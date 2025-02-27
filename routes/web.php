@@ -1,0 +1,69 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\PreTenderController;
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();
+
+Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
+
+Route::group(['middleware' => 'auth'], function () {
+        Route::get('addprojects', [ProjectsController::class, 'addprojects'])->name('pages.addprojects');
+        Route::post('addprojects/store', [ProjectsController::class, 'store'])->name('projects.store');
+        Route::post('notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::get('notifications/get', [NotificationController::class, 'getNotifications'])->name('notifications.get');
+		Route::get('icons', ['as' => 'pages.icons', 'uses' => 'App\Http\Controllers\PageController@icons']);
+		Route::get('maps', ['as' => 'pages.maps', 'uses' => 'App\Http\Controllers\PageController@maps']);
+		Route::get('notifications', ['as' => 'pages.notifications', 'uses' => 'App\Http\Controllers\PageController@notifications']);
+		Route::get('rtl', ['as' => 'pages.rtl', 'uses' => 'App\Http\Controllers\PageController@rtl']);
+		Route::get('tables', ['as' => 'pages.tables', 'uses' => 'App\Http\Controllers\PageController@tables']);
+		Route::get('typography', ['as' => 'pages.typography', 'uses' => 'App\Http\Controllers\PageController@typography']);
+		Route::get('upgrade', ['as' => 'pages.upgrade', 'uses' => 'App\Http\Controllers\PageController@upgrade']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
+	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
+	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
+	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
+});
+
+Route::middleware(['auth'])->group(function (){
+    Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+
+    //Route::get('/admin/forms/basicdetails', [StatusController::class, 'create'])->name('pages.admin.forms.basicdetails')->middleware('auth');
+
+    // admin
+    Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
+    Route::get('/admin/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
+    Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
+    Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
+    Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
+    Route::get('admin/projects/{id}/pre_tender', [ProjectsController::class, 'pre_tender'])->name('projects.pre_tender')->middleware('auth');
+    Route::get('admin/projects/{id}/design_submission', [ProjectsController::class, 'designSubmission'])->name('projects.design_submission')->middleware('auth');
+    Route::get('admin/projects/{id}/tender', [ProjectsController::class, 'tender'])->name('projects.tender')->middleware('auth');
+    Route::get('admin/projects/{id}/contract', [ProjectsController::class, 'contract'])->name('projects.contract')->middleware('auth');
+    Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
+    Route::post('/pre_tender/store', [PreTenderController::class, 'store'])->name('pre_tender.store')->middleware('auth');
+
+    // project manager
+    Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
+    Route::get('/project_manager/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.project_manager.forms.basicdetails')->middleware('auth');
+
+    // executive
+    Route::get('/executive/dashboard', [PageController::class, 'executiveDashboard'])->name('pages.executive.dashboard')->middleware('auth');
+
+});
