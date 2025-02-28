@@ -29,7 +29,7 @@ class Project extends Model
         'updated_at' => 'date',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     // relationship with ProjectTeam model
     public function projectTeam(){
@@ -48,7 +48,7 @@ class Project extends Model
 
     // relationship with Statuses model
     public function status(){
-        return $this->belongsTo(Status::class, 'status_id');
+        return $this->belongsTo(Status::class, 'statuses_id');
     }
 
     // relationship with ClientMinistry model

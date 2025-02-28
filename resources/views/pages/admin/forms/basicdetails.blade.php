@@ -33,7 +33,7 @@
             <h1 class="card-title">BASIC PROJECT DETAILS</h1>
         </div>
         <div class="card-body">
-            <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('pages.admin.forms.basicdetails.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- first row -->
                 <!-- <div class="form-row"> -->
@@ -66,13 +66,13 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="status" class="col-sm-2 col-form-label">Status</label>
+                    <label for="statuses_id" class="col-sm-2 col-form-label">Status</label>
                     <div class="col-sm-10">
-                        <select id="status" name="status" class="form-control">
+                        <select id="statuses_id" name="statuses_id" class="form-control">
                             <option disabled selected>-- Select status stage --</option>
                             @foreach($statuses as $status)
                                 <option value="{{ $status->id }}"
-                                    {{ old('status', isset($project) ? $project->status_id : '') == $status->id ? 'selected' : '' }}>
+                                    {{ ($project->status_id ?? old('status')) == $status->id ? 'selected' : '' }}>
                                     {{ $status->name }}
                                 </option>
                             @endforeach
@@ -103,7 +103,7 @@
                             <option disabled selected>-- Select Project Manager --</option>
                             @foreach($projectManagers as $manager)
                                 <option value="{{ $manager->id }}"
-                                {{ old('oic', isset($project) ? $project->user_id : '') == $manager->id ? 'selected' : '' }}>
+                                    {{ old('oic', isset($project) ? $project->user_id : '') == $manager->id ? 'selected' : '' }}>
                                     {{ $manager->name }}
                                 </option>
                             @endforeach
@@ -112,9 +112,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="cm" class="col-sm-2 col-form-label">Client Ministry</label>
+                    <label for="client_ministry_id" class="col-sm-2 col-form-label">Client Ministry</label>
                     <div class="col-sm-10">
-                        <select id="cm" name="cm" class="form-control">
+                        <select id="client_ministry_id" name="client_ministry_id" class="form-control">
                             <option disabled selected>-- Select Client Ministry --</option>
                                 @foreach($clientMinistries as $clientMinistry)
                                     <option value="{{ $clientMinistry->id }}"
@@ -127,9 +127,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="contractor" class="col-sm-2 col-form-label">Main Contractor</label>
+                    <label for="contractor_id" class="col-sm-2 col-form-label">Main Contractor</label>
                     <div class="col-sm-10">
-                        <select id="contractor" name="contractor" class="form-control">
+                        <select id="contractor_id" name="contractor_id" class="form-control">
                             <option disabled selected>-- Select Main Contractor --</option>
                             @foreach($contractors as $contractor)
                                 <option value="{{ $contractor->id }}"
@@ -204,6 +204,7 @@
                     </div>
                 </div>
 
+                <input type="hidden" name="project_team_id" value="{{ $projectTeam ?? '' }}">
                 <h3>PROJECT TEAM</h3>
 
                 <div class="row mb-3">
