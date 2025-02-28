@@ -118,6 +118,7 @@ class ProjectsController extends Controller
         return view('pages.admin.forms.contract', compact('project'));
     }
 
+    // store basicdetails form
     public function store(Request $request)
     {
         // validate input
@@ -125,16 +126,21 @@ class ProjectsController extends Controller
             'fy' => 'required|string|max:255',
             'sv' => 'required|numeric',
             'av' => 'required|numeric',
+            'statuses_id' => 'required|exists:statuses_id',
             'voteNum' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            'oic' => 'required|string|max:255',
+            'oic' => 'required|numeric|exists:users,id',
+            'client_ministry_id' => 'required|exists:client_ministry,id',
+            'contractor_id' => 'required|exists:contractor,id',
+            'contractorNum' => 'nullable|string|max:255',
+            'siteGazette' => 'nullable|string|max:255',
+            'soilInv' => 'nullable|date',
+            'topoSurvey' => 'nullable|date',
+            'handover' => 'nullable|date',
+            'scope' => 'string|max:255',
             'location' => 'string|max:255',
             'img' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'scope' => 'string|max:255',
-            'soilInv' => 'date',
-            'topoSurvey' => 'date',
-            'handover' => 'date',
-            //'status' => 'required|string|max:255',
+            'project_team_id' => 'nullable|exists:project_team,id',
         ]);
 
         // Log to see if the file is present in the request
@@ -151,22 +157,37 @@ class ProjectsController extends Controller
         $lastProject = Project::latest('id')->first();
         $newCustomID = 'P'.sprintf('%03d', ($lastProject ? substr($lastProject->customID, 1) : 0) + 1);
 
-        // store project in database
+        // create default project team entry if it doesn't exist
+        $defaultProjectTeam = ProjectTeam::firstOrCreate([
+            'architect_id' => null,
+            'mechanical_electrical_id' => null,
+            'civil_structural_id' => null,
+            'quantity_surveyor_id' => null,
+            'others_id' => null,
+        ]);
+
+        // create project in database
         $project = Project::create([
             'customID' => $newCustomID,
             'fy' => $request->input('fy'),
             'sv' => $request->input('sv'),
             'av' => $request->input('av'),
+            'statuses_id' => $request->input('statuses_id'),
             'voteNum' => $request->input('voteNum'),
             'title' => $request->input('title'),
             'oic' => $request->input('oic'),
-            'location' => $request->input('location'),
-            'img' => $imgPath,
-            'scope' => $request->input('scope'),
+            'client_ministry_id' => $request->input('client_ministry_id'),
+            'contractor_id' => $request->input('contractor_id'),
+            'contractorNum' => $request->input('contractorNum'),
+            'siteGazette' => $request->input('siteGazette'),
             'soilInv' => $request->input('soilInv'),
             'topoSurvey' => $request->input('topoSurvey'),
             'handover' => $request->input('handover'),
-            //'status' => $request->input('status'),
+            'scope' => $request->input('scope'),
+            'location' => $request->input('location'),
+            'img' => $imgPath,
+            'project_team_id' => $defaultProjectTeam->id,
+            'created_by' => auth()->id(),
         ]);
 
         // insert notification for the admin
