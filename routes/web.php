@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
     Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
     Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
+    Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
     Route::get('admin/projects/{id}/pre_tender', [ProjectsController::class, 'pre_tender'])->name('projects.pre_tender')->middleware('auth');
     Route::get('admin/projects/{id}/design_submission', [ProjectsController::class, 'designSubmission'])->name('projects.design_submission')->middleware('auth');
     Route::get('admin/projects/{id}/tender', [ProjectsController::class, 'tender'])->name('projects.tender')->middleware('auth');

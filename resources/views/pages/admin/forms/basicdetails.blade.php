@@ -33,11 +33,15 @@
             <h1 class="card-title">BASIC PROJECT DETAILS</h1>
         </div>
         <div class="card-body">
-        <form action="{{ route('pages.admin.forms.basicdetails.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ isset($project) ? route('pages.admin.forms.basicdetails.update', $project->id) : route('pages.admin.forms.basicdetails.store') }}" method="POST" enctype="multipart/form-data">
+
                 @csrf
-                <!-- first row -->
-                <!-- <div class="form-row"> -->
-                    <!-- financial year -->
+
+                @if(isset($project))
+                    @method('PUT')
+                @endif
+
+                <!-- financial year -->
                 <div class="row mb-3">
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>
                         <div class="col-sm-10">
@@ -208,9 +212,9 @@
                 <h3>PROJECT TEAM</h3>
 
                 <div class="row mb-3">
-                    <label for="architect" class="col-sm-2 col-form-label">Architect</label>
+                    <label for="architect_id" class="col-sm-2 col-form-label">Architect</label>
                     <div class="col-sm-10">
-                        <select id="architect" name="architect" class="form-control">
+                        <select id="architect_id" name="architect_id" class="form-control">
                             <option disabled selected>-- Select Architect --</option>
                             @foreach($architects as $architect)
                                 <option value="{{ $architect->id }}"
@@ -223,9 +227,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="me" class="col-sm-2 col-form-label">Mechanical & Electrical</label>
+                    <label for="mechanical_electrical_id" class="col-sm-2 col-form-label">Mechanical & Electrical</label>
                     <div class="col-sm-10">
-                        <select id="me" name="me" class="form-control">
+                        <select id="mechanical_electrical_id" name="mechanical_electrical_id" class="form-control">
                             <option disabled selected>-- Select Mechanical & Electrical --</option>
                             @foreach($mechanicalElectricals as $mechanicalElectrical)
                                 <option value="{{ $mechanicalElectrical->id }}"
@@ -238,9 +242,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="cs" class="col-sm-2 col-form-label">Civil & Structural</label>
+                    <label for="civil_structural_id" class="col-sm-2 col-form-label">Civil & Structural</label>
                     <div class="col-sm-10">
-                        <select id="cs" name="cs" class="form-control">
+                        <select id="civil_structural_id" name="civil_structural_id" class="form-control">
                             <option disabled selected>-- Select Civil & Structural --</option>
                             @foreach($civilStructurals as $civilStructural)
                                 <option value="{{ $civilStructural->id }}"
@@ -253,9 +257,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="qs" class="col-sm-2 col-form-label">Quantity Surveyor</label>
+                    <label for="quantity_surveyor_id" class="col-sm-2 col-form-label">Quantity Surveyor</label>
                     <div class="col-sm-10">
-                        <select id="qs" name="qs" class="form-control">
+                        <select id="quantity_surveyor_id" name="quantity_surveyor_id" class="form-control">
                             <option disabled selected>-- Select Quantity Surveyor --</option>
                             @foreach($quantitySurveyors as $quantitySurveyor)
                                 <option value="{{ $quantitySurveyor->id }}"
@@ -268,9 +272,9 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="others" class="col-sm-2 col-form-label">Others (Specialist)</label>
+                    <label for="others_id" class="col-sm-2 col-form-label">Others (Specialist)</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="others" id="others">
+                        <input type="text" class="form-control" name="others_id" id="others_id">
                     </div>
                 </div>
 
@@ -278,7 +282,7 @@
                 <a href="{{ route('pages.admin.projectsList') }}" class="btn btn-primary">Cancel</a>
                 @endif
 
-                <button type="submit" class="btn btn-primary">SAVE</button>
+                <button type="submit" class="btn btn-primary">{{ isset($project) ? 'Update' : 'Submit' }}</button>
 
                 @if(isset($project))
                 <a href="{{ route('projects.pre_tender', $project->id) }}" class="btn btn-primary">
