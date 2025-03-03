@@ -14,6 +14,16 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->enum('type', [
+                'new_user',
+                'reset_password',
+                'new_project',
+                'update_project_details',
+                'update_project_status',
+                'upcoming_deadline',
+                'overbudget',
+                'overdue'
+            ]);
             $table->string('message');
             $table->boolean('read')->default(false);
             $table->timestamps();
