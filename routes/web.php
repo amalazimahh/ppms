@@ -10,7 +10,7 @@ use App\Http\Controllers\PreTenderController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Auth::routes();
