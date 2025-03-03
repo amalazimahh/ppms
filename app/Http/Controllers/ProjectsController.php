@@ -259,11 +259,12 @@ class ProjectsController extends Controller
 
         // Log to confirm insertion
         Log::info('Project created: ', $project->toArray());
-        $message = Str::limit('A new project <b>' . $project->title . '</b> has been added.', 250);
+        $message = Str::limit('A new project ' . $project->title . ' has been added.', 250);
 
         // insert notification for the admin
         Notification::create([
             'user_id' => 1,
+            'type' => 'new_project',
             'message' => $message,
             'read' => false
         ]);
@@ -279,105 +280,116 @@ class ProjectsController extends Controller
         return response()->json(['message' => 'Notifications marked as read.']);
     }
 
+    // handle project update basic details form
     public function update(Request $request, $id)
-{
-    Log::info('Request Data:', $request->all());
+    {
+        Log::info('Request Data:', $request->all());
 
-    // Validate input
-    $request->validate([
-        'fy' => 'required|string',
-        'sv' => 'required|string',
-        'av' => 'required|string',
-        'statuses_id' => 'required|integer',
-        'voteNum' => 'required|string',
-        'title' => 'required|string',
-        'oic' => 'required|integer',
-        'client_ministry_id' => 'required|integer',
-        'contractor_id' => 'required|integer',
-        'contractorNum' => 'required|string',
-        'siteGazette' => 'nullable|string',
-        'soilInv' => 'nullable|date',
-        'topoSurvey' => 'nullable|date',
-        'handover' => 'nullable|date',
-        'scope' => 'nullable|string',
-        'location' => 'nullable|string',
-        'architect_id' => 'nullable|integer',
-        'mechanical_electrical_id' => 'nullable|integer',
-        'civil_structural_id' => 'nullable|integer',
-        'quantity_surveyor_id' => 'nullable|integer',
-        'others_id' => 'nullable|string',
-    ]);
+        // Validate input
+        $request->validate([
+            'fy' => 'required|string',
+            'sv' => 'required|string',
+            'av' => 'required|string',
+            'statuses_id' => 'required|integer',
+            'voteNum' => 'required|string',
+            'title' => 'required|string',
+            'oic' => 'required|integer',
+            'client_ministry_id' => 'required|integer',
+            'contractor_id' => 'required|integer',
+            'contractorNum' => 'required|string',
+            'siteGazette' => 'nullable|string',
+            'soilInv' => 'nullable|date',
+            'topoSurvey' => 'nullable|date',
+            'handover' => 'nullable|date',
+            'scope' => 'nullable|string',
+            'location' => 'nullable|string',
+            'architect_id' => 'nullable|integer',
+            'mechanical_electrical_id' => 'nullable|integer',
+            'civil_structural_id' => 'nullable|integer',
+            'quantity_surveyor_id' => 'nullable|integer',
+            'others_id' => 'nullable|string',
+        ]);
 
-    // Clean up the sv and av fields (remove dollar signs and commas)
-    $sv = preg_replace('/[^\d.]/', '', $request->input('sv'));
-    $av = preg_replace('/[^\d.]/', '', $request->input('av'));
+        // Clean up the sv and av fields (remove dollar signs and commas)
+        $sv = preg_replace('/[^\d.]/', '', $request->input('sv'));
+        $av = preg_replace('/[^\d.]/', '', $request->input('av'));
 
-    // Log cleaned values
-    Log::info('Cleaned sv: ' . $sv);
-    Log::info('Cleaned av: ' . $av);
+        // Log cleaned values
+        Log::info('Cleaned sv: ' . $sv);
+        Log::info('Cleaned av: ' . $av);
 
-    $project = Project::findOrFail($id);
-    Log::info('Before Update:', $project->toArray());
+        $project = Project::findOrFail($id);
+        Log::info('Before Update:', $project->toArray());
 
-    // Find the existing project team or create a new one
-    $projectTeam = ProjectTeam::find($project->project_team_id);
+        // Find the existing project team or create a new one
+        $projectTeam = ProjectTeam::find($project->project_team_id);
 
-    if (!$projectTeam) {
-        // If no project team exists, create one
-        Log::info('Creating a new project team.');
-        $projectTeam = new ProjectTeam();
-    } else {
-        // Log the existing project team ID for debugging
-        Log::info('Updating existing Project Team ID: ' . $projectTeam->id);
+        if (!$projectTeam) {
+            // If no project team exists, create one
+            Log::info('Creating a new project team.');
+            $projectTeam = new ProjectTeam();
+        } else {
+            // Log the existing project team ID for debugging
+            Log::info('Updating existing Project Team ID: ' . $projectTeam->id);
+        }
+
+        // Log current state of ProjectTeam before updating
+        Log::info('ProjectTeam Before Update: ', $projectTeam->toArray());
+
+        // Update project team fields (log each change)
+        $projectTeam->architect_id = $request->architect_id ?? null;
+        $projectTeam->mechanical_electrical_id = $request->mechanical_electrical_id ?? null;
+        $projectTeam->civil_structural_id = $request->civil_structural_id ?? null;
+        $projectTeam->quantity_surveyor_id = $request->quantity_surveyor_id ?? null;
+        $projectTeam->others_id = $request->others_id ?? null;
+
+        // Log updated ProjectTeam fields
+        Log::info('Updated ProjectTeam Fields: ', $projectTeam->toArray());
+
+        // Save the project team (this is crucial)
+        $projectTeam->save();
+
+        // Update the project with the new project_team_id
+        $updated = $project->update([
+            'fy' => $request['fy'],
+            'sv' => $sv,
+            'av' => $av,
+            'statuses_id' => $request['statuses_id'],
+            'voteNum' => $request['voteNum'],
+            'title' => $request['title'],
+            'oic' => $request['oic'], // Project Manager
+            'client_ministry_id' => $request['client_ministry_id'],
+            'contractor_id' => $request['contractor_id'],
+            'contractorNum' => $request['contractorNum'],
+            'siteGazette' => $request['siteGazette'],
+            'soilInv' => $request['soilInv'],
+            'topoSurvey' => $request['topoSurvey'],
+            'handover' => $request['handover'],
+            'scope' => $request['scope'],
+            'location' => $request['location'],
+            'project_team_id' => $projectTeam->id,
+        ]);
+
+        $message = Str::limit($project->title . ' has been modified.', 250);
+
+        // insert notification for the admin
+        Notification::create([
+            'user_id' => 1,
+            'type' => 'update_project_details',
+            'message' => $message,
+            'read' => false
+        ]);
+
+        // Log success or failure of project update
+        if ($updated) {
+            Log::info('Project Updated successfully', $project->toArray());
+        } else {
+            Log::info('Project Update failed: ', $project->toArray());
+        }
+
+        // Return the success response
+        return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
     }
-
-    // Log current state of ProjectTeam before updating
-    Log::info('ProjectTeam Before Update: ', $projectTeam->toArray());
-
-    // Update project team fields (log each change)
-    $projectTeam->architect_id = $request->architect_id ?? null;
-    $projectTeam->mechanical_electrical_id = $request->mechanical_electrical_id ?? null;
-    $projectTeam->civil_structural_id = $request->civil_structural_id ?? null;
-    $projectTeam->quantity_surveyor_id = $request->quantity_surveyor_id ?? null;
-    $projectTeam->others_id = $request->others_id ?? null;
-
-    // Log updated ProjectTeam fields
-    Log::info('Updated ProjectTeam Fields: ', $projectTeam->toArray());
-
-    // Save the project team (this is crucial)
-    $projectTeam->save();
-
-    // Update the project with the new project_team_id
-    $updated = $project->update([
-        'fy' => $request['fy'],
-        'sv' => $sv,
-        'av' => $av,
-        'statuses_id' => $request['statuses_id'],
-        'voteNum' => $request['voteNum'],
-        'title' => $request['title'],
-        'oic' => $request['oic'], // Project Manager
-        'client_ministry_id' => $request['client_ministry_id'],
-        'contractor_id' => $request['contractor_id'],
-        'contractorNum' => $request['contractorNum'],
-        'siteGazette' => $request['siteGazette'],
-        'soilInv' => $request['soilInv'],
-        'topoSurvey' => $request['topoSurvey'],
-        'handover' => $request['handover'],
-        'scope' => $request['scope'],
-        'location' => $request['location'],
-        'project_team_id' => $projectTeam->id,
-    ]);
-
-    // Log success or failure of project update
-    if ($updated) {
-        Log::info('Project Updated successfully', $project->toArray());
-    } else {
-        Log::info('Project Update failed: ', $project->toArray());
-    }
-
-    // Return the success response
-    return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
-}
 
 
 
