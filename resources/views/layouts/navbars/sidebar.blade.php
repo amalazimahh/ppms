@@ -20,7 +20,7 @@
 
              <li @if ($pageSlug == 'dashboard') class="active" @endif>
                 <a href="{{ route('pages.admin.dashboard')  }}">
-                    <i class="tim-icons icon-single-02"></i>
+                    <i class="tim-icons icon-chart-bar-32"></i>
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
@@ -35,13 +35,13 @@
 
                 <div class="collapse show" id="manage-projects">
                     <ul class="nav pl-4">
-                        <li @if ($pageSlug == 'profile') class="active " @endif>
+                        <li @if ($pageSlug == 'profile') class="active" @endif>
                             <a href="{{ route('profile.edit')  }}">
                                 <i class="tim-icons icon-single-02"></i>
                                 <p>{{ __('Project Dashboard') }}</p>
                             </a>
                         </li>
-                        <li @if ($pageSlug == 'users') class="active " @endif>
+                        <li @if ($pageSlug == 'users') class="active" @endif>
                             <a href="{{ route('pages.admin.projectsList')  }}">
                                 <i class="tim-icons icon-bullet-list-67"></i>
                                 <p>{{ __('Projects List') }}</p>
@@ -80,7 +80,7 @@
             @if(session('roles') == 2)
             <li @if ($pageSlug == 'basicDetails') class="active" @endif>
                 <a href="{{ route('pages.project_manager.forms.basicdetails')  }}">
-                    <i class="tim-icons icon-single-02"></i>
+                    <i class="tim-icons icon-chart-bar-32"></i>
                     <p>{{ __('Manage Projects') }}</p>
                 </a>
             </li>
@@ -97,7 +97,7 @@
             @if(session('roles') == 3)
             <li @if ($pageSlug == 'dashboard') class="active" @endif>
                 <a href="{{ route('pages.executive.dashboard')  }}">
-                    <i class="tim-icons icon-single-02"></i>
+                    <i class="tim-icons icon-chart-bar-32"></i>
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
