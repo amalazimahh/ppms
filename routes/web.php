@@ -23,11 +23,10 @@ Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->
 Route::group(['middleware' => 'auth'], function () {
         Route::get('addprojects', [ProjectsController::class, 'addprojects'])->name('pages.addprojects');
         Route::post('addprojects/store', [ProjectsController::class, 'store'])->name('projects.store');
-        Route::post('notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-        Route::get('notifications/get', [NotificationController::class, 'getNotifications'])->name('notifications.get');
+        // Route::post('notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+        // Route::get('notifications/get', [NotificationController::class, 'getNotifications'])->name('notifications.get');
 		Route::get('icons', ['as' => 'pages.icons', 'uses' => 'App\Http\Controllers\PageController@icons']);
 		Route::get('maps', ['as' => 'pages.maps', 'uses' => 'App\Http\Controllers\PageController@maps']);
-		Route::get('notifications', ['as' => 'pages.notifications', 'uses' => 'App\Http\Controllers\PageController@notifications']);
 		Route::get('rtl', ['as' => 'pages.rtl', 'uses' => 'App\Http\Controllers\PageController@rtl']);
 		Route::get('tables', ['as' => 'pages.tables', 'uses' => 'App\Http\Controllers\PageController@tables']);
 		Route::get('typography', ['as' => 'pages.typography', 'uses' => 'App\Http\Controllers\PageController@typography']);
@@ -43,6 +42,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::middleware(['auth'])->group(function (){
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('pages.notification.index');
+    Route::get('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('pages.notification.markAsRead');
+    Route::get('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
+    Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
+
 
     //Route::get('/admin/forms/basicdetails', [StatusController::class, 'create'])->name('pages.admin.forms.basicdetails')->middleware('auth');
 

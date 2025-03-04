@@ -18,11 +18,10 @@
             <!-- Conditional links based on role -->
              @if(session('roles') == 1)
 
-             <!-- Notification Tab -->
-             <li @if ($pageSlug == 'users') class="active" @endif>
-                <a href="{{ route('pages.admin.user_management')  }}">
+             <li @if ($pageSlug == 'dashboard') class="active" @endif>
+                <a href="{{ route('pages.admin.dashboard')  }}">
                     <i class="tim-icons icon-single-02"></i>
-                    <p>{{ __('Notification') }}</p>
+                    <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
 
@@ -67,6 +66,14 @@
                 </a>
             </li> -->
 
+            <!-- Notification Tab -->
+            <li @if ($pageSlug == 'notifications') class="active" @endif>
+                <a href="{{ route('pages.notification.index')  }}">
+                    <i class="tim-icons icon-bell-55"></i>
+                    <p>{{ __('Notifications') }}</p>
+                </a>
+            </li>
+
             @endif
 
             <!-- sidebar for project manager -->
@@ -75,6 +82,14 @@
                 <a href="{{ route('pages.project_manager.forms.basicdetails')  }}">
                     <i class="tim-icons icon-single-02"></i>
                     <p>{{ __('Manage Projects') }}</p>
+                </a>
+            </li>
+
+            <!-- Notification Tab -->
+            <li @if ($pageSlug == 'notifications') class="active" @endif>
+                <a href="{{ route('pages.notification.index')  }}">
+                    <i class="tim-icons icon-bell-55"></i>
+                    <p>{{ __('Notifications') }}</p>
                 </a>
             </li>
             @endif
@@ -88,19 +103,13 @@
             </li>
 
             <!-- Notification Tab -->
-            <li @if ($pageSlug == 'users') class="active" @endif>
-                <a href="{{ route('pages.admin.user_management')  }}">
-                    <i class="tim-icons icon-single-02"></i>
-                    <p>{{ __('Notification') }}</p>
-                </a>
-            </li>
-
-            <li @if ($pageSlug == 'notifications') class="active " @endif>
-                <a href="{{ route('pages.notifications') }}">
+            <li @if ($pageSlug == 'notifications') class="active" @endif>
+                <a href="{{ route('pages.notification.index')  }}">
                     <i class="tim-icons icon-bell-55"></i>
                     <p>{{ __('Notifications') }}</p>
                 </a>
             </li>
+
             @endif
 
 
@@ -146,12 +155,7 @@
                     <p>{{ __('Maps') }}</p>
                 </a>
             </li>
-            <li @if ($pageSlug == 'notifications') class="active " @endif>
-                <a href="{{ route('pages.notifications') }}">
-                    <i class="tim-icons icon-bell-55"></i>
-                    <p>{{ __('Notifications') }}</p>
-                </a>
-            </li>
+
             <li @if ($pageSlug == 'tables') class="active " @endif>
                 <a href="{{ route('pages.tables') }}">
                     <i class="tim-icons icon-puzzle-10"></i>

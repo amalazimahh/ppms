@@ -40,6 +40,15 @@
                                 <a href="#" class="nav-item dropdown-item">No new notifications</a>
                             </li>
                         @endforelse
+
+                        <!-- view all notifications link -->
+                         <li class="dropdown-divider"></li>
+                         <li class="nav-link text-center">
+                         <a href="{{ route('pages.notification.index') }}" class="nav-item dropdown-item text-primary">
+                            View All Notifications
+                        </a>
+
+                         </li>
                     </ul>
                 </li>
                 <li class="dropdown nav-item">
