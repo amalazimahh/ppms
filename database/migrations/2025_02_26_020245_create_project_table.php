@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('project', function (Blueprint $table) {
             $table->id();
-            $table->string('customID')->nullable();
             $table->string('fy')->nullable();
             $table->decimal('sv', 15, 2)->nullable();
             $table->decimal('av', 15, 2)->nullable();
             $table->foreignId('statuses_id')->constrained('statuses')->onDelete('cascade');
+            $table->foreignId('parent_project_id')->nullable()->constrained('project')->onDelete('cascade');
             $table->string('voteNum')->nullable();
             $table->string('title')->nullable();
             $table->bigInteger('oic')->unsigned()->nullable();

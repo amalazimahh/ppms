@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('admin/projects/{id}/contract', [ProjectsController::class, 'contract'])->name('projects.contract')->middleware('auth');
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
     Route::post('/pre_tender/store', [PreTenderController::class, 'store'])->name('pre_tender.store')->middleware('auth');
+    Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');

@@ -14,7 +14,7 @@ class Project extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'customID', 'fy', 'sv', 'av', 'statuses_id', 'voteNum',
+        'fy', 'sv', 'av', 'statuses_id', 'parent_project_id', 'voteNum',
         'title', 'oic', 'client_ministry_id', 'contractor_id', 'contractorNum',
         'siteGazette', 'soilInv', 'topoSurvey', 'handover',
         'scope', 'location', 'img', 'project_team_id',
@@ -59,5 +59,15 @@ class Project extends Model
     // relationship with Contractor model
     public function contractor(){
         return $this->belongsTo(Contractor::class, 'contractor_id');
+    }
+
+    // retrieve parent project
+    public function parentProject(){
+        return $this->belongsTo(Project::class, 'parent_project_id');
+    }
+
+    // get all child projects
+    public function childProjects(){
+        return $this->hasMany(Project::class, 'parent_project_id');
     }
 }

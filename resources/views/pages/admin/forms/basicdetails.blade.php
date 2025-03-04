@@ -84,6 +84,24 @@
                     </div>
                 </div>
 
+                <input type="hidden" name="parent_project_id" value="{{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') }}">
+
+                <div class="row mb-3">
+                    <label for="parent_project_id" class="col-sm-2 col-form-label">Parent Project (Optional)</label>
+                    <div class="col-sm-10">
+                        <select id="parent_project_id" name="parent_project_id" class="form-control">
+                            <option value="">No Parent (New Main Project)</option>
+                            @foreach($mainProjects as $parentProject)
+                                <option value="{{ $parentProject->id }}"
+                                    {{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') == $parentProject->id ? 'selected' : '' }}>
+                                    {{ $parentProject->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+
                 <div class="row mb-3">
                     <label for="voteNum" class="col-sm-2 col-form-label">Vote No.</label>
                     <div class="col-sm-10">
@@ -293,8 +311,8 @@
         </div>
     </div>
 
-    <!-- handles financial year, amount user enters -->
-    <script>
+<!-- handles financial year, amount user enters -->
+<script>
     function formatFinancialYear(input)
     {
         //remove non-digit input
@@ -326,6 +344,36 @@
             numeralPositiveOnly: true,
         });
     });
+
+
+    // javascript to load the voteNum dynamically
+    document.addEventListener('DOMContentLoaded', function () {
+        let voteNumField = document.getElementById('voteNum');
+        let parentProjectSelect = document.getElementById('parent_project_id');
+
+        function updateVoteNum() {
+            let parentId = parentProjectSelect.value;
+
+            if (parentId) {
+                fetch(`/admin/projects/${parentId}/getVoteNum`) // ✅ Fetch voteNum from parent
+                    .then(response => response.json())
+                    .then(data => {
+                        voteNumField.value = data.voteNum; // ✅ Set parent voteNum
+                        voteNumField.setAttribute('disabled', 'disabled'); // ✅ Disable input
+                    })
+                    .catch(error => console.error('Error fetching voteNum:', error));
+            } else {
+                voteNumField.value = ''; // ✅ Clear field
+                voteNumField.removeAttribute('disabled'); // ✅ Enable input for manual entry
+            }
+        }
+
+        parentProjectSelect.addEventListener('change', updateVoteNum);
+
+        // ✅ Run on page load (for edit mode)
+        updateVoteNum();
+    });
+
 </script>
 
 @endsection

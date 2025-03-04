@@ -53,6 +53,8 @@ class ProjectsController extends Controller
         // retrieve lists of quantity surveyor
         $quantitySurveyors = QuantitySurveyor::all();
 
+        $mainProjects = Project::whereNull('parent_project_id')->get();
+
         // check if user is Pm
         if(auth()->user()->roles_id == 2)
         {
@@ -62,7 +64,7 @@ class ProjectsController extends Controller
         // default to Admin view
         return view('pages.admin.forms.basicdetails',
             compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
-                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
     }
 
     // retrieve project details and pass them to the basic details form
@@ -93,6 +95,8 @@ class ProjectsController extends Controller
         // retrieve lists of quantity surveyor
         $quantitySurveyors = QuantitySurveyor::all();
 
+        $mainProjects = Project::whereNull('parent_project_id')->get();
+
         // default to Admin view
         return view('pages.admin.forms.basicdetails', compact(
             'project',
@@ -103,7 +107,8 @@ class ProjectsController extends Controller
             'architects',
             'mechanicalElectricals',
             'civilStructurals',
-            'quantitySurveyors'
+            'quantitySurveyors',
+            'mainProjects'
         ));
     }
 
@@ -165,6 +170,7 @@ class ProjectsController extends Controller
             'sv' => 'required|string',
             'av' => 'required|string',
             'statuses_id' => 'required|integer',
+            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
             'oic' => 'required|integer',
@@ -237,6 +243,7 @@ class ProjectsController extends Controller
             'sv' => $sv,
             'av' => $av,
             'statuses_id' => $request['statuses_id'],
+            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
             'oic' => $request['oic'], // Project Manager
@@ -250,7 +257,7 @@ class ProjectsController extends Controller
             'scope' => $request['scope'],
             'location' => $request['location'],
             'project_team_id' => $projectTeam->id,
-            //'created_by' -> $created_by,
+            'created_by' => auth()->id(),
         ]);
 
 
@@ -269,6 +276,7 @@ class ProjectsController extends Controller
             'read' => false
         ]);
 
+        $mainProjects = Project::whereNull('parent_project_id')->get();
         // redirect with success notification
         return redirect()->route('pages.admin.projectsList')->with('success', 'Project added successfully!');
     }
@@ -291,6 +299,7 @@ class ProjectsController extends Controller
             'sv' => 'required|string',
             'av' => 'required|string',
             'statuses_id' => 'required|integer',
+            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
             'oic' => 'required|integer',
@@ -355,6 +364,7 @@ class ProjectsController extends Controller
             'sv' => $sv,
             'av' => $av,
             'statuses_id' => $request['statuses_id'],
+            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
             'oic' => $request['oic'], // Project Manager
@@ -390,6 +400,13 @@ class ProjectsController extends Controller
         // Return the success response
         return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
     }
+
+    public function getVoteNum($id)
+    {
+        $parentProject = Project::findOrFail($id);
+        return response()->json(['voteNum' => $parentProject->voteNum]); // ✅ Return correct voteNum
+    }
+
 
 
 
