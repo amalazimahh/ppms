@@ -231,7 +231,7 @@ class ProjectsController extends Controller
 
         //$created_by = (auth()->check()) ? (int)auth()->user()->id : null;
 
-        // Create a new Project
+        // create a new Project
         $project = Project::create([
             'fy' => $request['fy'],
             'sv' => $sv,
@@ -325,31 +325,31 @@ class ProjectsController extends Controller
         $projectTeam = ProjectTeam::find($project->project_team_id);
 
         if (!$projectTeam) {
-            // If no project team exists, create one
+            // create team if no project team exists
             Log::info('Creating a new project team.');
             $projectTeam = new ProjectTeam();
         } else {
-            // Log the existing project team ID for debugging
+            // debug existing project team ID
             Log::info('Updating existing Project Team ID: ' . $projectTeam->id);
         }
 
-        // Log current state of ProjectTeam before updating
+        // log current state of ProjectTeam before updating
         Log::info('ProjectTeam Before Update: ', $projectTeam->toArray());
 
-        // Update project team fields (log each change)
+        // update project team fields
         $projectTeam->architect_id = $request->architect_id ?? null;
         $projectTeam->mechanical_electrical_id = $request->mechanical_electrical_id ?? null;
         $projectTeam->civil_structural_id = $request->civil_structural_id ?? null;
         $projectTeam->quantity_surveyor_id = $request->quantity_surveyor_id ?? null;
         $projectTeam->others_id = $request->others_id ?? null;
 
-        // Log updated ProjectTeam fields
+        // log updated ProjectTeam fields
         Log::info('Updated ProjectTeam Fields: ', $projectTeam->toArray());
 
-        // Save the project team (this is crucial)
+        // save the project team
         $projectTeam->save();
 
-        // Update the project with the new project_team_id
+        // update the project with the new project_team_id
         $updated = $project->update([
             'fy' => $request['fy'],
             'sv' => $sv,
