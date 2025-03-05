@@ -175,8 +175,8 @@ class ProjectsController extends Controller
             'title' => 'required|string',
             'oic' => 'required|integer',
             'client_ministry_id' => 'required|integer',
-            'contractor_id' => 'required|integer',
-            'contractorNum' => 'required|string',
+            'contractor_id' => 'nullable|integer|exists:contractor,id',
+            'contractorNum' => 'nullable|string',
             'siteGazette' => 'nullable|string',
             'soilInv' => 'nullable|date',
             'topoSurvey' => 'nullable|date',
@@ -237,6 +237,16 @@ class ProjectsController extends Controller
 
         //$created_by = (auth()->check()) ? (int)auth()->user()->id : null;
 
+        $voteNum = $request->voteNum;
+
+        // fetch voteNum from parent project for child project
+        if ($request->parent_project_id) {
+            $parentProject = Project::find($request->parent_project_id);
+            if ($parentProject) {
+                $voteNum = $parentProject->voteNum;
+            }
+        }
+
         // create a new Project
         $project = Project::create([
             'fy' => $request['fy'],
@@ -248,8 +258,8 @@ class ProjectsController extends Controller
             'title' => $request['title'],
             'oic' => $request['oic'], // Project Manager
             'client_ministry_id' => $request['client_ministry_id'],
-            'contractor_id' => $request['contractor_id'],
-            'contractorNum' => $request['contractorNum'],
+            'contractor_id' => $request['contractor_id'] ?? null,
+            'contractorNum' => $request['contractorNum'] ?? null,
             'siteGazette' => $request['siteGazette'],
             'soilInv' => $request['soilInv'],
             'topoSurvey' => $request['topoSurvey'],
@@ -304,8 +314,8 @@ class ProjectsController extends Controller
             'title' => 'required|string',
             'oic' => 'required|integer',
             'client_ministry_id' => 'required|integer',
-            'contractor_id' => 'required|integer',
-            'contractorNum' => 'required|string',
+            'contractor_id' => 'nullable|integer|exists:contractor,id',
+            'contractorNum' => 'nullable|string',
             'siteGazette' => 'nullable|string',
             'soilInv' => 'nullable|date',
             'topoSurvey' => 'nullable|date',
@@ -369,8 +379,8 @@ class ProjectsController extends Controller
             'title' => $request['title'],
             'oic' => $request['oic'], // Project Manager
             'client_ministry_id' => $request['client_ministry_id'],
-            'contractor_id' => $request['contractor_id'],
-            'contractorNum' => $request['contractorNum'],
+            'contractor_id' => $request['contractor_id'] ?? null,
+            'contractorNum' => $request['contractorNum'] ?? null,
             'siteGazette' => $request['siteGazette'],
             'soilInv' => $request['soilInv'],
             'topoSurvey' => $request['topoSurvey'],

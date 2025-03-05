@@ -152,7 +152,7 @@
                     <label for="contractor_id" class="col-sm-2 col-form-label">Main Contractor</label>
                     <div class="col-sm-10">
                         <select id="contractor_id" name="contractor_id" class="form-control">
-                            <option disabled selected>-- Select Main Contractor --</option>
+                            <option value="" disabled selected>-- Select Main Contractor --</option>
                             @foreach($contractors as $contractor)
                                 <option value="{{ $contractor->id }}"
                                 {{ old('contractor', isset($project) ? $project->contractor_id : '') == $contractor->id ? 'selected' : '' }}>
@@ -348,7 +348,7 @@
 
     // javascript to load the voteNum dynamically
     document.addEventListener('DOMContentLoaded', function () {
-        let voteNumField = document.getElementById('voteNum');
+        let voteNum = document.getElementById('voteNum');
         let parentProjectSelect = document.getElementById('parent_project_id');
 
         function updateVoteNum() {
@@ -358,19 +358,18 @@
                 fetch(`/admin/projects/${parentId}/getVoteNum`) // ✅ Fetch voteNum from parent
                     .then(response => response.json())
                     .then(data => {
-                        voteNumField.value = data.voteNum; // ✅ Set parent voteNum
-                        voteNumField.setAttribute('disabled', 'disabled'); // ✅ Disable input
+                        voteNum.value = data.voteNum; // ✅ Set parent voteNum
+                        voteNum.setAttribute('readonly', 'readonly'); // ✅ Disable input
                     })
                     .catch(error => console.error('Error fetching voteNum:', error));
             } else {
                 voteNumField.value = ''; // ✅ Clear field
-                voteNumField.removeAttribute('disabled'); // ✅ Enable input for manual entry
+                voteNumField.removeAttribute('readonly'); // ✅ Enable input for manual entry
             }
         }
 
         parentProjectSelect.addEventListener('change', updateVoteNum);
 
-        // ✅ Run on page load (for edit mode)
         updateVoteNum();
     });
 
