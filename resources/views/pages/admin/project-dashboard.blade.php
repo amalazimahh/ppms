@@ -1,16 +1,17 @@
-@extends('layouts.app', ['pageSlug' => 'project-dashboard'])
+@extends('layouts.app', ['pageSlug' => 'dashboard'])
 
 @section('content')
     <div class="row">
         <!-- Overall Progress -->
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">Overall Progress</h5>
                     <h2 class="card-title">78%</h2>
                 </div>
                 <div class="card-body">
-                    <div class="progress-section">
+                    <canvas id="overallProgressChart"></canvas>
+                    <div class="progress-section mt-3">
                         <div class="progress-item">
                             <span>Planning</span>
                             <span>Completed</span>
@@ -32,17 +33,6 @@
             </div>
         </div>
 
-        <!-- Projected Launch Date -->
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Projected Launch Date</h5>
-                    <h2 class="card-title">Friday, December 15</h2>
-                    <p class="card-category">121 Days</p>
-                </div>
-            </div>
-        </div>
-
         <!-- Risks -->
         <div class="col-lg-4">
             <div class="card">
@@ -50,6 +40,20 @@
                     <h5 class="card-category">Risks</h5>
                     <h2 class="card-title text-danger">8.1%</h2>
                     <p class="card-category">Currently Over Target Budget</p>
+                </div>
+                <div class="card-body">
+                    <canvas id="risksChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projected Launch Date -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Projected Launch Date</h5>
+                    <h2 class="card-title">Friday, December 15</h2>
+                    <p class="card-category">121 Days</p>
                 </div>
             </div>
         </div>
@@ -84,7 +88,8 @@
                     <h5 class="card-category">Project Budget</h5>
                 </div>
                 <div class="card-body">
-                    <div class="budget-details">
+                    <canvas id="budgetChart"></canvas>
+                    <div class="budget-details mt-3">
                         <div class="budget-item">
                             <span>Total Budget</span>
                             <span>$80K</span>
@@ -184,7 +189,56 @@
     <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
     <script>
         $(document).ready(function() {
-          demo.initDashboardPageCharts();
+            // Overall Progress Pie Chart
+            const overallProgressCtx = document.getElementById('overallProgressChart').getContext('2d');
+            new Chart(overallProgressCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Planning', 'Design', 'Development', 'Testing'],
+                    datasets: [{
+                        data: [100, 100, 67, 0], // Percentages for each category
+                        backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#9E9E9E'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+
+            // Risks Pie Chart
+            const risksCtx = document.getElementById('risksChart').getContext('2d');
+            new Chart(risksCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Over Budget', 'Within Budget'],
+                    datasets: [{
+                        data: [8.1, 91.9], // Risk percentage
+                        backgroundColor: ['#FF5252', '#4CAF50'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+
+            // Project Budget Pie Chart
+            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(budgetCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Used', 'Remaining'],
+                    datasets: [{
+                        data: [52000, 8770], // Budget amounts
+                        backgroundColor: ['#2196F3', '#FFC107'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
         });
     </script>
 @endpush

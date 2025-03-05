@@ -37,7 +37,7 @@
                     <ul class="nav pl-4">
                         <li @if ($pageSlug == 'project-dashboard') class="active" @endif>
                             <a href="{{ route('pages.admin.project-dashboard')  }}">
-                                <i class="tim-icons icon-single-02"></i>
+                                <i class="tim-icons icon-chart-pie-36"></i>
                                 <p>{{ __('Project Dashboard') }}</p>
                             </a>
                         </li>

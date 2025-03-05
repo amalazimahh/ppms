@@ -31,6 +31,9 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- D3 sunburst chart -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
 
     <!-- Additional JS for charts -->
     <script>
