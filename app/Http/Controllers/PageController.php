@@ -123,6 +123,11 @@ class PageController extends Controller
         return redirect()->route('home'); // Redirect if not an admin
     }
 
+    public function projectSpecificDashboard()
+    {
+        return view('pages.admin.project-dashboard', ['pageSlug' => 'project-dashboard']);
+    }
+
     public function projectManagerDashboard()
     {
         $user = Auth::user();

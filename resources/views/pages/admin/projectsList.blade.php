@@ -44,7 +44,7 @@
                                     <td> {{ $project->fy }} </td>
                                     <td> {{ $project->voteNum }} </td>
                                     <td> {{ $project->title }} </td>
-                                    <td> {{ $project->oic }} </td>
+                                    <td> {{ $project->oicUser->name }} </td>
                                     <td>
                                         <!-- edit and delete buton should be here -->
                                          <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-info btn-sm">
