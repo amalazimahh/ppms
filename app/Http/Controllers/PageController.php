@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -125,7 +126,14 @@ class PageController extends Controller
 
     public function projectSpecificDashboard()
     {
-        return view('pages.admin.project-dashboard', ['pageSlug' => 'project-dashboard']);
+        if(session('roles') == 1){
+            return view('pages.admin.project-dashboard', ['pageSlug' => 'project-dashboard']);
+        } else if(session('roles') == 2){
+            return view('pages.project_manager.project-dashboard', ['pageSlug' => 'project-dashboard']);
+        } else if(session('roles') == 3){
+            return view('pages.executive.project-dashboard', ['pageSlug' => 'project-dashboard']);
+        }
+
     }
 
     public function projectManagerDashboard()
@@ -190,8 +198,13 @@ class PageController extends Controller
     * Display project list page for admin
     */
     public function projectList() {
+        $projects = Project::all();
         if(session('roles') == 1){
-            return view('pages.admin.projectsList');
+            return view('pages.admin.projectsList', compact('projects'));
+        } else if(session('roles') == 2){
+            return view('pages.project_manager.projectsList', compact('projects'));
+        } else if(session('roles') == 3){
+            return view('pages.executive.projectsList', compact('projects'));
         }
         return redirect()->route('home');
     }
