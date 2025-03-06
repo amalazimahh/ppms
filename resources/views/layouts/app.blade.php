@@ -33,6 +33,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- D3 sunburst chart -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Apex chart for radial chart -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
     <!-- Additional JS for charts -->

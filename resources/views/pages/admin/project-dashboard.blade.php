@@ -1,34 +1,41 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
 
 @section('content')
+    <style>
+        /* Ensure the card body has a fixed height */
+        .card-body {
+            height: 350px; /* Adjust as needed */
+        }
+
+        /* Style for progress items */
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between items */
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            /* background-color: #f8f9fa; Light background for each item */
+            border-radius: 4px;
+        }
+
+        .progress-item span {
+            font-size: 14px;
+            color: #fffff;
+        }
+    </style>
     <div class="row">
         <!-- Overall Progress -->
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">Overall Progress</h5>
-                    <h2 class="card-title">78%</h2>
                 </div>
                 <div class="card-body">
-                    <canvas id="overallProgressChart"></canvas>
-                    <div class="progress-section mt-3">
-                        <div class="progress-item">
-                            <span>Planning</span>
-                            <span>Completed</span>
-                        </div>
-                        <div class="progress-item">
-                            <span>Design</span>
-                            <span>Completed</span>
-                        </div>
-                        <div class="progress-item">
-                            <span>Development</span>
-                            <span>67%</span>
-                        </div>
-                        <div class="progress-item">
-                            <span>Testing</span>
-                            <span>Waiting</span>
-                        </div>
-                    </div>
+                    <div id="progressChart" style="height: 350px; width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -38,8 +45,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">Risks</h5>
-                    <h2 class="card-title text-danger">8.1%</h2>
-                    <p class="card-category">Currently Over Target Budget</p>
+                    <!-- <h2 class="card-title text-danger">8.1%</h2> -->
                 </div>
                 <div class="card-body">
                     <canvas id="risksChart"></canvas>
@@ -87,9 +93,9 @@
                 <div class="card-header">
                     <h5 class="card-category">Project Budget</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: 300px;">
                     <canvas id="budgetChart"></canvas>
-                    <div class="budget-details mt-3">
+                    <!-- <div class="budget-details mt-3">
                         <div class="budget-item">
                             <span>Total Budget</span>
                             <span>$80K</span>
@@ -102,7 +108,7 @@
                             <span>Remaining</span>
                             <span>$8,770</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -189,22 +195,43 @@
     <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Overall Progress Pie Chart
-            const overallProgressCtx = document.getElementById('overallProgressChart').getContext('2d');
-            new Chart(overallProgressCtx, {
-                type: 'pie',
-                data: {
-                    labels: ['Planning', 'Design', 'Development', 'Testing'],
-                    datasets: [{
-                        data: [100, 100, 67, 0], // Percentages for each category
-                        backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#9E9E9E'],
-                    }]
+            // Overall Progress Radial Chart
+            var options = {
+                series: [78], // Set the progress value (78%)
+                chart: {
+                    height: 350,
+                    type: 'radialBar',
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
-            });
+                plotOptions: {
+                    radialBar: {
+                        hollow: {
+                            size: '70%', // Adjust the size of the hollow area
+                        },
+                        dataLabels: {
+                            name: {
+                                show: true,
+                                fontSize: '16px',
+                                color: '#fff',
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                color: '#fff',
+                                formatter: function (val) {
+                                    return val + "%"; // Display the value with a percentage sign
+                                }
+                            }
+                        }
+                    },
+                },
+                labels: ['Overall Progress'], // Label for the chart
+                colors: ['#4CAF50'], // Color of the radial bar
+            };
+
+            // Render the chart
+            var chart = new ApexCharts(document.querySelector("#progressChart"), options);
+            chart.render();
 
             // Risks Pie Chart
             const risksCtx = document.getElementById('risksChart').getContext('2d');
