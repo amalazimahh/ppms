@@ -70,8 +70,12 @@ Route::middleware(['auth'])->group(function (){
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
     Route::get('/project_manager/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.project_manager.forms.basicdetails')->middleware('auth');
+    Route::get('/project_manager/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.project_manager.project-dashboard')->middleware('auth');
+    Route::get('/project_manager/projectsList', [PageController::class, 'projectList'])->name('pages.project_manager.projectsList')->middleware('auth');
 
     // executive
     Route::get('/executive/dashboard', [PageController::class, 'executiveDashboard'])->name('pages.executive.dashboard')->middleware('auth');
+    Route::get('/executive/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.executive.project-dashboard')->middleware('auth');
+    Route::get('/executive/projectsList', [PageController::class, 'projectList'])->name('pages.executive.projectsList')->middleware('auth');
 
 });
