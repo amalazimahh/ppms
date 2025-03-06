@@ -78,11 +78,38 @@
 
             <!-- sidebar for project manager -->
             @if(session('roles') == 2)
-            <li @if ($pageSlug == 'basicDetails') class="active" @endif>
-                <a href="{{ route('pages.project_manager.forms.basicdetails')  }}">
+            <!-- Project Manager Dashboard -->
+            <li @if ($pageSlug == 'dashboard') class="active" @endif>
+                <a href="{{ route('pages.project_manager.dashboard')  }}">
                     <i class="tim-icons icon-chart-bar-32"></i>
-                    <p>{{ __('Manage Projects') }}</p>
+                    <p>{{ __('Dashboard') }}</p>
                 </a>
+            </li>
+
+            <!-- Manage Projects Tab -->
+            <li>
+                <a data-toggle="collapse" href="#manage-projects" aria-expanded="true">
+                    <i class="fab fa-laravel" ></i>
+                    <span class="nav-link-text" >{{ __('Manage Projects') }}</span>
+                    <b class="caret mt-1"></b>
+                </a>
+
+                <div class="collapse show" id="manage-projects">
+                    <ul class="nav pl-4">
+                        <li @if ($pageSlug == 'project-dashboard') class="active" @endif>
+                            <a href="{{ route('pages.project_manager.project-dashboard')  }}">
+                                <i class="tim-icons icon-chart-pie-36"></i>
+                                <p>{{ __('Project Dashboard') }}</p>
+                            </a>
+                        </li>
+                        <li @if ($pageSlug == 'users') class="active" @endif>
+                            <a href="{{ route('pages.project_manager.projectsList')  }}">
+                                <i class="tim-icons icon-bullet-list-67"></i>
+                                <p>{{ __('Projects List') }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <!-- Notification Tab -->
