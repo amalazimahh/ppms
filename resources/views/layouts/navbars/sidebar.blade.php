@@ -74,6 +74,22 @@
                 </a>
             </li>
 
+            <!-- Notification Tab -->
+            <li @if ($pageSlug == 'notifications') class="active" @endif>
+                <a href="{{ route('pages.admin.user_management')  }}">
+                    <i class="tim-icons icon-badge"></i>
+                    <p>{{ __('Project Team') }}</p>
+                </a>
+            </li>
+
+            <!-- Notification Tab -->
+            <li @if ($pageSlug == 'notifications') class="active" @endif>
+                <a href="{{ route('pages.admin.user_management')  }}">
+                    <i class="tim-icons icon-bus-front-12"></i>
+                    <p>{{ __('Contractors') }}</p>
+                </a>
+            </li>
+
             @endif
 
             <!-- sidebar for project manager -->

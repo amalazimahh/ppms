@@ -55,14 +55,7 @@
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">
                                             <i class="tim-icons icon-trash-simple"></i> Delete
                                         </button>
-
-
-
                                     </td>
-                                    <!-- <td>${{ $project->sv }} </td> -->
-                                    <!-- <td>${{ $project->av }} </td> -->
-                                    <!-- <td> {{ $project->client }} </td> -->
-                                    <!-- <td> {{ $project->status }} </td> -->
                                 </tr>
                             @endforeach
                         </tbody>

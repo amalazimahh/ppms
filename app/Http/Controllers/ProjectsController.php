@@ -56,15 +56,22 @@ class ProjectsController extends Controller
         $mainProjects = Project::whereNull('parent_project_id')->get();
 
         // check if user is Pm
-        if(auth()->user()->roles_id == 2)
+        if(session('roles') == 1)
         {
-            return view('pages.project_manager.forms.basicdetails', compact('statuses', 'projectManagers'));
-        }
-
-        // default to Admin view
-        return view('pages.admin.forms.basicdetails',
+            return view('pages.admin.forms.basicdetails',
             compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
                     'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+        } else if(session('roles') == 2)
+        {
+            return view('pages.project_manager.forms.basicdetails',
+            compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+        } else if(session('roles') == 3)
+        {
+            return view('pages.project_manager.forms.basicdetails',
+            compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+        }
     }
 
     // retrieve project details and pass them to the basic details form
@@ -97,19 +104,35 @@ class ProjectsController extends Controller
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
 
-        // default to Admin view
-        return view('pages.admin.forms.basicdetails', compact(
-            'project',
-            'statuses',
-            'clientMinistries',
-            'projectManagers',
-            'contractors',
-            'architects',
-            'mechanicalElectricals',
-            'civilStructurals',
-            'quantitySurveyors',
-            'mainProjects'
-        ));
+        if(session('roles') == 1){
+            // default to Admin view
+            return view('pages.admin.forms.basicdetails', compact(
+                'project',
+                'statuses',
+                'clientMinistries',
+                'projectManagers',
+                'contractors',
+                'architects',
+                'mechanicalElectricals',
+                'civilStructurals',
+                'quantitySurveyors',
+                'mainProjects'
+            ));
+        } else if(session('roles') == 2){
+            // default to Admin view
+        return view('pages.project_manager.forms.basicdetails', compact(
+                'project',
+                'statuses',
+                'clientMinistries',
+                'projectManagers',
+                'contractors',
+                'architects',
+                'mechanicalElectricals',
+                'civilStructurals',
+                'quantitySurveyors',
+                'mainProjects'
+            ));
+        }
     }
 
     public function destroy($id)

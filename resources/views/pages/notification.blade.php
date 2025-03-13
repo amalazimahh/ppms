@@ -34,10 +34,14 @@
             <div class="mb-3">
               <select id="filterType" class="form-control">
                 <option value="all">All Notifications</option>
-                <option value="update_project_details">Project Updates</option>
                 <option value="new_project">New Projects</option>
                 <option value="new_user">New Users</option>
+                <option value="overbudget_project">Reset Password Request</option>
+                <option value="overbudget_project">Upcoming Deadline Projects</option>
+                <option value="update_project_details">Project Details Updates</option>
+                <option value="update_project_details">Project Status Updates</option>
                 <option value="overbudget_project">Overbudget Projects</option>
+                <option value="overbudget_project">Overdue Projects</option>
               </select>
             </div>
 

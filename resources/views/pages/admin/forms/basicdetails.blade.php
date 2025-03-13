@@ -355,16 +355,16 @@
             let parentId = parentProjectSelect.value;
 
             if (parentId) {
-                fetch(`/admin/projects/${parentId}/getVoteNum`) // ✅ Fetch voteNum from parent
+                fetch(`/admin/projects/${parentId}/getVoteNum`) // fetch voteNum from parent
                     .then(response => response.json())
                     .then(data => {
-                        voteNum.value = data.voteNum; // ✅ Set parent voteNum
-                        voteNum.setAttribute('readonly', 'readonly'); // ✅ Disable input
+                        voteNum.value = data.voteNum; // set parent voteNum
+                        voteNum.setAttribute('readonly', 'readonly'); // disable input
                     })
                     .catch(error => console.error('Error fetching voteNum:', error));
             } else {
-                voteNumField.value = ''; // ✅ Clear field
-                voteNumField.removeAttribute('readonly'); // ✅ Enable input for manual entry
+                voteNumField.value = ''; // clear field
+                voteNumField.removeAttribute('readonly'); // enable input for manual entry
             }
         }
 
