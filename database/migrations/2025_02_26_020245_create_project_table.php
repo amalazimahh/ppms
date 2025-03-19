@@ -21,14 +21,14 @@ return new class extends Migration
             $table->string('siteGazette')->nullable();
             $table->text('scope')->nullable();
             $table->text('location')->nullable();
-            $table->binary('img')->nullable();
+            $table->string('img')->nullable();
             $table->timestamps();
 
             // foreign keys
-            $table->foreignId('statuses_id')->constrained('statuses')->onDelete('cascade');
+            $table->foreignId('statuses_id')->nullable()->constrained('statuses')->onDelete('cascade');
             $table->foreignId('parent_project_id')->nullable()->constrained('project')->onDelete('cascade');
-            $table->foreignId('client_ministry_id')->constrained('client_ministry')->onDelete('cascade');
-            $table->foreignId('project_team_id')->constrained('project_team')->onDelete('cascade');
+            $table->foreignId('client_ministry_id')->nullable()->constrained('client_ministry')->onDelete('cascade');
+            $table->foreignId('project_team_id')->nullable()->constrained('project_team')->onDelete('cascade');
 
             // users
             $table->bigInteger('oic')->unsigned()->nullable();

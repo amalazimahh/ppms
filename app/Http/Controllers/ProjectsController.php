@@ -24,7 +24,8 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = Project::all();
-        return view('pages.admin.projectsList', compact('projects'));
+        $mainProjects = Project::whereNull('parent_project_id')->get();
+        return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
     }
 
     public function basicdetails()
@@ -192,20 +193,15 @@ class ProjectsController extends Controller
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
-            'statuses_id' => 'required|integer',
-            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
-            'oic' => 'required|integer',
-            'client_ministry_id' => 'required|integer',
-            'contractor_id' => 'nullable|integer|exists:contractor,id',
-            'contractorNum' => 'nullable|string',
             'siteGazette' => 'nullable|string',
-            'soilInv' => 'nullable|date',
-            'topoSurvey' => 'nullable|date',
-            'handover' => 'nullable|date',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
+            'statuses_id' => 'nullable|integer',
+            'parent_project_id' => 'nullable|exists:project,id',
+            'client_ministry_id' => 'nullable|integer',
+            'oic' => 'nullable|integer',
             'architect_id' => 'nullable|integer',
             'mechanical_electrical_id' => 'nullable|integer',
             'civil_structural_id' => 'nullable|integer',
@@ -233,19 +229,6 @@ class ProjectsController extends Controller
 
         // get the last customID
         $lastProject = Project::latest('id')->first();
-        // $newCustomID = 'P'.sprintf('%03d', ($lastProject ? substr($lastProject->customID, 1) : 0) + 1);
-
-        // create default project team entry if it doesn't exist
-        // $projectTeam = ProjectTeam::updateOrCreate(
-        //     ['id' => $request->project_team_id],
-        //     [
-        //     'architect_id' => $request->architect,
-        //     'mechanical_electrical_id' => $request->me,
-        //     'civil_structural_id' => $request->cs,
-        //     'quantity_surveyor_id' => $request->qs,
-        //     'others_id' => $request->others,
-        //     ]
-        // );
 
         $projectTeam = null;
 
@@ -275,20 +258,15 @@ class ProjectsController extends Controller
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,
-            'statuses_id' => $request['statuses_id'],
-            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
-            'oic' => $request['oic'], // Project Manager
-            'client_ministry_id' => $request['client_ministry_id'],
-            'contractor_id' => $request['contractor_id'] ?? null,
-            'contractorNum' => $request['contractorNum'] ?? null,
             'siteGazette' => $request['siteGazette'],
-            'soilInv' => $request['soilInv'],
-            'topoSurvey' => $request['topoSurvey'],
-            'handover' => $request['handover'],
             'scope' => $request['scope'],
             'location' => $request['location'],
+            'statuses_id' => $request['statuses_id'],
+            'parent_project_id' => $request['parent_project_id'],
+            'client_ministry_id' => $request['client_ministry_id'],
+            'oic' => $request['oic'], // Project Manager
             'project_team_id' => $projectTeam->id,
             'created_by' => auth()->id(),
         ]);

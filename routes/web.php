@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
     Route::get('/admin/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::post('/admin/basicdetails/store', [ProjectsController::class, 'store'])->name('pages.admin.forms.basicdetails.store')->middleware('auth');
+    Route::post('/projects/store', [ProjectsController::class, 'store'])->name('projects.store')->middleware('auth');
     Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
     Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
     Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');

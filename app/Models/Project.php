@@ -14,17 +14,13 @@ class Project extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'fy', 'sv', 'av', 'statuses_id', 'parent_project_id', 'voteNum',
-        'title', 'oic', 'client_ministry_id', 'contractor_id', 'contractorNum',
-        'siteGazette', 'soilInv', 'topoSurvey', 'handover',
-        'scope', 'location', 'img', 'project_team_id',
+        'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
+        'scope', 'location', 'statuses_id', 'parent_project_id',
+        'client_ministry_id', 'oic', 'img', 'project_team_id',
         'created_by', 'created_at', 'updated_at'
     ];
 
     protected $casts = [
-        'soilInv' => 'date',
-        'topoSurvey' => 'date',
-        'handover' => 'date',
         'created_at' => 'date',
         'updated_at' => 'date',
     ];
