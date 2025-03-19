@@ -25,6 +25,8 @@ return new class extends Migration
             $table->date('jkmkkp_approval')->nullable();
             $table->date('loa')->nullable();
             $table->date('aac')->nullable();
+            $table->date('soilInv')->nullable();
+            $table->date('topoSurvey')->nullable();
             $table->timestamps();
         });
     }
