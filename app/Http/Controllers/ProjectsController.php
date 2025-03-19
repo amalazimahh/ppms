@@ -415,9 +415,35 @@ class ProjectsController extends Controller
     public function getVoteNum($id)
     {
         $parentProject = Project::findOrFail($id);
-        return response()->json(['voteNum' => $parentProject->voteNum]); // ✅ Return correct voteNum
+        return response()->json(['voteNum' => $parentProject->voteNum]); // return correct voteNum
     }
 
+    public function view($id)
+    {
+        //fetch project details
+        $project = Project::findOrFail($id);
+
+        //fetch related data
+        $statuses = Status::all();
+        $mainProjects = Project::whereNull('parent_project_id')->get();
+        $clientMinistries = ClientMinistry::all();
+        $architects = Architect::all();
+        $civilStructurals = CivilStructural::all();
+        $mechanicalElectricals = MechanicalElectrical::all();
+        $quantitySurveyors = QuantitySurveyor::all();
+
+        return view('pages.view_project', [
+            'project' => $project,
+            'statuses' => $statuses,
+            'mainProjects' => $mainProjects,
+            'clientMinistries' => $clientMinistries,
+            'architects' => $architects,
+            'civilStructurals' => $civilStructurals,
+            'mechanicalElectricals' => $mechanicalElectricals,
+            'quantitySurveyors' => $quantitySurveyors,
+        ]);
+
+    }
 
 
 

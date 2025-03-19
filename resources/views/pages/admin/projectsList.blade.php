@@ -41,7 +41,6 @@
                             <th> Financial Year </th>
                             <th> Project Vote </th>
                             <th> Title </th>
-                            <th> Officer in Charge </th>
                             <th> Action </th>
                         </thead>
                         <tbody>
@@ -50,11 +49,10 @@
                                     <td> {{ $project->fy }} </td>
                                     <td> {{ $project->voteNum }} </td>
                                     <td> {{ $project->title }} </td>
-                                    <td></td>
                                     <td>
-                                        <!-- edit and delete buton should be here -->
-                                         <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-info btn-sm">
-                                            <i class="tim-icons icon-pencil"></i> Edit
+                                        <!-- view details and delete buton should be here -->
+                                         <a href="{{ route('pages.view_project', $project->id) }}" class="btn btn-info btn-sm">
+                                            <i class="tim-icons icon-zoom-split"></i> View Details
                                          </a>
 
                                          <!-- Delete Button -->
