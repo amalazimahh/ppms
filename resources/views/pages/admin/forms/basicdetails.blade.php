@@ -149,29 +149,6 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="contractor_id" class="col-sm-2 col-form-label">Main Contractor</label>
-                    <div class="col-sm-10">
-                        <select id="contractor_id" name="contractor_id" class="form-control">
-                            <option value="" disabled selected>-- Select Main Contractor --</option>
-                            @foreach($contractors as $contractor)
-                                <option value="{{ $contractor->id }}"
-                                {{ old('contractor', isset($project) ? $project->contractor_id : '') == $contractor->id ? 'selected' : '' }}>
-                                    {{ $contractor->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="contractorNum" class="col-sm-2 col-form-label">Contractor No.</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="contractorNum" id="contractorNum" placeholder="BSB/DOD/VI.1/2021"
-                        value="{{ old('contractorNum', isset($project) ? $project->contractorNum : '') }}">
-                    </div>
-                </div>
-
-                <div class="row mb-3">
                     <label for="siteGazette" class="col-sm-2 col-form-label">Site Gazette</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="siteGazette" id="siteGazette" placeholder="Gaz Lot 4054 EDR11247"
@@ -179,29 +156,13 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <label for="soilInv" class="col-sm-2 col-form-label">Soil Investigation</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" name="soilInv" id="soilInv"
-                            value="{{ old('soilInv', isset($project) ? $project->soilInv : '') }}">
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="topoSurvey" class="col-sm-2 col-form-label">Topo Survey</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" name="topoSurvey" id="topoSurvey"
-                            value="{{ old('topoSurvey', isset($project) ? $project->topoSurvey : '') }}">
-                    </div>
-                </div>
-
-                <div class="row mb-3">
+                <!-- <div class="row mb-3">
                     <label for="handover" class="col-sm-2 col-form-label">Handover Project</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" name="handover" id="handover"
                         value="{{ old('handover', isset($project) ? $project->handover : '') }}">
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row mb-3">
                     <label for="scope" class="col-sm-2 col-form-label">Scope</label>

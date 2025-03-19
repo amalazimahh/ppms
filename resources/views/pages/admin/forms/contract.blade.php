@@ -35,6 +35,30 @@
         <div class="card-body">
             <form action="" method="POST" enctype="multipart/form-data">
                 @csrf
+
+                <div class="row mb-3">
+                    <label for="contractor_id" class="col-sm-2 col-form-label">Main Contractor</label>
+                    <div class="col-sm-10">
+                        <select id="contractor_id" name="contractor_id" class="form-control">
+                            <option value="" disabled selected>-- Select Main Contractor --</option>
+                            @foreach($contractors as $contractor)
+                                <option value="{{ $contractor->id }}"
+                                {{ old('contractor', isset($project) ? $project->contractor_id : '') == $contractor->id ? 'selected' : '' }}>
+                                    {{ $contractor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="contractorNum" class="col-sm-2 col-form-label">Contractor No.</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="contractorNum" id="contractorNum" placeholder="BSB/DOD/VI.1/2021"
+                        value="{{ old('contractorNum', isset($project) ? $project->contractorNum : '') }}">
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <label for="start" class="col-sm-2 col-form-label">Contract Start Date</label>
                     <div class="col-sm-10">

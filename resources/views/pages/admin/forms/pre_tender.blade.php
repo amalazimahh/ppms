@@ -112,6 +112,22 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <label for="soilInv" class="col-sm-2 col-form-label">Soil Investigation</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="soilInv" id="soilInv"
+                            value="{{ old('soilInv', isset($project) ? $project->soilInv : '') }}">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="topoSurvey" class="col-sm-2 col-form-label">Topo Survey</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="topoSurvey" id="topoSurvey"
+                            value="{{ old('topoSurvey', isset($project) ? $project->topoSurvey : '') }}">
+                    </div>
+                </div>
+
                 <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
                 <a href="{{ route('projects.design_submission', $project->id) }}" class="btn btn-primary">Next</a>
