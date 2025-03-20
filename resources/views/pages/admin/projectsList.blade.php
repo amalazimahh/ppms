@@ -50,10 +50,15 @@
                                     <td> {{ $project->voteNum }} </td>
                                     <td> {{ $project->title }} </td>
                                     <td>
-                                        <!-- view details and delete buton should be here -->
+                                        <!-- view details button here -->
                                          <a href="{{ route('pages.view_project', $project->id) }}" class="btn btn-info btn-sm">
                                             <i class="tim-icons icon-zoom-split"></i> View Details
                                          </a>
+
+                                         <!-- edit forms button -->
+                                         <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm">
+                                             <i class="tim-icons icon-pencil"></i> Edit
+                                          </a>
 
                                          <!-- Delete Button -->
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">

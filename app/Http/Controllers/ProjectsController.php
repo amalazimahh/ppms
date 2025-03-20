@@ -28,8 +28,11 @@ class ProjectsController extends Controller
         return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
     }
 
-    public function basicdetails()
+    public function basicdetails($id)
     {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
         // retrieve list of statuses
         $statuses = Status::all();
 
@@ -60,7 +63,7 @@ class ProjectsController extends Controller
         if(session('roles') == 1)
         {
             return view('pages.admin.forms.basicdetails',
-            compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
+            compact('project', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
                     'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
         } else if(session('roles') == 2)
         {
@@ -156,6 +159,28 @@ class ProjectsController extends Controller
         return view('pages.admin.forms.pre_tender', compact('project'));
     }
 
+    // add  pre_tender method to handle form
+    public function project_team($id)
+    {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
+        // retrieve lists of architect
+        $architects = Architect::all();
+
+        // retrieve lists of mechanical electrical
+        $mechanicalElectricals = MechanicalElectrical::all();
+
+        // retrieve lists of civil structural
+        $civilStructurals = CivilStructural::all();
+
+        // retrieve lists of quantity surveyor
+        $quantitySurveyors = QuantitySurveyor::all();
+
+
+        return view('pages.admin.forms.project_team', compact('project', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
+    }
+
     // add designSubmission method to handle form
     public function designSubmission($id)
     {
@@ -174,13 +199,51 @@ class ProjectsController extends Controller
         return view('pages.admin.forms.tender', compact('project'));
     }
 
+    // add tender recommendation method to handle form
+    public function tender_recommendation($id)
+    {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
+        return view('pages.admin.forms.tender_recommendation', compact('project'));
+    }
+
+     // add approval of award method to handle form
+     public function approval_award($id)
+     {
+         // fetch project details using the ID
+         $project = Project::findOrFail($id);
+
+         return view('pages.admin.forms.approval_award', compact('project'));
+     }
+
     // add contract method to handle form
     public function contract($id)
     {
         // fetch project details using the ID
         $project = Project::findOrFail($id);
+        // retrieve lists of main contractors
+        $contractors = Contractor::all();
 
-        return view('pages.admin.forms.contract', compact('project'));
+        return view('pages.admin.forms.contract', compact('project', 'contractors'));
+    }
+
+    // add bankers guarantee method to handle form
+    public function bankers_guarantee($id)
+    {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
+        return view('pages.admin.forms.bankers_guarantee', compact('project'));
+    }
+
+    // add insurance method to handle form
+    public function insurance($id)
+    {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
+        return view('pages.admin.forms.insurance', compact('project'));
     }
 
     // store basicdetails form

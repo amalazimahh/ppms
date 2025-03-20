@@ -113,7 +113,6 @@
                 <!-- Basic Details Tab -->
                 <div class="tab-pane fade show active" id="basic-details" role="tabpanel" aria-labelledby="basic-details-tab">
                     @include('pages.form_details.view_basicdetails', ['project' => $project])
-                    <a href="#" onclick="loadEditForm(' {{ route('projects.edit', ['id' => $project->id, 'form' => 'basicdetails']) }}')" class="btn btn-primary">Edit</a>
                 </div>
 
                 <!-- Pre-Tender Tab -->

@@ -28,8 +28,8 @@
         }
     </style>
 
-    <!-- Progress Bar -->
-    <div class="progress" style="height: 20px;">
+   <!-- Progress Bar -->
+   <div class="progress" style="height: 20px;">
         <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
@@ -56,75 +56,57 @@
 
     <div class="card">
         <div class="card-header mb-2">
-            <h1 class="card-title">Design Form</h1>
+            <h1 class="card-title">Approval of Award</h1>
         </div>
         <div class="card-body">
             <form action="" method="POST" enctype="multipart/form-data">
                 @csrf
-                <!-- first row -->
-                <!-- <div class="form-row"> -->
-                    <!-- financial year -->
-                    <div class="row mb-3">
-                    <label for="kom" class="col-sm-2 col-form-label">Kick Off Meeting</label>
+                <div class="row mb-3">
+                    <label for="loaIssued" class="col-sm-2 col-form-label">Letter of Award Issued</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="kom" id="kom">
+                        <input type="date" class="form-control" name="loaIssued" id="loaIssued">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="conAppr" class="col-sm-2 col-form-label">Concept Approval</label>
+                    <label for="loa" class="col-sm-2 col-form-label">Letter of Award (LOA)</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="conAppr" id="conAppr">
+                        <input type="date" class="form-control" name="loa" id="loa">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="designRev" class="col-sm-2 col-form-label">Design Review</label>
+                    <label for="ladDay" class="col-sm-2 col-form-label">Liquidated Ascertained Damages (LAD)</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="designRev" id="designRev">
+                        <input type="date" class="form-control" name="ladDay" id="ladDay">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="detailedRev" class="col-sm-2 col-form-label">Detailed Design Review</label>
+                    <label for="docPrep" class="col-sm-2 col-form-label">Document Preparation</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="detailedRev" id="detailedRev">
+                        <input type="date" class="form-control" name="docPrep" id="docPrep">
                     </div>
                 </div>
 
-                <a href="{{ route('projects.project_team', $project->id) }}" class="btn btn-primary">Back</a>
+                <div class="row mb-3">
+                    <label for="conSigned" class="col-sm-2 col-form-label">Contract Signed Date</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="conSigned" id="conSigned">
+                    </div>
+                </div>
+
+                <a href="{{ route('projects.tender_recommendation', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
-                <a href="{{ route('projects.tender', $project->id) }}" class="btn btn-primary">Next</a>
+                <a href="{{ route('projects.contract', $project->id) }}" class="btn btn-primary">Next</a>
             </form>
         </div>
     </div>
 
     <!-- handles financial year, amount user enters -->
     <script>
-    function formatFinancialYear(input)
-    {
-        //remove non-digit input
-        let value = input.value.replace(/\D/g, '');
-
-        // if length > 4, insert /
-        if(value.length > 4)
-        {
-            value = value.slice(0,4) + '/' + value.slice(4,8);
-        }
-
-        input.value = value;
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        new Cleave('#sv', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#av', {
+        new Cleave('#costAmt', {
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
             prefix: '$',

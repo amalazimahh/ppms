@@ -53,17 +53,22 @@ Route::middleware(['auth'])->group(function (){
     // admin
     Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
     Route::get('/admin/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
-    Route::get('/admin/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
+    Route::get('/admin/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::post('/admin/basicdetails/store', [ProjectsController::class, 'store'])->name('pages.admin.forms.basicdetails.store')->middleware('auth');
     Route::post('/projects/store', [ProjectsController::class, 'store'])->name('projects.store')->middleware('auth');
     Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
     Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
     Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
     Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
+    Route::get('admin/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team')->middleware('auth');
     Route::get('admin/projects/{id}/pre_tender', [ProjectsController::class, 'pre_tender'])->name('projects.pre_tender')->middleware('auth');
     Route::get('admin/projects/{id}/design_submission', [ProjectsController::class, 'designSubmission'])->name('projects.design_submission')->middleware('auth');
     Route::get('admin/projects/{id}/tender', [ProjectsController::class, 'tender'])->name('projects.tender')->middleware('auth');
+    Route::get('admin/projects/{id}/tender_recommendation', [ProjectsController::class, 'tender_recommendation'])->name('projects.tender_recommendation')->middleware('auth');
+    Route::get('admin/projects/{id}/approval_award', [ProjectsController::class, 'approval_award'])->name('projects.approval_award')->middleware('auth');
     Route::get('admin/projects/{id}/contract', [ProjectsController::class, 'contract'])->name('projects.contract')->middleware('auth');
+    Route::get('admin/projects/{id}/bankers_guarantee', [ProjectsController::class, 'bankers_guarantee'])->name('projects.bankers_guarantee')->middleware('auth');
+    Route::get('admin/projects/{id}/insurance', [ProjectsController::class, 'insurance'])->name('projects.insurance')->middleware('auth');
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
     Route::post('/pre_tender/store', [PreTenderController::class, 'store'])->name('pre_tender.store')->middleware('auth');
     Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');

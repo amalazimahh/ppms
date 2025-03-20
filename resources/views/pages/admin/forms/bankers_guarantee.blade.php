@@ -56,67 +56,51 @@
 
     <div class="card">
         <div class="card-header mb-2">
-            <h1 class="card-title">Design Form</h1>
+            <h1 class="card-title">Banker's Guarantee Form</h1>
         </div>
         <div class="card-body">
             <form action="" method="POST" enctype="multipart/form-data">
                 @csrf
-                <!-- first row -->
-                <!-- <div class="form-row"> -->
-                    <!-- financial year -->
-                    <div class="row mb-3">
-                    <label for="kom" class="col-sm-2 col-form-label">Kick Off Meeting</label>
+
+                <div class="row mb-3">
+                    <label for="bgAmt" class="col-sm-2 col-form-label">Banker's Guarantee Amount</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="kom" id="kom">
+                        <input type="text" class="form-control" name="bgAmt" id="bgAmt">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="conAppr" class="col-sm-2 col-form-label">Concept Approval</label>
+                    <label for="bgIssued" class="col-sm-2 col-form-label">Banker's Guarantee Issued</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="conAppr" id="conAppr">
+                        <input type="date" class="form-control" name="bgIssued" id="bgIssued">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="designRev" class="col-sm-2 col-form-label">Design Review</label>
+                    <label for="bgExpiry" class="col-sm-2 col-form-label">Banker's Guarantee Expiry</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="designRev" id="designRev">
+                        <input type="date" class="form-control" name="bgExpiry" id="bgExpiry">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="detailedRev" class="col-sm-2 col-form-label">Detailed Design Review</label>
+                    <label for="bgExt" class="col-sm-2 col-form-label">Banker's Guarantee Extended</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="detailedRev" id="detailedRev">
+                        <input type="date" class="form-control" name="bgExt" id="bgExt">
                     </div>
                 </div>
 
-                <a href="{{ route('projects.project_team', $project->id) }}" class="btn btn-primary">Back</a>
+                <a href="{{ route('projects.contract', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
-                <a href="{{ route('projects.tender', $project->id) }}" class="btn btn-primary">Next</a>
+                <a href="{{ route('projects.insurance', $project->id) }}" class="btn btn-primary">Next</a>
             </form>
         </div>
     </div>
 
     <!-- handles financial year, amount user enters -->
     <script>
-    function formatFinancialYear(input)
-    {
-        //remove non-digit input
-        let value = input.value.replace(/\D/g, '');
-
-        // if length > 4, insert /
-        if(value.length > 4)
-        {
-            value = value.slice(0,4) + '/' + value.slice(4,8);
-        }
-
-        input.value = value;
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        new Cleave('#sv', {
+        new Cleave('#sum', {
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
             prefix: '$',
@@ -124,7 +108,47 @@
             numeralPositiveOnly: true,
         });
 
-        new Cleave('#av', {
+        new Cleave('#revSum', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#lad', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#totalLad', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#penAmt', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#retAmt', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#bgAmt', {
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
             prefix: '$',
