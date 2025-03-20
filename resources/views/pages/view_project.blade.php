@@ -5,12 +5,13 @@
     /* Vertical Tabs Styling */
     .vertical-tabs {
         display: flex;
+        align-items: flex-start;
     }
 
     .nav-tabs {
         flex-direction: column;
         border-bottom: none;
-        width: 200px; /* Fixed width for tabs */
+        width: 330px; /* Fixed width for tabs */
         flex-shrink: 0; /* Prevent tabs from shrinking */
     }
 
@@ -37,8 +38,12 @@
     }
 
     .tab-content {
-        padding: 20px;
-        overflow: auto; /* Ensure content scrolls if it overflows */
+        flex-grow: 1;
+        width: calc(100% - 250px); /* Adjust according to nav-tabs width */
+        padding: 5px 20px 20px 20px;
+        border: 1px solid #dee2e6;
+        min-height: 400px; /* Prevent collapsing */
+        box-sizing: border-box;
     }
 </style>
 
