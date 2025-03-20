@@ -41,7 +41,7 @@
         flex-grow: 1;
         width: calc(100% - 250px); /* Adjust according to nav-tabs width */
         padding: 5px 20px 20px 20px;
-        border: 1px solid #dee2e6;
+        border: 2px solid #dee2e6;
         min-height: 400px; /* Prevent collapsing */
         box-sizing: border-box;
     }
@@ -113,7 +113,7 @@
                 <!-- Basic Details Tab -->
                 <div class="tab-pane fade show active" id="basic-details" role="tabpanel" aria-labelledby="basic-details-tab">
                     @include('pages.form_details.view_basicdetails', ['project' => $project])
-                    <a href="{{ route('projects.edit', ['id' => $project->id, 'form' => 'basicdetails' ]) }}" class="btn btn-primary">Edit</a>
+                    <a href="#" onclick="loadEditForm(' {{ route('projects.edit', ['id' => $project->id, 'form' => 'basicdetails']) }}')" class="btn btn-primary">Edit</a>
                 </div>
 
                 <!-- Pre-Tender Tab -->
@@ -167,4 +167,15 @@
 
 <!-- Include Bootstrap JS for tabs functionality -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function loadEditForm(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            // Inject the edit form into the tab content
+            document.getElementById('basic-details').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading the edit form:', error));
+}
+</script>
 @endsection

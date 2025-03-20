@@ -119,21 +119,6 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="oic" class="col-sm-2 col-form-label">Officer in Charge</label>
-                    <div class="col-sm-10">
-                        <select id="oic" name="oic" class="form-control">
-                            <option disabled selected>-- Select Project Manager --</option>
-                            @foreach($projectManagers as $manager)
-                                <option value="{{ $manager->id }}"
-                                    {{ old('oic', isset($project) ? $project->user_id : '') == $manager->id ? 'selected' : '' }}>
-                                    {{ $manager->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
                     <label for="client_ministry_id" class="col-sm-2 col-form-label">Client Ministry</label>
                     <div class="col-sm-10">
                         <select id="client_ministry_id" name="client_ministry_id" class="form-control">
@@ -262,12 +247,7 @@
                 @endif
 
                 <button type="submit" class="btn btn-primary">{{ isset($project) ? 'Update' : 'Submit' }}</button>
-
-                @if(isset($project))
-                <a href="{{ route('projects.pre_tender', $project->id) }}" class="btn btn-primary">
-                    Next
-                </a>
-                @endif
+                <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
             </form>
         </div>
     </div>

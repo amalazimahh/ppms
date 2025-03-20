@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="contractorNum" class="col-sm-2 col-form-label">Contractor No.</label>
+                    <label for="contractorNum" class="col-sm-2 col-form-label">Contract No.</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="contractorNum" id="contractorNum" placeholder="BSB/DOD/VI.1/2021"
                         value="{{ old('contractorNum', isset($project) ? $project->contractorNum : '') }}">
