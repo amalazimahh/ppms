@@ -34,38 +34,13 @@
     </div>
     <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
 
-    <!-- Project Status & Milestone Selection -->
-    <div class="row mb-3">
-        <label for="status" class="col-sm-2 col-form-label">Project Stage:</label>
-        <div class="col-sm-4">
-            <select id="status" name="status_id" class="form-control" onchange="updateMilestones(this.value)">
-                @foreach($statuses as $status)
-                    <option value="{{ $status->id }}" {{ $project->status_id == $status->id ? 'selected' : '' }}>
-                        {{ $status->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <label for="milestone" class="col-sm-2 col-form-label">Milestone:</label>
-        <div class="col-sm-4">
-            <select id="milestone" name="milestone_id" class="form-control">
-                @foreach($milestones as $milestone)
-                    <option value="{{ $milestone->id }}" {{ $project->milestone_id == $milestone->id ? 'selected' : '' }}>
-                        {{ $milestone->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-
-
     <!-- Dropdown Navigation (for jumping between forms) -->
     <div class="row mb-3">
-        <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to Form: </label>
+        <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to: </label>
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
                 <option disabled selected>-- Select Form --</option>
+                <option value="{{ route('projects.status', $project->id) }}">Project Status</option>
                 <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">Project Terms of Reference Form</option>
                 <option value="{{ route('projects.pre_tender', $project->id) }}">Pre-Design Form</option>
                 <option value="{{ route('projects.project_team', $project->id) }}">Project Team Form</option>

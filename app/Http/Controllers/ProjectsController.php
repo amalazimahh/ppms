@@ -177,7 +177,6 @@ class ProjectsController extends Controller
         // retrieve lists of quantity surveyor
         $quantitySurveyors = QuantitySurveyor::all();
 
-
         return view('pages.admin.forms.project_team', compact('project', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
     }
 

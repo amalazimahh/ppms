@@ -24,7 +24,7 @@ class Milestone extends Model
         'updated_at' => 'date',
     ];
 
-    public function stage(){
+    public function status(){
         return $this->belongsTo(Status::class, 'statuses_id');
     }
 }
