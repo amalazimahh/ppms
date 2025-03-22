@@ -272,15 +272,15 @@ class ProjectsController extends Controller
             'others_id' => 'nullable|string',
         ]);
 
-        // Clean up the sv and av fields (remove dollar signs and commas)
+        // remove dollar signs and commas sv and av fields (clean values)
         $sv = preg_replace('/[^\d.]/', '', $request->input('sv'));
         $av = preg_replace('/[^\d.]/', '', $request->input('av'));
 
-        // Log to verify cleaned values
+        // log to verify cleaned values
         Log::info('Cleaned sv: ' . $sv);
         Log::info('Cleaned av: ' . $av);
 
-        // Log to see if the file is present in the request
+        // log to see if the file is present in the request
         if ($request->hasFile('img')) {
             Log::info('File Uploaded: ' . $request->file('img')->getClientOriginalName());
             $imgPath = $request->file('img')->store('images', 'public');
@@ -295,7 +295,7 @@ class ProjectsController extends Controller
 
         $projectTeam = null;
 
-        // Create a new Project Team if at least one role is filled
+        // create a new Project Team if at least one role is filled
         $projectTeam = ProjectTeam::create([
                 'architect_id' => $request['architect_id'] ?? null,
                 'mechanical_electrical_id' => $request['mechanical_electrical_id'] ?? null,

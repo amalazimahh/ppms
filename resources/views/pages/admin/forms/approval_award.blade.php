@@ -34,6 +34,7 @@
     </div>
     <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
 
+
     <!-- Dropdown Navigation (for jumping between forms) -->
     <div class="row mb-3">
         <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to Form: </label>

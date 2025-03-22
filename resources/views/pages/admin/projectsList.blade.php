@@ -38,17 +38,24 @@
                 <div class="table-responsive">
                     <table class="table">
                         <thead class=" text-primary">
-                            <th> Financial Year </th>
-                            <th> Project Vote </th>
-                            <th> Title </th>
-                            <th> Action </th>
+                            <tr>
+                                <th>Financial Year</th>
+                                <th>Title</th>
+                                <th>Progress</th>
+                                <th>Action</th>
+                            </tr>
                         </thead>
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr>
                                     <td> {{ $project->fy }} </td>
-                                    <td> {{ $project->voteNum }} </td>
                                     <td> {{ $project->title }} </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            0%
+                                        </div>
+                                    </td>
                                     <td>
                                         <!-- view details button here -->
                                          <a href="{{ route('pages.view_project', $project->id) }}" class="btn btn-info btn-sm">
@@ -64,14 +71,7 @@
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">
                                             <i class="tim-icons icon-trash-simple"></i> Delete
                                         </button>
-
-
-
                                     </td>
-                                    <!-- <td>${{ $project->sv }} </td> -->
-                                    <!-- <td>${{ $project->av }} </td> -->
-                                    <!-- <td> {{ $project->client }} </td> -->
-                                    <!-- <td> {{ $project->status }} </td> -->
                                 </tr>
                             @endforeach
                         </tbody>

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CivilStructuralTableSeeder::class,
             QuantitySurveyorTableSeeder::class,
             StatusSeeder::class,
+            MilestoneSeeder::class,
         ]);
     }
 }

@@ -20,7 +20,7 @@ class Status extends Model
 
     public $timestamps = false;
 
-    // public function projects(){
-    //     return $this->hasMany(Project::class);
-    // }
+    public function milestones(){
+         return $this->hasMany(Milestone::class, 'statuses_id');
+    }
 }

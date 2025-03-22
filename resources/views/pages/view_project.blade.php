@@ -57,6 +57,12 @@
             <!-- Tab Navigation -->
             <ul class="nav nav-tabs" id="projectTabs" role="tablist">
                 <li class="nav-item">
+                    <a class="nav-link" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="false">
+                        Project Status
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link active" id="basic-details-tab" data-toggle="tab" href="#basic-details" role="tab" aria-controls="basic-details" aria-selected="true">
                         i. Basic Details
                     </a>
@@ -110,6 +116,26 @@
 
             <!-- Tab Content -->
             <div class="tab-content" id="projectTabsContent">
+                <div class="tab-pane fade" id="status" role="tabpanel" aria-labelledby="status-tab">
+                    <form action="" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <label for="status">Project Stage:</label>
+                        <select id="status" name="status_id" class="form-control">
+
+                        </select>
+
+                        <label for="milestone">Milestone:</label>
+                        <select id="milestone" name="milestone_id" class="form-control">
+
+                        </select>
+
+                        <button type="submit" class="btn btn-primary mt-3">Update Status</button>
+                    </form>
+                </div>
+
+
                 <!-- Basic Details Tab -->
                 <div class="tab-pane fade show active" id="basic-details" role="tabpanel" aria-labelledby="basic-details-tab">
                     @include('pages.form_details.view_basicdetails', ['project' => $project])
