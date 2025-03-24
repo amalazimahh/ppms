@@ -371,25 +371,16 @@ class ProjectsController extends Controller
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
-            'statuses_id' => 'required|integer',
-            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
-            'oic' => 'required|integer',
-            'client_ministry_id' => 'required|integer',
-            'contractor_id' => 'nullable|integer|exists:contractor,id',
-            'contractorNum' => 'nullable|string',
             'siteGazette' => 'nullable|string',
-            'soilInv' => 'nullable|date',
-            'topoSurvey' => 'nullable|date',
-            'handover' => 'nullable|date',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
-            'architect_id' => 'nullable|integer',
-            'mechanical_electrical_id' => 'nullable|integer',
-            'civil_structural_id' => 'nullable|integer',
-            'quantity_surveyor_id' => 'nullable|integer',
-            'others_id' => 'nullable|string',
+            // img
+            'statuses_id' => 'nullable|integer',
+            'parent_project_id' => 'nullable|exists:project,id',
+            'client_ministry_id' => 'nullable|integer',
+            'project_team_id' => 'nullable|integer',
         ]);
 
         // Clean up the sv and av fields (remove dollar signs and commas)
@@ -436,21 +427,17 @@ class ProjectsController extends Controller
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,
-            'statuses_id' => $request['statuses_id'],
-            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
-            'oic' => $request['oic'], // Project Manager
-            'client_ministry_id' => $request['client_ministry_id'],
-            'contractor_id' => $request['contractor_id'] ?? null,
-            'contractorNum' => $request['contractorNum'] ?? null,
             'siteGazette' => $request['siteGazette'],
-            'soilInv' => $request['soilInv'],
-            'topoSurvey' => $request['topoSurvey'],
-            'handover' => $request['handover'],
             'scope' => $request['scope'],
             'location' => $request['location'],
+            // img
+            'statuses_id' => $request['statuses_id'],
+            'parent_project_id' => $request['parent_project_id'],
+            'client_ministry_id' => $request['client_ministry_id'],
             'project_team_id' => $projectTeam->id,
+            'created_by' =>  auth()->id(),
         ]);
 
         $message = Str::limit($project->title . ' has been modified.', 250);

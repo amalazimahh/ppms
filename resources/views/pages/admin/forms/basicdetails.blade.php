@@ -96,21 +96,6 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <label for="statuses_id" class="col-sm-2 col-form-label">Status</label>
-                    <div class="col-sm-10">
-                        <select id="statuses_id" name="statuses_id" class="form-control">
-                            <option disabled selected>-- Select status stage --</option>
-                            @foreach($statuses as $status)
-                                <option value="{{ $status->id }}"
-                                    {{ ($project->status_id ?? old('status')) == $status->id ? 'selected' : '' }}>
-                                    {{ $status->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
                 <input type="hidden" name="parent_project_id" value="{{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') }}">
 
                 <div class="row mb-3">
