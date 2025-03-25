@@ -32,16 +32,16 @@
           <div class="card-body">
             <!-- Filter dropdown -->
             <div class="mb-3">
-              <select id="filterType" class="form-control">
-                <option value="all">All Notifications</option>
-                <option value="new_project">New Projects</option>
-                <option value="new_user">New Users</option>
-                <option value="overbudget_project">Reset Password Request</option>
-                <option value="overbudget_project">Upcoming Deadline Projects</option>
-                <option value="update_project_details">Project Details Updates</option>
-                <option value="update_project_details">Project Status Updates</option>
-                <option value="overbudget_project">Overbudget Projects</option>
-                <option value="overbudget_project">Overdue Projects</option>
+              <select id="filterType" class="form-control" onchange="window.location.href = this.value">
+                <option value="{{ route('pages.notification.index') }}" {{ !request()->has('type') ? 'selected' : '' }}>All Notifications</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'new_project']) }}" {{ request('type') == 'new_project' ? 'selected' : '' }}>New Projects</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'new_user']) }}" {{ request('type') == 'new_user' ? 'selected' : '' }}>New Users</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'reset_password']) }}" {{ request('type') == 'reset_password' ? 'selected' : '' }}>Reset Password Request</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'upcoming_deadline']) }}" {{ request('type') == 'upcoming_deadline' ? 'selected' : '' }}>Upcoming Deadline Projects</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'update_project_details']) }}" {{ request('type') == 'update_project_details' ? 'selected' : '' }}>Project Details Updates</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'update_project_status']) }}" {{ request('type') == 'update_project_status' ? 'selected' : '' }}>Project Status Updates</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'overbudget']) }}" {{ request('type') == 'overbudget' ? 'selected' : '' }}>Overbudget Projects</option>
+                <option value="{{ route('pages.notification.index', ['type' => 'overdue']) }}" {{ request('type') == 'overdue' ? 'selected' : '' }}>Overdue Projects</option>
               </select>
             </div>
 
@@ -55,8 +55,8 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  @forelse($notifications as $notification)
+                <tbody id="notificationsTable">
+                  @foreach ($notifications as $notification)
                     <tr class="{{ !$notification->read ? : '' }}">
                       <td>{{ $notification->message }}</td>
                       <td>
@@ -78,11 +78,7 @@
                         </button>
                       </td>
                     </tr>
-                  @empty
-                    <tr>
-                      <td colspan="4" class="text-center">No notifications available.</td>
-                    </tr>
-                  @endforelse
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -171,11 +167,7 @@
                 });
             }
         });
-
-        // Filter notifications by type
-        $('#filterType').change(function () {
-            window.location.href = "{{ route('pages.notification.index') }}?type=" + $(this).val();
-        });
     });
+
 </script>
 @endsection

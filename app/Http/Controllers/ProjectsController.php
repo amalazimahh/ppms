@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\Notification;
+use App\Models\NotificationRecipient;
 use App\Models\Status;
 use App\Models\ClientMinistry;
 use App\Models\Contractor;
@@ -303,8 +304,6 @@ class ProjectsController extends Controller
                 'others_id' => $request['others_id'] ?? null,
         ]);
 
-        //$created_by = (auth()->check()) ? (int)auth()->user()->id : null;
-
         $voteNum = $request->voteNum;
 
         // fetch voteNum from parent project for child project
@@ -342,12 +341,7 @@ class ProjectsController extends Controller
         $message = Str::limit('A new project ' . $project->title . ' has been added.', 250);
 
         // insert notification for the admin
-        Notification::create([
-            'user_id' => 1,
-            'type' => 'new_project',
-            'message' => $message,
-            'read' => false
-        ]);
+        sendNotification('new_project', $message, ['Admin', 'Executive']);
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
         // redirect with success notification
@@ -440,15 +434,8 @@ class ProjectsController extends Controller
             'created_by' =>  auth()->id(),
         ]);
 
-        $message = Str::limit($project->title . ' has been modified.', 250);
-
-        // insert notification for the admin
-        Notification::create([
-            'user_id' => 1,
-            'type' => 'update_project_details',
-            'message' => $message,
-            'read' => false
-        ]);
+        $message = Str::limit($project->title . ' details have been updated.', 250);
+        sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
 
         // Log success or failure of project update
         if ($updated) {

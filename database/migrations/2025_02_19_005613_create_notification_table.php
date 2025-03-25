@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->enum('type', [
                 'new_user',
                 'reset_password',
@@ -27,9 +26,6 @@ return new class extends Migration
             $table->string('message');
             $table->boolean('read')->default(false);
             $table->timestamps();
-
-            // Define the foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

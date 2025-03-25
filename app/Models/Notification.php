@@ -11,4 +11,9 @@ class Notification extends Model
 
     protected $table = 'notifications';
     protected $fillable = ['user_id', 'type', 'message', 'read'];
+
+    public function recipient()
+    {
+        return $this->hasMany(NotificationRecipient::class);
+    }
 }

@@ -35,6 +35,8 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- Apex chart for radial chart -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
     <!-- Additional JS for charts -->
