@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('project_team', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained('project')->onDelete('cascade');
-            $table->string('architect')->nullable();
-            $table->string('me')->nullable();
-            $table->string('cs')->nullable();
-            $table->string('qs')->nullable();
-            $table->string('others')->nullable();
+            $table->foreignId('project_id')->nullable()->constrained('project')->onDelete('set null');
+            $table->foreignId('officer_in_charge')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('architect_id')->nullable()->constrained('architect');
+            $table->foreignId('mechanical_electrical_id')->nullable()->constrained('mechanical_electrical');
+            $table->foreignId('civil_structural_id')->nullable()->constrained('civil_structural');
+            $table->foreignId('quantity_surveyor_id')->nullable()->constrained('quantity_surveyor');
+            $table->foreignId('others_id')->nullable()->constrained('others');
             $table->timestamps();
         });
     }
