@@ -256,20 +256,14 @@ class ProjectsController extends Controller
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
+            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
+            'client_ministry_id' => 'nullable|integer',
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
-            'statuses_id' => 'nullable|integer',
-            'parent_project_id' => 'nullable|exists:project,id',
-            'client_ministry_id' => 'nullable|integer',
-            'oic' => 'nullable|integer',
-            'architect_id' => 'nullable|integer',
-            'mechanical_electrical_id' => 'nullable|integer',
-            'civil_structural_id' => 'nullable|integer',
-            'quantity_surveyor_id' => 'nullable|integer',
-            'others_id' => 'nullable|string',
+            //img
         ]);
 
         // remove dollar signs and commas sv and av fields (clean values)
@@ -290,20 +284,6 @@ class ProjectsController extends Controller
             $imgPath = null;
         }
 
-        // get the last customID
-        $lastProject = Project::latest('id')->first();
-
-        $projectTeam = null;
-
-        // create a new Project Team if at least one role is filled
-        $projectTeam = ProjectTeam::create([
-                'architect_id' => $request['architect_id'] ?? null,
-                'mechanical_electrical_id' => $request['mechanical_electrical_id'] ?? null,
-                'civil_structural_id' => $request['civil_structural_id'] ?? null,
-                'quantity_surveyor_id' => $request['quantity_surveyor_id'] ?? null,
-                'others_id' => $request['others_id'] ?? null,
-        ]);
-
         $voteNum = $request->voteNum;
 
         // fetch voteNum from parent project for child project
@@ -319,22 +299,16 @@ class ProjectsController extends Controller
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,
+            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
+            'client_ministry_id' => $request['client_ministry_id'],
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],
-            'statuses_id' => $request['statuses_id'],
-            'parent_project_id' => $request['parent_project_id'],
-            'client_ministry_id' => $request['client_ministry_id'],
-            'oic' => $request['oic'], // Project Manager
-            'project_team_id' => $projectTeam->id,
+            //img
             'created_by' => auth()->id(),
         ]);
-
-
-        // Update project with project_team_id
-        $project->update(['project_team_id' => $projectTeam->id]);
 
         // Log to confirm insertion
         Log::info('Project created: ', $project->toArray());
@@ -365,16 +339,14 @@ class ProjectsController extends Controller
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
+            'parent_project_id' => 'nullable|exists:project,id',
             'voteNum' => 'required|string',
             'title' => 'required|string',
+            'client_ministry_id' => 'nullable|integer',
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
             // img
-            'statuses_id' => 'nullable|integer',
-            'parent_project_id' => 'nullable|exists:project,id',
-            'client_ministry_id' => 'nullable|integer',
-            'project_team_id' => 'nullable|integer',
         ]);
 
         // Clean up the sv and av fields (remove dollar signs and commas)
@@ -388,49 +360,20 @@ class ProjectsController extends Controller
         $project = Project::findOrFail($id);
         Log::info('Before Update:', $project->toArray());
 
-        // Find the existing project team or create a new one
-        $projectTeam = ProjectTeam::find($project->project_team_id);
-
-        if (!$projectTeam) {
-            // create team if no project team exists
-            Log::info('Creating a new project team.');
-            $projectTeam = new ProjectTeam();
-        } else {
-            // debug existing project team ID
-            Log::info('Updating existing Project Team ID: ' . $projectTeam->id);
-        }
-
-        // log current state of ProjectTeam before updating
-        Log::info('ProjectTeam Before Update: ', $projectTeam->toArray());
-
-        // update project team fields
-        $projectTeam->architect_id = $request->architect_id ?? null;
-        $projectTeam->mechanical_electrical_id = $request->mechanical_electrical_id ?? null;
-        $projectTeam->civil_structural_id = $request->civil_structural_id ?? null;
-        $projectTeam->quantity_surveyor_id = $request->quantity_surveyor_id ?? null;
-        $projectTeam->others_id = $request->others_id ?? null;
-
-        // log updated ProjectTeam fields
-        Log::info('Updated ProjectTeam Fields: ', $projectTeam->toArray());
-
-        // save the project team
-        $projectTeam->save();
 
         // update the project with the new project_team_id
         $updated = $project->update([
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,
+            'parent_project_id' => $request['parent_project_id'],
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
+            'client_ministry_id' => $request['client_ministry_id'],
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],
             // img
-            'statuses_id' => $request['statuses_id'],
-            'parent_project_id' => $request['parent_project_id'],
-            'client_ministry_id' => $request['client_ministry_id'],
-            'project_team_id' => $projectTeam->id,
             'created_by' =>  auth()->id(),
         ]);
 

@@ -16,7 +16,7 @@ class Project extends Model
     protected $fillable = [
         'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
         'scope', 'location', 'statuses_id', 'parent_project_id',
-        'client_ministry_id', 'oic', 'img', 'project_team_id',
+        'client_ministry_id', 'img',
         'created_by', 'created_at', 'updated_at'
     ];
 
@@ -26,16 +26,6 @@ class Project extends Model
     ];
 
     public $timestamps = true;
-
-    // relationship with ProjectTeam model
-    public function projectTeam(){
-        return $this->belongsTo(ProjectTeam::class, 'project_team_id');
-    }
-
-    // relationship with User model for oic and created_by
-    public function oicUser(){
-        return $this->belongsTo(User::class, 'oic');
-    }
 
     public function createdByUser()
     {
