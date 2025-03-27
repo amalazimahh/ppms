@@ -56,7 +56,7 @@
                   </tr>
                 </thead>
                 <tbody id="notificationsTable">
-                  @foreach ($notifications as $notification)
+                  @forelse ($notifications as $notification)
                     <tr class="{{ !$notification->read ? : '' }}">
                       <td>{{ $notification->message }}</td>
                       <td>
@@ -78,14 +78,25 @@
                         </button>
                       </td>
                     </tr>
-                  @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            @if(request()->has('type'))
+                                No notifications found for
+                                <strong>{{ ucfirst(str_replace('_', ' ', request('type'))) }}</strong>
+                            @else
+                                No notifications found
+                            @endif
+                        </td>
+                    </tr>
+                  @endforelse
                 </tbody>
               </table>
             </div>
 
             <!-- Pagination -->
-            <div class="mt-3">
-              {{ $notifications->links() }}
+            <div class="mt-3 d-flex justify-content-center">
+              {{ $notifications->links('pagination::bootstrap-5') }}
             </div>
 
             <!-- Delete All Notifications -->
