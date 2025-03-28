@@ -11,41 +11,42 @@ class NotificationController extends Controller
 {
 
     public function index(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // fetch notifications where the user is a recipient
-        $query = Notification::whereHas('recipient', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
-        });
+    // Base query
+    $query = Notification::whereHas('recipient', function ($q) use ($user) {
+        $q->where('user_id', $user->id);
+    });
 
-        // Log the initial query
-        \Log::info('Initial Query:', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
+    \Log::info('Initial Query:', ['query' => $query->toSql()]);
 
-        // Log the request data
-        \Log::info('Request Data:', ['type' => $request->type]);
-
-        // Filter by type
-        if ($request->has('type') && $request->type !== '') {
-            $query->where('type', $request->type);
-            // Log the filtered query
-            \Log::info('Filtered Query:', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
-        }
-
-        $notifications = $query->orderBy('created_at', 'desc')->paginate(10);
-
-        // Log the final result
-        \Log::info('Notifications:', ['notifications' => $notifications]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'notifications' => $notifications->items(),
-                'links'=> $notifications->links()->toHtml(),
-            ]);
-        }
-
-        return view('pages.notification', compact('notifications'));
+    // Filter by type
+    if ($request->has('type') && $request->type !== '') {
+        $query->where('type', $request->type);
+        \Log::info('Type Filter Added:', ['type' => $request->type]);
     }
+
+    // Filter by read status (NEW)
+    if ($request->has('status')) {
+        $isRead = $request->status === 'read';
+        $query->whereHas('recipient', function ($q) use ($isRead) {
+            $q->where('read', $isRead);
+        });
+    }
+
+    $notifications = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    if ($request->ajax()) {
+        return response()->json([
+            'notifications' => $notifications->items(),
+            'links' => $notifications->links()->toHtml(),
+        ]);
+    }
+
+    return view('pages.notification', compact('notifications'));
+}
+
 
     /**
      * Mark all notifications as read.
@@ -54,15 +55,10 @@ class NotificationController extends Controller
      */
     public function markAsRead($id)
     {
-        $recipient = NotficationRecipient::where('notifications_id', $id)->where('users_id', Auth::id())->first();
-
-        if ($recipient) {
-            $recipient->update(['read' => true]);
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false], 404);
+        Notification::where('id', $id)->update(['read' => true]);
+        return back()->with('success', 'Marked as read!');
     }
+
 
 
     public function destroyAll(){

@@ -68,9 +68,12 @@
                       </td>
                       <td>
                         <!-- Mark as Read Button -->
-                        <button class="btn btn-success btn-sm mark-as-read" data-id="{{ $notification->id }}">
-                          Mark as Read
-                        </button>
+                        <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-success">
+                                Mark as Read
+                            </button>
+                        </form>
 
                         <!-- Delete Button -->
                         <button class="btn btn-danger btn-sm delete-notification" data-id="{{ $notification->id }}">
@@ -137,48 +140,36 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        // Mark as read
-        $('.notification-text').click(function () {
-            var id = $(this).data('id');
-            var $parent = $(this).closest('li');
+$(document).ready(function () {
 
-            $.post("{{ route('pages.notification.markAsRead', '') }}/" + id, {
-                _token: "{{ csrf_token() }}"
-            }).done(function () {
-                $parent.removeClass('font-weight-bold bg-light');
-            });
-        });
+    // Delete single notification
+    $('.delete-notification').click(function () {
+        var id = $(this).data('id');
+        var $row = $(this).closest('tr');
 
-        // Delete single notification
-        $('.delete-notification').click(function () {
-            var id = $(this).data('id');
-            var $parent = $(this).closest('li');
-
-            $.ajax({
-                url: "{{ route('pages.notification.destroy', '') }}/" + id,
-                type: 'DELETE',
-                data: { _token: "{{ csrf_token() }}" },
-                success: function () {
-                    $parent.remove();
-                }
-            });
-        });
-
-        // Delete all notifications
-        $('#deleteAll').click(function () {
-            if (confirm("Are you sure you want to delete all notifications?")) {
-                $.ajax({
-                    url: "{{ route('pages.notification.destroyAll') }}",
-                    type: 'DELETE',
-                    data: { _token: "{{ csrf_token() }}" },
-                    success: function () {
-                        location.reload();
-                    }
-                });
+        $.ajax({
+            url: "{{ route('pages.notification.destroy', '') }}/" + id,
+            type: 'DELETE',
+            data: { _token: "{{ csrf_token() }}" },
+            success: function () {
+                $row.remove();
             }
         });
     });
 
+    // Delete all notifications
+    $('#deleteAll').click(function () {
+        if (confirm("Are you sure you want to delete all notifications?")) {
+            $.ajax({
+                url: "{{ route('pages.notification.destroyAll') }}",
+                type: 'DELETE',
+                data: { _token: "{{ csrf_token() }}" },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
 </script>
 @endsection
