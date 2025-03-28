@@ -40,6 +40,7 @@
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
                 <option disabled selected>-- Select Form --</option>
+                <option value="{{ route('projects.status', $project->id) }}">Project Status</option>
                 <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">Project Terms of Reference Form</option>
                 <option value="{{ route('projects.pre_tender', $project->id) }}">Pre-Design Form</option>
                 <option value="{{ route('projects.project_team', $project->id) }}">Project Team Form</option>
@@ -74,7 +75,12 @@
                 <div class="row mb-3">
                     <label for="oic" class="col-sm-2 col-form-label">Officer-in-Charge</label>
                     <div class="col-sm-10">
-
+                        <select name="officer_in_charge" id="officer_in_charge" class="form-control">
+                            <option disabled selected>-- Select Officer in Charge --</option>
+                            @foreach($projectManagers as $projectManager)
+                                <option value="{{ $projectManager->id }}">{{ $projectManager->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 

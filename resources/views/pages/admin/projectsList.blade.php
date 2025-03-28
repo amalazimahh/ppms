@@ -12,6 +12,28 @@
     </div>
 @endif -->
 
+@if(session('success') || session('error'))
+<div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Success - </b> {!! session('success') !!}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Error - </b> {{ session('error') }}</span>
+    </div>
+    @endif
+</div>
+@endif
+
 @section('content')
 <style>
 .form-control:focus {
@@ -20,6 +42,45 @@
 .form-control:not(:placeholder-shown) {
     color: #000; /* Black text when not empty */
 }
+
+/* Notification animation */
+.alert {
+    box-shadow: 0 4px 20px 0 rgba(0,0,0,.14),
+                0 7px 10px -5px rgba(0,188,212,.4);
+    border: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+    width: auto;
+}
+
+.alert-success {
+    background-color: #00d25b;
+    color: #fff;
+}
+
+.alert-danger {
+    background-color: #fc424a;
+    color: #fff;
+}
+
+.alert .close {
+    color: #fff;
+    opacity: .9;
+    text-shadow: none;
+    line-height: 0;
+    outline: 0;
+}
+
+body {
+        opacity: 1;
+        transition: opacity 300ms ease-in-out;
+    }
+    body.fade-out {
+        opacity: 0;
+        transition: none;
+    }
 </style>
 <div class="content">
   <div class="container-fluid">
@@ -71,6 +132,31 @@
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">
                                             <i class="tim-icons icon-trash-simple"></i> Delete
                                         </button>
+
+                                        <!-- bootstrap delete modal -->
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-dark">
+                                                Are you sure you want to delete this project? This action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                <!-- Delete Form -->
+                                                <form id="deleteForm" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                                </form>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -169,31 +255,6 @@
     </div>
  </div>
 
-<!-- bootstrap delete modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this project? This action cannot be undone.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-        <!-- Delete Form -->
-        <form id="deleteForm" method="POST" style="display: inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
     function setDeleteUrl(url) {
         document.getElementById('deleteForm').action = url;
@@ -230,6 +291,30 @@
             numeralPositiveOnly: true,
         });
     });
+
+    // Add fade-out class before page unload
+    window.addEventListener('beforeunload', function() {
+        document.body.classList.add('fade-out');
+    });
+
+// Auto-dismiss after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+
+    alerts.forEach(alert => {
+        // Manual close
+        alert.querySelector('.close').addEventListener('click', function() {
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+        });
+
+        // Auto-dismiss
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+});
 
 
     // javascript to load the voteNum dynamically

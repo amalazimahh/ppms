@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\Project;
 use App\Models\Notification;
 use App\Models\NotificationRecipient;
@@ -145,7 +146,9 @@ class ProjectsController extends Controller
         $project = Project::findOrFail($id);
         if($project){
             $project->delete();
-            return redirect()->route('pages.admin.projectsList')->with('success', 'Project deleted successfully.');
+            $message = Str::limit($project->title.' has been deleted.', 250);
+            sendNotification('update_project_details', $message, ['Admin', 'Project Manager', 'Executive']);
+            return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was deleted successfully.');
         }
         return redirect()->route('pages.admin.projectsList')->with('error', 'Project not found.');
     }
@@ -166,6 +169,10 @@ class ProjectsController extends Controller
         // fetch project details using the ID
         $project = Project::findOrFail($id);
 
+        // retrieve lists of project managers (oic)
+        $projectManagerRoleId = 2;
+        $projectManagers = User::where('roles_id', 2)->get();
+
         // retrieve lists of architect
         $architects = Architect::all();
 
@@ -178,7 +185,7 @@ class ProjectsController extends Controller
         // retrieve lists of quantity surveyor
         $quantitySurveyors = QuantitySurveyor::all();
 
-        return view('pages.admin.forms.project_team', compact('project', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
+        return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
     }
 
     // add designSubmission method to handle form
@@ -319,7 +326,7 @@ class ProjectsController extends Controller
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
         // redirect with success notification
-        return redirect()->route('pages.admin.projectsList')->with('success', 'Project added successfully!');
+        return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was added successfully!');
     }
 
 

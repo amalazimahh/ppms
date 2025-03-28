@@ -8,7 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\PreTenderController;
 use App\Http\Controllers\MilestoneController;
-
+use App\Http\Controllers\ProjectTeamContoller;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -44,12 +44,9 @@ Route::group(['middleware' => 'auth'], function () {
 Route::middleware(['auth'])->group(function (){
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('pages.notification.index');
-    Route::get('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('pages.notification.markAsRead');
+    Route::post('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
     Route::get('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
-
-
-    //Route::get('/admin/forms/basicdetails', [StatusController::class, 'create'])->name('pages.admin.forms.basicdetails')->middleware('auth');
 
     // admin
     Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
@@ -63,7 +60,8 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
     Route::get('admin/projects/{id}/status', [MilestoneController::class, 'milestone'])->name('projects.status')->middleware('auth');
     Route::get('admin/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team')->middleware('auth');
-    Route::get('admin/projects/{id}/pre_tender', [ProjectsController::class, 'pre_tender'])->name('projects.pre_tender')->middleware('auth');
+    Route::get('admin/projects/{id}/pre_tender', [PreTenderController::class, 'edit'])->name('projects.pre_tender')->middleware('auth');
+    Route::put('admin/projects/{id}/pre_tender', [PreTenderController::class, 'update'])->name('projects.pre_tender.update')->middleware('auth');
     Route::get('admin/projects/{id}/design_submission', [ProjectsController::class, 'designSubmission'])->name('projects.design_submission')->middleware('auth');
     Route::get('admin/projects/{id}/tender', [ProjectsController::class, 'tender'])->name('projects.tender')->middleware('auth');
     Route::get('admin/projects/{id}/tender_recommendation', [ProjectsController::class, 'tender_recommendation'])->name('projects.tender_recommendation')->middleware('auth');
@@ -72,9 +70,9 @@ Route::middleware(['auth'])->group(function (){
     Route::get('admin/projects/{id}/bankers_guarantee', [ProjectsController::class, 'bankers_guarantee'])->name('projects.bankers_guarantee')->middleware('auth');
     Route::get('admin/projects/{id}/insurance', [ProjectsController::class, 'insurance'])->name('projects.insurance')->middleware('auth');
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
-    Route::post('/pre_tender/store', [PreTenderController::class, 'store'])->name('pre_tender.store')->middleware('auth');
     Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
     Route::get('admin/projects/{id}/view', [ProjectsController::class, 'view'])->name('pages.view_project')->middleware('auth');
+    // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
@@ -82,7 +80,6 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/project_manager/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.project_manager.project-dashboard')->middleware('auth');
     Route::get('/project_manager/projectsList', [PageController::class, 'projectList'])->name('pages.project_manager.projectsList')->middleware('auth');
     Route::get('/project_manager/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
-
 
     // executive
     Route::get('/executive/dashboard', [PageController::class, 'executiveDashboard'])->name('pages.executive.dashboard')->middleware('auth');

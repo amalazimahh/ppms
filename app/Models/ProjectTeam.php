@@ -13,6 +13,8 @@ class ProjectTeam extends Model
 
     protected $fillable =
     [
+        'project_id',
+        'officer_in_charge',
         'architect_id',
         'mechanical_electrical_id',
         'civil_structural_id',
@@ -21,6 +23,14 @@ class ProjectTeam extends Model
     ];
 
     // relationships
+    public function project(){
+        return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function officerInCharge(){
+        return $this->belongsTo(User::class, 'officer_in_charge');
+    }
+
     public function architect(){
         return $this->belongsTo(Architect::class, 'architect_id');
     }

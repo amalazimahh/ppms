@@ -8,9 +8,6 @@
         <div class="card">
             <div class="card-header card-header-primary d-flex justify-content-between align-items-center">
                 <h2 class="card-title m-0">USERS LIST</h2>
-                <a href="{{ route('pages.admin.forms.basicdetails') }}" class="btn btn-success btn-round animation-on-hover">
-                    <i class="tim-icons icon-simple-add"></i> Add New User
-                </a>
             </div>
           <div class="card-body">
             <div class="table-responsive">

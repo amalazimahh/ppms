@@ -40,7 +40,8 @@
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
                 <option disabled selected>-- Select Form --</option>
-                <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">Project Terms of Reference Form</option>
+                <option value="{{ route('projects.status', $project->id) }}">Project Status</option>
+                <option value="{{ route('projects.edit', $project->id) }}">Project Terms of Reference Form</option>
                 <option value="{{ route('projects.pre_tender', $project->id) }}">Pre-Design Form</option>
                 <option value="{{ route('projects.project_team', $project->id) }}">Project Team Form</option>
                 <option value="{{ route('projects.design_submission', $project->id) }}">Design Submission Form</option>
@@ -59,8 +60,12 @@
             <h1 class="card-title">Pre-Design Form</h1>
         </div>
         <div class="card-body">
-            <form action="{{ route('pre_tender.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('projects.pre_tender.update', $project->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @if(isset($project))
+                    @method('PUT')
+                @endif
+
                 <div class="row mb-3">
                     <label for="rfpRfqNum" class="col-sm-2 col-form-label">RFP/RFQ No.</label>
                     <div class="col-sm-10">
@@ -154,7 +159,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('pages.admin.forms.basicdetails', $project->id) }}" class="btn btn-primary">Back</a>
+                <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
                 <a href="{{ route('projects.project_team', $project->id) }}" class="btn btn-primary">Next</a>
             </form>

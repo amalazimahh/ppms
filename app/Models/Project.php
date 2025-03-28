@@ -52,6 +52,11 @@ class Project extends Model
         return $this->belongsTo(Project::class, 'parent_project_id');
     }
 
+    //add relationship for pre-tender
+    public function preTender(){
+        return $this->hasOne(PreTender::class);
+    }
+
     // get all child projects
     public function childProjects(){
         return $this->hasMany(Project::class, 'parent_project_id');
