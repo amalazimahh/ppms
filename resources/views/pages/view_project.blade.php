@@ -16,7 +16,7 @@
     }
 
     .nav-tabs .nav-link {
-        color: #000;
+        color: #fff;
         border: 1px solid transparent;
         border-radius: 0.25rem 0 0 0.25rem;
         padding: 0.75rem 1rem;

@@ -110,7 +110,12 @@ body {
                             @foreach ($projects as $project)
                                 <tr>
                                     <td> {{ $project->fy }} </td>
-                                    <td> {{ $project->title }} </td>
+                                    <td> @if($project->parent_project_id)
+                                            {{ $project->parentProject->title }} -
+                                        @endif
+                                        {{ $project->title }}
+
+                                    </td>
                                     <td>
                                         <div class="progress" style="height: 20px;">
                                             <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
