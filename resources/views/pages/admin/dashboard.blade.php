@@ -1,384 +1,160 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card card-chart">
-                <div class="card-header ">
-                    <div class="row">
-                        <div class="col-sm-6 text-left">
-                            <h5 class="card-category">Total Shipments</h5>
-                            <h2 class="card-title">Performance</h2>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                                <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                                    <input type="radio" name="options" checked>
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-single-02"></i>
-                                    </span>
-                                </label>
-                                <label class="btn btn-sm btn-primary btn-simple" id="1">
-                                    <input type="radio" class="d-none d-sm-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-gift-2"></i>
-                                    </span>
-                                </label>
-                                <label class="btn btn-sm btn-primary btn-simple" id="2">
-                                    <input type="radio" class="d-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-tap-02"></i>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
+<!-- Filter row -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <select class="form-control" id="projectType">
+                            <option value="">All Project Types</option>
+                            <option value="infrastructure">Infrastructure</option>
+                            <option value="software">Software</option>
+                            <option value="research">Research</option>
+                        </select>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartBig1"></canvas>
+                    <div class="col-md-3">
+                        <select class="form-control" id="priority">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="year">
+                            <option value="">Financial Year</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-block">Apply Filters</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- D3 Sunburst Chart -->
+<div class="row mt-3">
+    <div class="col-lg-3">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-primary">TOTAL PROJECTS</p>
+                            <h2 class="card-title">150</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-primary" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-chart-pie-36" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-info">ONGOING</p>
+                            <h2 class="card-title">65</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-info" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-refresh-02" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-success">COMPLETED</p>
+                            <h2 class="card-title">75</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-success" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-check-2" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-danger">OVERDUE</p>
+                            <h2 class="card-title">10</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-danger" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-alert-circle-exc" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- After the first row of stat cards -->
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">Sunburst Chart</h5>
-                    <h2 class="card-title">Zoomable Sunburst</h2>
+                    <h5 class="card-category">Budget vs Timeline</h5>
+                    <h2 class="card-title">Project Progress</h2>
                 </div>
                 <div class="card-body">
-                    <div id="sunburst-chart"></div>
+                    <canvas id="projectProgressChart" height="300"></canvas>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-chart">
+        <div class="col-lg-6">
+            <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">Total Shipments</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartLinePurple"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card-chart">
-                <div class="card-header">
-                    <h5 class="card-category">Daily Sales</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="CountryChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card-chart">
-                <div class="card-header">
-                    <h5 class="card-category">Completed Tasks</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartLineGreen"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6 col-md-12">
-            <div class="card card-tasks">
-                <div class="card-header ">
-                    <h6 class="title d-inline">Tasks(5)</h6>
-                    <p class="card-category d-inline">today</p>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
-                            <i class="tim-icons icon-settings-gear-63"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#pablo">Action</a>
-                            <a class="dropdown-item" href="#pablo">Another action</a>
-                            <a class="dropdown-item" href="#pablo">Something else</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    <div class="table-full-width table-responsive">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Update the Documentation</p>
-                                        <p class="text-muted">Dwuamish Head, Seattle, WA 8:47 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked="">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">GDPR Compliance</p>
-                                        <p class="text-muted">The GDPR is a regulation that requires businesses to protect the personal data and privacy of Europe citizens for transactions that occur within EU member states.</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                    <span class="form-check-sign">
-                                                        <span class="check"></span>
-                                                    </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Solve the issues</p>
-                                        <p class="text-muted">Fifty percent of all respondents said they would be more likely to shop at a company </p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Release v2.0.0</p>
-                                        <p class="text-muted">Ra Ave SW, Seattle, WA 98116, SUA 11:19 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Export the processed files</p>
-                                        <p class="text-muted">The report also shows that consumers will not easily forgive a company once a breach exposing their personal data occurs. </p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Arival at export process</p>
-                                        <p class="text-muted">Capitol Hill, Seattle, WA 12:34 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12">
-            <div class="card ">
-                <div class="card-header">
-                    <h4 class="card-title">Simple Table</h4>
+                    <h5 class="card-category">Timeline Overview</h5>
+                    <h2 class="card-title">Upcoming Deadlines</h2>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table tablesorter" id="">
-                            <thead class=" text-primary">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Country
-                                    </th>
-                                    <th>
-                                        City
-                                    </th>
-                                    <th class="text-center">
-                                        Salary
-                                    </th>
+                                    <th>Project</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th>Budget</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                      Dakota Rice
-                                    </td>
-                                    <td>
-                                      Niger
-                                    </td>
-                                    <td>
-                                      Oud-Turnhout
-                                    </td>
-                                    <td class="text-center">
-                                      $36,738
-                                    </td>
+                                    <td>Infrastructure A</td>
+                                    <td>2024-03-15</td>
+                                    <td><span class="badge badge-success">65 days</span></td>
+                                    <td><span class="badge badge-success">On Track</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        Minerva Hooper
-                                    </td>
-                                    <td>
-                                        Curaçao
-                                    </td>
-                                    <td>
-                                        Sinaai-Waas
-                                    </td>
-                                    <td class="text-center">
-                                        $23,789
-                                    </td>
+                                    <td>Software B</td>
+                                    <td>2024-02-10</td>
+                                    <td><span class="badge badge-warning">45 days</span></td>
+                                    <td><span class="badge badge-danger">Over Budget</span></td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        Sage Rodriguez
-                                    </td>
-                                    <td>
-                                        Netherlands
-                                    </td>
-                                    <td>
-                                        Baileux
-                                    </td>
-                                    <td class="text-center">
-                                        $56,142
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Philip Chaney
-                                    </td>
-                                    <td>
-                                        Korea, South
-                                    </td>
-                                    <td>
-                                        Overland Park
-                                    </td>
-                                    <td class="text-center">
-                                        $38,735
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Doris Greene
-                                    </td>
-                                    <td>
-                                        Malawi
-                                    </td>
-                                    <td>
-                                        Feldkirchen in Kärnten
-                                    </td>
-                                    <td class="text-center">
-                                        $63,542
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Mason Porter
-                                    </td>
-                                    <td>
-                                        Chile
-                                    </td>
-                                    <td>
-                                        Gloucester
-                                    </td>
-                                    <td class="text-center">
-                                        $78,615
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Jon Porter
-                                    </td>
-                                    <td>
-                                        Portugal
-                                    </td>
-                                    <td>
-                                        Gloucester
-                                    </td>
-                                    <td class="text-center">
-                                        $98,615
-                                    </td>
-                                </tr>
+                                <!-- Add more rows -->
                             </tbody>
                         </table>
                     </div>
@@ -386,6 +162,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Charts Section -->
+    <div class="row">
+        <div class="col-lg-7">  <!-- Changed from 8 to 7 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Ministry Distribution</h5>
+                    <h2 class="card-title">Project Allocation</h2>
+                </div>
+                <div class="card-body">
+                    <div id="sunburst-chart" style="height: 400px; display: flex; justify-content: center;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Project Stages</h5>
+                    <h2 class="card-title">Current Status</h2>
+                </div>
+                <div class="card-body">
+                    <canvas id="projectStagesDonut" style="height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('js')
@@ -415,9 +218,18 @@
         };
 
         // D3 Sunburst Chart
-        const width = 928;
-        const height = width;
-        const radius = width / 6;
+        // Adjust container and chart dimensions
+        const container = d3.select("#sunburst-chart")
+            .style("height", "350px")  // Reduced height
+            .style("width", "100%")
+            .style("display", "flex")
+            .style("align-items", "center")
+            .style("justify-content", "center");
+
+        // Adjust chart dimensions
+        const width = 600;  // Reduced width
+        const height = 350;  // Reduced height
+        const radius = Math.min(width, height) / 6;  // Further reduced radius ratio
 
         const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
 
@@ -437,10 +249,42 @@
             .innerRadius(d => d.y0 * radius)
             .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
 
-        const svg = d3.select("#sunburst-chart")
+        const svg = container
             .append("svg")
-            .attr("viewBox", [-width / 2, -height / 2, width, width])
-            .style("font", "10px sans-serif");
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("viewBox", [-width / 4, -height / 2, width, height])
+            .style("font", "11px sans-serif");
+
+        // Single column legend with better positioning
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width/2.2}, ${-height/2.5})`);
+
+        // Single column layout
+        const legendItems = legend.selectAll("g")
+            .data(data.children)
+            .enter()
+            .append("g")
+            .attr("transform", (d, i) => `translate(0, ${i * 18})`);  // Adjusted spacing
+
+        // Smaller legend items
+        legendItems.append("rect")
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("rx", 2)
+            .attr("fill", d => color(d.name))
+            .attr("fill-opacity", 0.8);
+
+        // Adjust legend text
+        legendItems.append("text")
+            .attr("x", 16)
+            .attr("y", 6)
+            .attr("dy", "0.35em")
+            .attr("fill", "#ffffff")
+            .style("font-size", "10px")
+            .text(d => d.name);
 
         const path = svg.append("g")
             .selectAll("path")
@@ -522,5 +366,96 @@
             const y = (d.y0 + d.y1) / 2 * radius;
             return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
         }
-    </script>
+
+    // Project Stages Donut Chart
+    const projectStagesData = {
+        labels: ['Pre-Design', 'Design', 'Tender', 'Construction', 'Post-Completion'],
+        datasets: [{
+            data: [25, 40, 15, 10, 10],
+            backgroundColor: ['#e14eca', '#00f2c3', '#ff8d72', '#1d8cf8', '#fd5d93'],  // Updated colors
+            borderWidth: 0
+        }]
+    };
+
+    const projectStagesConfig = {
+        type: 'doughnut',
+        data: projectStagesData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    align: 'start',
+                    labels: {
+                        color: '#ffffff',
+                        padding: 20,
+                        font: {
+                            size: 10
+                        },
+                        boxWidth: 12
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    right: 100
+                }
+            }
+        }
+    };
+
+    const projectStagesCtx = document.getElementById('projectStagesDonut').getContext('2d');
+    new Chart(projectStagesCtx, projectStagesConfig);
+
+    // After the existing charts initialization
+    const progressCtx = document.getElementById('projectProgressChart').getContext('2d');
+    new Chart(progressCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Pre-Design', 'Design', 'Tender', 'Construction', 'Post-Completion'],
+            datasets: [{
+                label: 'Budget Usage',
+                data: [65, 80, 45, 90, 30],
+                backgroundColor: '#1d8cf8'
+            }, {
+                label: 'Timeline Progress',
+                data: [70, 85, 40, 85, 25],
+                backgroundColor: '#00f2c3'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            }
+        }
+    });
+
+</script>
 @endpush
