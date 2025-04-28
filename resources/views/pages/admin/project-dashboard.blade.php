@@ -68,7 +68,7 @@
                 height: 100%;
                 background: #4CAF50;
                 border-radius: 4px;
-                width: 78%;
+                width: 54%;
             }
 
         /* Budget styles */
@@ -289,25 +289,25 @@
             </div>
         </div>
 
-        <!-- Project Summary (moved from bottom) -->
+        <!-- Project Summary -->
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-category">Project Summary</h5>
                     <div class="summary-details mt-3">
-                        <div class="summary-item">
+                        <div class="summary-item text-light bg-dark">
                             <span>Start Date:</span>
                             <span>2017-05-01</span>
                         </div>
-                        <div class="summary-item">
+                        <div class="summary-item text-light bg-dark">
                             <span>End Date:</span>
                             <span>2017-12-15</span>
                         </div>
-                        <div class="summary-item">
+                        <div class="summary-item text-light bg-dark">
                             <span>Officer-in-Charge:</span>
-                            <span>Georg Danwill</span>
+                            <span>Pg Ayatol</span>
                         </div>
-                        <div class="summary-item">
+                        <div class="summary-item text-light bg-dark">
                             <span>Overall Status:</span>
                             <span class="text-success">In Time</span>
                         </div>
@@ -331,7 +331,7 @@
         </div>
     </div>
 
-    <!-- Second row: Project Phases (full width) -->
+    <!-- Second row Project Phases -->
     <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card">
@@ -557,7 +557,7 @@
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Design Documentation Updated</h6>
-                                    <small class="text-muted">2 hours ago by Catherine</small>
+                                    <small class="text-muted">2 hours ago by Amal</small>
                                     <p class="mb-0 mt-2">Updated UI/UX specifications for mobile view</p>
                                 </div>
                             </div>
@@ -569,7 +569,7 @@
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Mobile View Configuration Completed</h6>
-                                    <small class="text-muted">Yesterday by Nancy</small>
+                                    <small class="text-muted">Yesterday by Amal</small>
                                     <p class="mb-0 mt-2">Responsive design implementation finished</p>
                                 </div>
                             </div>
@@ -581,7 +581,7 @@
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Budget Adjustment Required</h6>
-                                    <small class="text-muted">2 days ago by Georg</small>
+                                    <small class="text-muted">2 days ago by Amal</small>
                                     <p class="mb-0 mt-2">Additional resources needed for testing phase</p>
                                 </div>
                             </div>
@@ -641,7 +641,7 @@
                 data: {
                     labels: ['Total Budget', 'Amount Used', 'Target Amount'],
                     datasets: [{
-                        data: [52000, 43230, 40000],
+                        data: [52000, 44230, 46000],
                         backgroundColor: ['#2196F3', '#4CAF50', '#FFC107'],
                         barThickness: 20
                     }]

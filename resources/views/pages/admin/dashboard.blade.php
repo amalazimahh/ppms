@@ -47,7 +47,7 @@
                     <div class="col-12">
                         <div class="numbers">
                             <p class="card-category text-primary">TOTAL PROJECTS</p>
-                            <h2 class="card-title">150</h2>
+                            <h2 class="card-title">{{ $totalProjects }}</h2>
                         </div>
                     </div>
                 </div>
@@ -110,6 +110,32 @@
     </div>
 </div>
 
+<!-- Charts Section -->
+<div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Ministry Distribution</h5>
+                    <h2 class="card-title">Project Allocation</h2>
+                </div>
+                <div class="card-body">
+                    <div id="sunburst-chart" style="height: 400px; display: flex; justify-content: center;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Project Stages</h5>
+                    <h2 class="card-title">Current Status</h2>
+                </div>
+                <div class="card-body">
+                    <canvas id="projectStagesDonut" style="height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- After the first row of stat cards -->
     <div class="row">
         <div class="col-lg-6">
@@ -158,32 +184,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Section -->
-    <div class="row">
-        <div class="col-lg-7">  <!-- Changed from 8 to 7 -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Ministry Distribution</h5>
-                    <h2 class="card-title">Project Allocation</h2>
-                </div>
-                <div class="card-body">
-                    <div id="sunburst-chart" style="height: 400px; display: flex; justify-content: center;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Project Stages</h5>
-                    <h2 class="card-title">Current Status</h2>
-                </div>
-                <div class="card-body">
-                    <canvas id="projectStagesDonut" style="height: 400px;"></canvas>
                 </div>
             </div>
         </div>

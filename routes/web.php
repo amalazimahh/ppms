@@ -9,6 +9,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\PreTenderController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ProjectTeamContoller;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function (){
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
 
     // admin
-    Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
+    // Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
     Route::get('/admin/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
     Route::get('/admin/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::post('/admin/basicdetails/store', [ProjectsController::class, 'store'])->name('pages.admin.forms.basicdetails.store')->middleware('auth');
@@ -72,6 +73,7 @@ Route::middleware(['auth'])->group(function (){
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
     Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
     Route::get('admin/projects/{id}/view', [ProjectsController::class, 'view'])->name('pages.view_project')->middleware('auth');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('pages.admin.dashboard')->middleware('auth');
     // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
 
     // project manager
