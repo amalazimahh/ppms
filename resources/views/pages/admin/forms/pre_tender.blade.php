@@ -1,12 +1,26 @@
-@if(session('success'))
-    <script>
-        window.onload = function() {
-            demo.showNotification('top', 'right', "{{ session('success') }}");
-        };
-    </script>
-@endif
-
 @extends('layouts.app', ['pageSlug' => 'basicdetails'])
+
+@if(session('success') || session('error'))
+<div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Success - </b> {!! session('success') !!}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Error - </b> {{ session('error') }}</span>
+    </div>
+    @endif
+</div>
+@endif
 
 @section('content')
 
@@ -69,77 +83,77 @@
                 <div class="row mb-3">
                     <label for="rfpRfqNum" class="col-sm-2 col-form-label">RFP/RFQ No.</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="rfpRfqNum" id="rfpRfqNum" placeholder="JKR/RFQ/DOD/01/2021">
+                        <input type="text" class="form-control" name="rfpRfqNum" id="rfpRfqNum" placeholder="JKR/RFQ/DOD/01/2021" value="{{ old('rfpRfqNum', $preTender->rfpRfqNum ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="rfqTitle" class="col-sm-2 col-form-label">RFQ Title</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="rfqTitle" id="rfqTitle" placeholder="">
+                        <input type="text" class="form-control" name="rfqTitle" id="rfqTitle" placeholder="" value="{{ old('rfqTitle', $preTender->rfqTitle ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="rfqFee" class="col-sm-2 col-form-label">RFQ Fee</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="rfqFee" id="rfqFee" placeholder="$3,901,420.00">
+                        <input type="text" class="form-control" name="rfqFee" id="rfqFee" placeholder="$3,901,420.00" value="{{ old('rfqFee', $preTender->rfqFee ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="opened" class="col-sm-2 col-form-label">Opened</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="opened" id="opened">
+                        <input type="date" class="form-control" name="opened" id="opened" value="{{ old('opened', $preTender->opened ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="closed" class="col-sm-2 col-form-label">Closed</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="closed" id="closed">
+                        <input type="date" class="form-control" name="closed" id="closed" value="{{ old('closed', $preTender->closed ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="ext" class="col-sm-2 col-form-label">Extended</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="ext" id="ext">
+                        <input type="date" class="form-control" name="ext" id="ext" value="{{ old('ext', $preTender->ext ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="validity_ext" class="col-sm-2 col-form-label">Validity Extended</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="validity_ext" id="validity_ext">
+                        <input type="date" class="form-control" name="validity_ext" id="validity_ext" value="{{ old('validity_ext', $preTender->validity_ext ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="jkmkkp_recomm" class="col-sm-2 col-form-label">Recommendation to JKMKKP</label>
                     <div class="col-sm-10">
-                        <input type="date" name="jkmkkp_recomm" class="form-control" id="jkmkkp_recomm">
+                        <input type="date" name="jkmkkp_recomm" class="form-control" id="jkmkkp_recomm" value="{{ old('jkmkkp_recomm', $preTender->jkmkkp_recomm ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="jkmkkp_approval" class="col-sm-2 col-form-label">JKMKKP Approval</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="jkmkkp_approval" id="jkmkkp_approval" placeholder="BSB/DOD/VI.1/2021">
+                        <input type="date" class="form-control" name="jkmkkp_approval" id="jkmkkp_approval" placeholder="BSB/DOD/VI.1/2021" value="{{ old('jkmkkp_approval', $preTender->jkmkkp_approval ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="loa" class="col-sm-2 col-form-label">Letter of Award (LOA)</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="loa" id="loa">
+                        <input type="date" class="form-control" name="loa" id="loa" value="{{ old('loa', $preTender->loa ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="aac" class="col-sm-2 col-form-label">Agreement for Appointment of Consultant (AAC)</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="aac" id="aac">
+                        <input type="date" class="form-control" name="aac" id="aac" value="{{ old('aac', $preTender->aac ?? '') }}">
                     </div>
                 </div>
 
@@ -147,7 +161,7 @@
                     <label for="soilInv" class="col-sm-2 col-form-label">Soil Investigation</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" name="soilInv" id="soilInv"
-                            value="{{ old('soilInv', isset($project) ? $project->soilInv : '') }}">
+                            value="{{ old('soilInv', $preTender->soilInv ?? '') }}">
                     </div>
                 </div>
 
@@ -155,7 +169,7 @@
                     <label for="topoSurvey" class="col-sm-2 col-form-label">Topo Survey</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" name="topoSurvey" id="topoSurvey"
-                            value="{{ old('topoSurvey', isset($project) ? $project->topoSurvey : '') }}">
+                            value="{{ old('topoSurvey', $preTender->topoSurvey ?? '') }}">
                     </div>
                 </div>
 

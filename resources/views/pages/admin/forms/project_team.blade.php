@@ -1,12 +1,26 @@
-@if(session('success'))
-    <script>
-        window.onload = function() {
-            demo.showNotification('top', 'right', "{{ session('success') }}");
-        };
-    </script>
-@endif
-
 @extends('layouts.app', ['pageSlug' => 'basicdetails'])
+
+@if(session('success') || session('error'))
+<div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Success - </b> {!! session('success') !!}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Error - </b> {{ session('error') }}</span>
+    </div>
+    @endif
+</div>
+@endif
 
 @section('content')
 
@@ -62,8 +76,7 @@
         </div>
         <div class="card-body">
         <!-- need to change later -->
-        <form action="{{ isset($project) ? route('pages.admin.forms.basicdetails.update', $project->id) : route('pages.admin.forms.basicdetails.store') }}" method="POST" enctype="multipart/form-data">
-
+        <form action="{{ isset($project) ? route('projects.project_team.update', $project->id) : route('projects.project_team.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 @if(isset($project))
@@ -76,9 +89,12 @@
                     <label for="oic" class="col-sm-2 col-form-label">Officer-in-Charge</label>
                     <div class="col-sm-10">
                         <select name="officer_in_charge" id="officer_in_charge" class="form-control">
-                            <option disabled selected>-- Select Officer in Charge --</option>
+                            <option disabled {{ empty($projectTeam->officer_in_charge) ? 'selected' : '' }}>-- Select Officer in Charge --</option>
                             @foreach($projectManagers as $projectManager)
-                                <option value="{{ $projectManager->id }}">{{ $projectManager->name }}</option>
+                                <option value="{{ $projectManager->id }}"
+                                    {{ (old('officer_in_charge', $projectTeam->officer_in_charge ?? '') == $projectManager->id) ? 'selected' : '' }}>
+                                    {{ $projectManager->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -88,10 +104,10 @@
                     <label for="architect_id" class="col-sm-2 col-form-label">Architect</label>
                     <div class="col-sm-10">
                         <select id="architect_id" name="architect_id" class="form-control">
-                            <option disabled selected>-- Select Architect --</option>
+                            <option disabled {{ empty($projectTeam->architect_id) ? 'selected' : '' }}>-- Select Architect --</option>
                             @foreach($architects as $architect)
                                 <option value="{{ $architect->id }}"
-                                {{ old('architect', isset($project) ? $project->architect_id : '') == $architect->id ? 'selected' : '' }}>
+                                {{ (old('architect_id', $projectTeam->architect_id ?? '') == $architect->id) ? 'selected' : '' }}>
                                     {{ $architect->name }}
                                 </option>
                             @endforeach
@@ -103,10 +119,10 @@
                     <label for="mechanical_electrical_id" class="col-sm-2 col-form-label">Mechanical & Electrical</label>
                     <div class="col-sm-10">
                         <select id="mechanical_electrical_id" name="mechanical_electrical_id" class="form-control">
-                            <option disabled selected>-- Select Mechanical & Electrical --</option>
+                            <option disabled {{ empty($projectTeam->mechanical_electrical_id) ? 'selected' : '' }}>-- Select Mechanical & Electrical --</option>
                             @foreach($mechanicalElectricals as $mechanicalElectrical)
                                 <option value="{{ $mechanicalElectrical->id }}"
-                                {{ old('mechanicalElectrical', isset($project) ? $project->mechanicalElectrical_id : '') == $mechanicalElectrical->id ? 'selected' : '' }}>
+                                {{ (old('mechanical_electrical_id', $projectTeam->mechanical_electrical_id ?? '') == $mechanicalElectrical->id) ? 'selected' : '' }}>
                                     {{ $mechanicalElectrical->name }}
                                 </option>
                             @endforeach
@@ -118,10 +134,10 @@
                     <label for="civil_structural_id" class="col-sm-2 col-form-label">Civil & Structural</label>
                     <div class="col-sm-10">
                         <select id="civil_structural_id" name="civil_structural_id" class="form-control">
-                            <option disabled selected>-- Select Civil & Structural --</option>
+                            <option disabled {{ empty($projectTeam->civil_structural_id) ? 'selected' : '' }}>-- Select Civil & Structural --</option>
                             @foreach($civilStructurals as $civilStructural)
                                 <option value="{{ $civilStructural->id }}"
-                                {{ old('civilStructural', isset($project) ? $project->civilStructural_id : '') == $civilStructural->id ? 'selected' : '' }}>
+                                {{ (old('civil_structural_id', $projectTeam->civil_structural_id ?? '') == $civilStructural->id) ? 'selected' : '' }}>
                                     {{ $civilStructural->name }}
                                 </option>
                             @endforeach
@@ -133,10 +149,10 @@
                     <label for="quantity_surveyor_id" class="col-sm-2 col-form-label">Quantity Surveyor</label>
                     <div class="col-sm-10">
                         <select id="quantity_surveyor_id" name="quantity_surveyor_id" class="form-control">
-                            <option disabled selected>-- Select Quantity Surveyor --</option>
+                            <option disabled {{ empty($projectTeam->quantity_surveyor_id) ? 'selected' : '' }}>-- Select Quantity Surveyor --</option>
                             @foreach($quantitySurveyors as $quantitySurveyor)
                                 <option value="{{ $quantitySurveyor->id }}"
-                                {{ old('quantitySurveyor', isset($project) ? $project->quantitySurveyor_id : '') == $quantitySurveyor->id ? 'selected' : '' }}>
+                                {{ (old('quantity_surveyor_id', $projectTeam->quantity_surveyor_id ?? '') == $quantitySurveyor->id) ? 'selected' : '' }}>
                                     {{ $quantitySurveyor->name }}
                                 </option>
                             @endforeach
@@ -147,7 +163,7 @@
                 <div class="row mb-3">
                     <label for="others_id" class="col-sm-2 col-form-label">Others (Specialist)</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="others_id" id="others_id">
+                        <input type="text" class="form-control" name="others_id" id="others_id" value="{{ old('others_id', $projectTeam->others_id ?? '') }}">
                     </div>
                 </div>
 

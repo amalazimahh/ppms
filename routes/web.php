@@ -8,7 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\PreTenderController;
 use App\Http\Controllers\MilestoneController;
-use App\Http\Controllers\ProjectTeamContoller;
+use App\Http\Controllers\ProjectTeamController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
     Route::get('admin/projects/{id}/status', [MilestoneController::class, 'milestone'])->name('projects.status')->middleware('auth');
     Route::get('admin/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team')->middleware('auth');
+    Route::put('/projects/{id}/project_team', [ProjectTeamController::class, 'update'])->name('projects.project_team.update');
     Route::get('admin/projects/{id}/pre_tender', [PreTenderController::class, 'edit'])->name('projects.pre_tender')->middleware('auth');
     Route::put('admin/projects/{id}/pre_tender', [PreTenderController::class, 'update'])->name('projects.pre_tender.update')->middleware('auth');
     Route::get('admin/projects/{id}/design_submission', [ProjectsController::class, 'designSubmission'])->name('projects.design_submission')->middleware('auth');
@@ -89,3 +90,6 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/executive/projectsList', [PageController::class, 'projectList'])->name('pages.executive.projectsList')->middleware('auth');
 
 });
+
+// (Optional) If you have a store route for creating new project team
+// Route::post('/projects/{id}/project_team', [ProjectTeamController::class, 'store'])->name('projects.project_team.store');
