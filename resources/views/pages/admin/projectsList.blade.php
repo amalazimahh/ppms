@@ -130,7 +130,7 @@ body {
 
                                         <!-- Project Details Modal -->
                                         <div class="modal fade" id="projectDetailsModal{{ $project->id }}" tabindex="-1" aria-labelledby="projectDetailsModalLabel{{ $project->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                                                 <div class="modal-content" style="border-radius: 12px;">
                                                     <div class="modal-header" style="border-bottom: 2px solid #8bc34a;">
                                                         <h4 class="modal-title" id="projectDetailsModalLabel{{ $project->id }}">
