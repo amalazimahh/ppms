@@ -264,20 +264,37 @@
             display: inline-block;
             margin-right: 8px;
         }
-        .status-dot.green { background: #4CAF50; }
-        .status-dot.yellow { background: #FFC107; }
-        .status-dot.red { background: #f44336; }
+    .status-dot.green { background: #4CAF50; }
+    .status-dot.yellow { background: #FFC107; }
+    .status-dot.red { background: #f44336; }
 
-        .overdue-badge {
+    .overdue-badge {
             background: rgba(244, 67, 54, 0.1);
             color: #f44336;
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 12px;
-        }
+    }
     </style>
 
-    <!-- First row: Overall Progress, Project Summary, Launch Date -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-9">
+                        <form action="{{ route('pages.admin.project-dashboard') }}" method="get">
+                            <input type="text" name="project_name" id="project_name" class="form-control" placeholder="Enter a project name...">
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-block">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Progress, Project Summary, Launch Date -->
     <div class="row">
         <!-- Overall Progress -->
         <div class="col-lg-3">
