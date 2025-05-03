@@ -19,6 +19,7 @@ use App\Models\CivilStructural;
 use App\Models\QuantitySurveyor;
 use App\Models\ProjectTeam;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProjectsController extends Controller
 {
@@ -431,7 +432,11 @@ class ProjectsController extends Controller
 
     }
 
-
+    public function downloadPdf($id)
+    {
+        $project = Project::findOrFail($id);
+        return Pdf::loadView('pages.admin.report-pdf', compact('project'))->download('project-details-' . $project->id . '.pdf');
+    }
 
 }
 

@@ -123,15 +123,73 @@ body {
                                         </div>
                                     </td>
                                     <td>
-                                        <!-- view details button here -->
-                                         <a href="{{ route('pages.view_project', $project->id) }}" class="btn btn-info btn-sm">
+                                        <!-- view details button (now opens modal) -->
+                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#projectDetailsModal{{ $project->id }}">
                                             <i class="tim-icons icon-zoom-split"></i> View Details
-                                         </a>
+                                        </button>
 
-                                         <!-- edit forms button -->
-                                         <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm">
-                                             <i class="tim-icons icon-pencil"></i> Edit
-                                          </a>
+                                        <!-- Project Details Modal -->
+                                        <div class="modal fade" id="projectDetailsModal{{ $project->id }}" tabindex="-1" aria-labelledby="projectDetailsModalLabel{{ $project->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                <div class="modal-content" style="border-radius: 12px;">
+                                                    <div class="modal-header" style="border-bottom: 2px solid #8bc34a;">
+                                                        <h4 class="modal-title" id="projectDetailsModalLabel{{ $project->id }}">
+                                                            <span style="font-weight: bold; color: #4caf50;">Project Details</span>
+                                                        </h4>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="icon-simple-remove"></button>
+                                                    </div>
+                                                    <div class="modal-body text-dark" style="background: #f9f9f9;">
+                                                        <div class="container">
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <strong>Financial Year:</strong>
+                                                                    <div>{{ $project->fy }}</div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <strong>Vote No.:</strong>
+                                                                    <div>{{ $project->voteNum }}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <strong>Title:</strong>
+                                                                    <div>{{ $project->title }}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-6">
+                                                                    <strong>Scheme Value:</strong>
+                                                                    <div>{{ $project->sv }}</div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <strong>Allocation Value:</strong>
+                                                                    <div>{{ $project->av }}</div>
+                                                                </div>
+                                                            </div>
+                                                            @if($project->parent_project_id)
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <strong>Parent Project:</strong>
+                                                                    <div>{{ $project->parentProject->title }}</div>
+                                                                </div>
+                                                            </div>
+                                                            @endif
+                                                            <div class="modal-footer" style="border-top: 2px solid #8bc34a;">
+                                                                <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-danger" target="_blank">
+                                                                    <i class="fa fa-file-pdf-o"></i> Download PDF
+                                                                </a>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- edit forms button -->
+                                        <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="tim-icons icon-pencil"></i> Edit
+                                        </a>
 
                                          <!-- Delete Button -->
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">
@@ -142,23 +200,23 @@ body {
                                         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-dark">
-                                                Are you sure you want to delete this project? This action cannot be undone.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-dark">
+                                                    Are you sure you want to delete this project? This action cannot be undone.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
-                                                <!-- Delete Form -->
-                                                <form id="deleteForm" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                                                </form>
-                                            </div>
+                                                    <!-- Delete Form -->
+                                                    <form id="deleteForm" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                         </div>
@@ -250,9 +308,11 @@ body {
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer" style="border-top: 2px solid #8bc34a;">
+                    <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-danger" target="_blank">
+                        <i class="fa fa-file-pdf-o"></i> Download PDF
+                    </a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Project</button>
                 </div>
 
             </form>

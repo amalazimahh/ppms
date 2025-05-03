@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
     Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'index'])->name('pages.admin.project-dashboard')->middleware('auth');
     // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
+    Route::get('/admin/projects/{id}/download-PDF', [ProjectsController::class, 'downloadPDF'])->name('projects.downloadPDF')->middleware('auth');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
