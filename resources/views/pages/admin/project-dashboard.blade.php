@@ -314,11 +314,11 @@
                     <div class="summary-details mt-3">
                         <div class="summary-item text-light bg-dark">
                             <span>Start Date:</span>
-                            <span>2017-05-01</span>
+                            <span>01-05-2024</span>
                         </div>
                         <div class="summary-item text-light bg-dark">
                             <span>End Date:</span>
-                            <span>2017-12-15</span>
+                            <span>15-12-2024</span>
                         </div>
                         <div class="summary-item text-light bg-dark">
                             <span>Officer-in-Charge:</span>
@@ -340,7 +340,7 @@
                     <h5 class="card-category">Projected Launch Date</h5>
                     <div class="launch-date-card mt-3">
                         <i class="tim-icons icon-calendar-60 text-success"></i>
-                        <h4>Friday, December 15</h4>
+                        <h4>Thursday, November 01</h4>
                         <h3 class="text-success mt-2">121 Days</h3>
                     </div>
                 </div>
@@ -423,7 +423,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Tender Documentation</td>
-                                            <td>2017-09-15</td>
+                                            <td>15-09-2024</td>
                                             <td>
                                                 <span class="status-dot green"></span>
                                                 On Track
@@ -431,7 +431,7 @@
                                         </tr>
                                         <tr>
                                             <td>Contractor Selection</td>
-                                            <td>2017-09-30</td>
+                                            <td>30-09-2024</td>
                                             <td>
                                                 <span class="status-dot yellow"></span>
                                                 At Risk
@@ -439,7 +439,7 @@
                                         </tr>
                                         <tr>
                                             <td>Construction Planning</td>
-                                            <td>2017-10-15</td>
+                                            <td>15-10-2024</td>
                                             <td>
                                                 <span class="status-dot green"></span>
                                                 On Track
@@ -463,14 +463,14 @@
                                                 <span class="overdue-badge">5 days</span>
                                                 Budget Review Meeting
                                             </td>
-                                            <td>2017-08-15</td>
+                                            <td>15-08-2024</td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <span class="overdue-badge">3 days</span>
                                                 Tender Documents Review
                                             </td>
-                                            <td>2017-08-17</td>
+                                            <td>17-08-2024</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -495,25 +495,19 @@
                                 <div class="col-md-4">
                                     <div class="budget-info">
                                         <div class="budget-stat">
-                                            <div class="budget-icon bg-info">
-                                                <i class="tim-icons icon-coins text-info"></i>
-                                            </div>
                                             <div>
                                                 <h6 class="text-muted">Total Budget</h6>
                                                 <h3>$52,000</h3>
                                             </div>
                                         </div>
                                         <div class="budget-stat">
-                                            <div class="budget-icon bg-success">
-                                                <i class="tim-icons icon-wallet-43 text-success"></i>
-                                            </div>
                                             <div>
                                                 <h6 class="text-muted">Remaining</h6>
                                                 <h3>$8,770</h3>
                                             </div>
                                         </div>
                                         <div class="budget-warning">
-                                            <i class="tim-icons icon-alert-circle-exc"></i>
+                                        <i class="fa-solid fa-exclamation fa-fade fa-lg" style="color: #ff0000;"></i>
                                             <h5 class="text-danger mb-0">8.1% Over Target</h5>
                                         </div>
                                     </div>
@@ -569,8 +563,9 @@
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="timeline-icon bg-info">
-                                    <i class="tim-icons icon-notes text-info"></i>
+                                <div class="timeline-icon">
+                                    <!-- <i class="tim-icons icon-notes text-info"></i> -->
+                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #8f36a1;"></i>
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Design Documentation Updated</h6>
@@ -581,8 +576,9 @@
                         </div>
                         <div class="timeline-item">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="timeline-icon bg-success">
-                                    <i class="tim-icons icon-check-2 text-success"></i>
+                                <div class="timeline-icon">
+                                    <!-- <i class="tim-icons icon-check-2 text-success"></i> -->
+                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #2f70ac;"></i>
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Mobile View Configuration Completed</h6>
@@ -593,8 +589,9 @@
                         </div>
                         <div class="timeline-item">
                             <div class="d-flex align-items-center">
-                                <div class="timeline-icon bg-warning">
-                                    <i class="tim-icons icon-alert-circle-exc text-warning"></i>
+                                <div class="timeline-icon">
+                                    <!-- <i class="tim-icons icon-alert-circle-exc text-warning"></i> -->
+                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #9d3f88;"></i>
                                 </div>
                                 <div class="ml-3">
                                     <h6 class="mb-0">Budget Adjustment Required</h6>
