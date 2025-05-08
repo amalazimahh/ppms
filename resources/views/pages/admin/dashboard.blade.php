@@ -170,13 +170,13 @@
                             <tbody>
                                 <tr>
                                     <td>Infrastructure A</td>
-                                    <td>2024-03-15</td>
+                                    <td>15-03-2024</td>
                                     <td><span class="badge badge-success">65 days</span></td>
                                     <td><span class="badge badge-success">On Track</span></td>
                                 </tr>
                                 <tr>
-                                    <td>Software B</td>
-                                    <td>2024-02-10</td>
+                                    <td>Software B <i class="fa-solid fa-exclamation fa-fade fa-lg" style="color: #ff0000;"></i></td>
+                                    <td>10-02-2024</td>
                                     <td><span class="badge badge-warning">45 days</span></td>
                                     <td><span class="badge badge-danger">Over Budget</span></td>
                                 </tr>
