@@ -123,7 +123,7 @@ body {
                                         </div>
                                     </td>
                                     <td>
-                                        <!-- view details button (now opens modal) -->
+                                        <!-- view details button -->
                                         <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#projectDetailsModal{{ $project->id }}">
                                             <i class="tim-icons icon-zoom-split"></i> View Details
                                         </button>
