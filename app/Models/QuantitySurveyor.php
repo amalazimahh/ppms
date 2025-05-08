@@ -16,5 +16,5 @@ class QuantitySurveyor extends Model
         'updated_at' => 'date',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }

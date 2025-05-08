@@ -16,5 +16,5 @@ class CivilStructural extends Model
         'updated_at' => 'date',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }
