@@ -76,7 +76,7 @@
 
             <!-- Notification Tab -->
             <li @if ($pageSlug == 'notifications') class="active" @endif>
-                <a href="{{ route('pages.admin.user_management')  }}">
+                <a href="{{ route('pages.admin.project_team')  }}">
                     <i class="tim-icons icon-badge"></i>
                     <p>{{ __('Project Team') }}</p>
                 </a>
