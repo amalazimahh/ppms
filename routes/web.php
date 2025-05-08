@@ -80,6 +80,9 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'index'])->name('pages.admin.project-dashboard')->middleware('auth');
     // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
     Route::get('/admin/projects/{id}/download-PDF', [ProjectsController::class, 'downloadPDF'])->name('projects.downloadPDF')->middleware('auth');
+    Route::get('/admin/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('pages.admin.project_team')->middleware('auth');
+    Route::post('/admin/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('admin.project_team.addDiscipline');
+    Route::post('/admin/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('admin.project_team.deleteDiscipline');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
