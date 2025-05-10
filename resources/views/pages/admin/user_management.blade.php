@@ -24,7 +24,7 @@
                         <tr>
                             <td> {{ $user->id }} </td>
                             <td> {{ $user->name }}</td>
-                            <td> {{ $user->roles_id ? DB::table('roles')->where('id', $user->roles_id)->value('name') : 'No Role Assigned' }} </td>
+                            <td> <span class="badge badge-primary">{{ $user->roles_id ? DB::table('roles')->where('id', $user->roles_id)->value('name') : 'No Role Assigned' }} </span></td>
                             <td> {{ $user->created_at }} </td>
                             <td>
                                 <!-- edit and delete buton should be here -->
