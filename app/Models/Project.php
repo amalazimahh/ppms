@@ -16,7 +16,7 @@ class Project extends Model
     protected $fillable = [
         'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
         'scope', 'location', 'statuses_id', 'parent_project_id',
-        'client_ministry_id', 'img',
+        'client_ministry_id', 'img', 'milestones_id',
         'created_by', 'created_at', 'updated_at'
     ];
 
@@ -35,6 +35,11 @@ class Project extends Model
     // relationship with Statuses model
     public function status(){
         return $this->belongsTo(Status::class, 'statuses_id');
+    }
+
+    // relationship with Milestone model
+    public function milestones(){
+        return $this->belongsTo(Milestone::class, 'milestones_id');
     }
 
     // relationship with ClientMinistry model
