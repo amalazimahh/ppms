@@ -19,13 +19,13 @@
         }
     </style>
 
-    <!-- Progress Bar -->
+    <!-- progress bar -->
     <div class="progress" style="height: 20px;">
         <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
-    <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
+    <div id="progressLabel" class="mt-2" style="text-align: center;">Project Title: </div>
 
-    <!-- Dropdown Navigation (for jumping between forms) -->
+    <!-- dropdown navigation to redirect to specific forms -->
     <div class="row mb-3">
         <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to: </label>
         <div class="col-sm-10">
@@ -54,6 +54,9 @@
             @if (!$project->status)
                 <div class="alert alert-info">
                     This project has not been assigned a status yet. Please assign a status to view milestones.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
                 </div>
             @elseif ($milestones->isEmpty())
                 <div class="alert alert-warning">
@@ -65,6 +68,7 @@
                         <tr>
                             <th>Stage</th>
                             <th>Actions</th>
+                            <!-- <th>Status</th> -->
                     </thead>
                     <tbody>
                         @foreach ($statuses as $status)
@@ -73,6 +77,7 @@
                                 <td>
                                     <button class="btn btn-sm btn-primary toggle-milestones">Show Milestones</button>
                                 </td>
+                                <!-- <td>N/A</td> -->
                             </tr>
                             <tr class="milestones-row" data-status-id="{{ $status->id }}" style="display:none;">
                                 <td colspan="2">
@@ -87,7 +92,16 @@
                                             @foreach($status->milestones as $milestone)
                                                 <tr>
                                                     <td>{{ $milestone->name }}</td>
-                                                    <td><input type="checkbox" name="completed" class="milestone-checkbox" data-milestone-id="{{ $milestone->id }}"></td>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" name="completed" class="form-check-input milestone-checkbox" data-milestone-id="{{ $milestone->id }}">
+                                                                <span class="form-check-sign">
+                                                                    <span class="check"></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -101,10 +115,9 @@
     </div>
 @endsection
 
-<!-- Add this at the end of your view or in a separate JS file -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Toggle milestones visibility
+        // toggle milestones visibility
         document.querySelectorAll('.toggle-milestones').forEach(button => {
             button.addEventListener('click', function () {
                 const statusId = this.closest('tr').getAttribute('data-status-id');
@@ -120,33 +133,35 @@
             });
         });
 
-        // Handle milestone checkbox clicks
-        document.querySelectorAll('.milestone-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const milestoneId = this.getAttribute('data-milestone-id');
-                const isCompleted = this.checked;
+        // progress bar update logic
+        function updateProgressBar(){
+            const checkboxes = document.querySelectorAll('.milestone-checkbox');
+            const checked = document.querySelectorAll('.milestone-checkbox:checked');
+            const total = checkboxes.length;
+            const checkedCount = checked.length;
 
-                // Send an AJAX request to update the milestone status
-                fetch(`/milestones/${milestoneId}/update-status`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: JSON.stringify({ completed: isCompleted }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Milestone status updated successfully!');
-                    } else {
-                        alert('Failed to update milestone status.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
+            let percent = 0;
+            if(total > 0){
+                percent = (checkedCount / total) * 100;
+            }
+
+            // round to nearest int
+            percent = Math.round(percent);
+
+            // update progress bar
+            const progressBar = document.getElementById('formProgressBar');
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+                progressBar.setAttribute('aria-valuenow', percent);
+                progressBar.textContent = percent + '%';
+            }
+        }
+
+        // attach event listener to milestone checkboxes
+        document.querySelectorAll('.milestone-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgressBar);
         });
+
+        updateProgressBar();
     });
 </script>
