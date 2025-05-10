@@ -19,16 +19,16 @@ class MilestoneController extends Controller
         // retrieve project and its milestones
         $project = Project::with('status.milestones')->findOrFail($id);
 
-        // Retrieve all statuses with their milestones
+        // retrieve all statuses with their milestones
         $statuses = Status::with('milestones')->get();
 
-        // Check if the project has a status
+        // check if the project has a status
         if ($project->status) {
-            // Get the milestones for the status
+            // get the milestones for the status
             $milestones = $project->status->milestones;
         } else {
             // No status assigned, so no milestones
-            $milestones = collect(); // Empty collection
+            $milestones = collect();
         }
 
         return view('pages.admin.forms.status', compact('project', 'statuses', 'milestones'));
