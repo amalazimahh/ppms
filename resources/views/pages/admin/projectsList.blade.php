@@ -1,17 +1,5 @@
 @extends('layouts.app', ['activePage' => 'table', 'titlePage' => __('Table List')])
 
-<!-- @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif -->
-
 @if(session('success') || session('error'))
 <div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
     @if(session('success'))
@@ -36,44 +24,44 @@
 
 @section('content')
 <style>
-.form-control:focus {
-    color: #000; /* Black text when focused */
-}
-.form-control:not(:placeholder-shown) {
-    color: #000; /* Black text when not empty */
-}
+    .form-control:focus {
+        color: #000;
+    }
+    .form-control:not(:placeholder-shown) {
+        color: #000;
+    }
 
-/* Notification animation */
-.alert {
-    box-shadow: 0 4px 20px 0 rgba(0,0,0,.14),
-                0 7px 10px -5px rgba(0,188,212,.4);
-    border: 0;
-    transition: all 0.3s ease;
-    position: relative;
-    display: inline-block;
-    margin-bottom: 10px;
-    width: auto;
-}
+    /* animation for notif */
+    .alert {
+        box-shadow: 0 4px 20px 0 rgba(0,0,0,.14),
+                    0 7px 10px -5px rgba(0,188,212,.4);
+        border: 0;
+        transition: all 0.3s ease;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 10px;
+        width: auto;
+    }
 
-.alert-success {
-    background-color: #00d25b;
-    color: #fff;
-}
+    .alert-success {
+        background-color: #00d25b;
+        color: #fff;
+    }
 
-.alert-danger {
-    background-color: #fc424a;
-    color: #fff;
-}
+    .alert-danger {
+        background-color: #fc424a;
+        color: #fff;
+    }
 
-.alert .close {
-    color: #fff;
-    opacity: .9;
-    text-shadow: none;
-    line-height: 0;
-    outline: 0;
-}
+    .alert .close {
+        color: #fff;
+        opacity: .9;
+        text-shadow: none;
+        line-height: 0;
+        outline: 0;
+    }
 
-body {
+    body {
         opacity: 1;
         transition: opacity 300ms ease-in-out;
     }
@@ -308,11 +296,9 @@ body {
                     </div>
                 </div>
 
-                <div class="modal-footer" style="border-top: 2px solid #8bc34a;">
-                    <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-danger" target="_blank">
-                        <i class="fa fa-file-pdf-o"></i> Download PDF
-                    </a>
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Project</button>
                 </div>
 
             </form>
