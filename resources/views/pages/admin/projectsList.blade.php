@@ -228,7 +228,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addProjectModalLabel">Add New Project</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
             </div>
             <form action="{{ route('projects.store') }}" method="post">
                 @csrf
