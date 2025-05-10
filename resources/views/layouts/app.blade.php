@@ -147,10 +147,43 @@
     @stack('js')
 
     <script>
-        $(document).ready(function() {
-            if (typeof demo.initDashboardPageCharts === 'function') {
-                demo.initDashboardPageCharts(); // Initialize the charts
+        // $(document).ready(function() {
+        //     if (typeof demo.initDashboardPageCharts === 'function') {
+        //         demo.initDashboardPageCharts(); // Initialize the charts
+        //     }
+        // });
+
+            document.addEventListener('DOMContentLoaded', function(){
+                // progress bar update logic
+            function updateProgressBar(){
+                const checkboxes = document.querySelectorAll('.milestone-checkbox');
+                const checked = document.querySelectorAll('.milestone-checkbox:checked');
+                const total = checkboxes.length;
+                const checkedCount = checked.length;
+
+                let percent = 0;
+                if(total > 0){
+                    percent = (checkedCount / total) * 100;
+                }
+
+                // round to nearest int
+                percent = Math.round(percent);
+
+                // update progress bar
+                const progressBar = document.getElementById('formProgressBar');
+                if (progressBar) {
+                    progressBar.style.width = percent + '%';
+                    progressBar.setAttribute('aria-valuenow', percent);
+                    progressBar.textContent = percent + '%';
+                }
             }
+
+            // attach event listener to milestone checkboxes
+            document.querySelectorAll('.milestone-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgressBar);
+            });
+
+            updateProgressBar();
         });
     </script>
 </body>
