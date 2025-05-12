@@ -17,20 +17,19 @@ class MilestoneController extends Controller
     public function milestone($id)
     {
         // retrieve project and its milestones
-        $project = Project::with('status.milestones')->findOrFail($id);
+        $project = Project::with(['milestones'])->findOrFail($id);
 
         // retrieve all statuses with their milestones
         $statuses = Status::with('milestones')->get();
 
-        // check if the project has a status
-        if ($project->status) {
-            // get the milestones for the status
-            $milestones = $project->status->milestones;
-        } else {
-            // No status assigned, so no milestones
-            $milestones = collect();
-        }
+        // get all milestones for the project
+        $milestones = $project->milestones;
 
-        return view('pages.admin.forms.status', compact('project', 'statuses', 'milestones'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.status', compact('project', 'statuses', 'milestones', 'progress'));
     }
 }

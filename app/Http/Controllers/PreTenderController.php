@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PreTender;
 use App\Models\Project;
+use App\Models\Milestone;
 use App\Models\Notification;
 use App\Models\NotificationRecipient;
 use Illuminate\Support\Facades\Log;
@@ -15,8 +16,15 @@ class PreTenderController extends Controller
     // show pre_tender edit form
     public function edit($id){
         $project = Project::findOrFail($id);
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
         $preTender = $project->preTender ?? new PreTender();
-        return view('pages.admin.forms.pre_tender', compact('project', 'preTender'));
+        return view('pages.admin.forms.pre_tender', compact('project', 'preTender', 'progress'));
     }
 
     public function update(Request $request, $id)

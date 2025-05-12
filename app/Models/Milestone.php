@@ -27,4 +27,8 @@ class Milestone extends Model
     public function status(){
         return $this->belongsTo(Status::class, 'statuses_id');
     }
+
+    public function projects(){
+        return $this->belongsToMany(Project::class)->withPivot('completed', 'completed_at')->withTimestamps();
+    }
 }
