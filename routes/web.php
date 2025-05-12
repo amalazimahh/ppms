@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectDashboardController;
 use App\Http\Controllers\ProjectMilestoneController;
 use App\Http\Controllers\DesignSubmissionController;
+use App\Http\Controllers\TenderController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -69,7 +70,8 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/pre_tender', [PreTenderController::class, 'update'])->name('projects.pre_tender.update')->middleware('auth');
     Route::get('admin/projects/{id}/design_submission', [DesignSubmissionController::class, 'edit'])->name('projects.design_submission')->middleware('auth');
     Route::put('admin/projects/{id}/design_submission', [DesignSubmissionController::class, 'update'])->name('projects.design_submission.update')->middleware('auth');
-    Route::get('admin/projects/{id}/tender', [ProjectsController::class, 'tender'])->name('projects.tender')->middleware('auth');
+    Route::get('admin/projects/{id}/tender', [TenderController::class, 'edit'])->name('projects.tender')->middleware('auth');
+    Route::put('admin/projects/{id}/tender', [TenderController::class, 'update'])->name('projects.tender.update')->middleware('auth');
     Route::get('admin/projects/{id}/tender_recommendation', [ProjectsController::class, 'tender_recommendation'])->name('projects.tender_recommendation')->middleware('auth');
     Route::get('admin/projects/{id}/approval_award', [ProjectsController::class, 'approval_award'])->name('projects.approval_award')->middleware('auth');
     Route::get('admin/projects/{id}/contract', [ProjectsController::class, 'contract'])->name('projects.contract')->middleware('auth');

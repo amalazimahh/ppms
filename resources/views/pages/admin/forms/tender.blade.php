@@ -1,12 +1,26 @@
-@if(session('success'))
-    <script>
-        window.onload = function() {
-            demo.showNotification('top', 'right', "{{ session('success') }}");
-        };
-    </script>
-@endif
-
 @extends('layouts.app', ['pageSlug' => 'basicdetails'])
+
+@if(session('success') || session('error'))
+<div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Success - </b> {!! session('success') !!}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Error - </b> {{ session('error') }}</span>
+    </div>
+    @endif
+</div>
+@endif
 
 @section('content')
 
@@ -63,8 +77,11 @@
             <h1 class="card-title">Opening/Closing Tender Form</h1>
         </div>
         <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('projects.tender.update', $project->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @if(isset($project))
+                    @method('PUT')
+                @endif
                 <div class="row mb-3">
                     <label for="confirmFund" class="col-sm-2 col-form-label">Confirmation Fund</label>
                     <div class="col-sm-10">
