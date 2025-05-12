@@ -11,6 +11,7 @@ use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ProjectTeamController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectDashboardController;
+use App\Http\Controllers\ProjectMilestoneController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -83,6 +84,8 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('pages.admin.project_team')->middleware('auth');
     Route::post('/admin/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('admin.project_team.addDiscipline');
     Route::post('/admin/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('admin.project_team.deleteDiscipline');
+    Route::post('/projects/{project}/milestones/{milestone}/toggle', [ProjectMilestoneController::class, 'toggle'])->name('projects.milestones.toggle');
+    Route::get('/projects/{project}/progress', [ProjectMilestoneController::class, 'getProgress'])->name('projects.progress');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');

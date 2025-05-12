@@ -37,11 +37,6 @@ class Project extends Model
         return $this->belongsTo(Status::class, 'statuses_id');
     }
 
-    // relationship with Milestone model
-    public function milestones(){
-        return $this->belongsTo(Milestone::class, 'milestones_id');
-    }
-
     // relationship with ClientMinistry model
     public function clientMinistry(){
         return $this->belongsTo(ClientMinistry::class, 'client_ministry_id');
@@ -65,5 +60,9 @@ class Project extends Model
     // get all child projects
     public function childProjects(){
         return $this->hasMany(Project::class, 'parent_project_id');
+    }
+
+    public function milestones(){
+        return $this->belongsToMany(Milestone::class)->withPivot('completed', 'completed_at')->withTimestamps();
     }
 }

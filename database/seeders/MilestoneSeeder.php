@@ -68,10 +68,6 @@ class MilestoneSeeder extends Seeder
             // ongoing / construction stage
             [
                 'statuses_id' => 4,
-                'name' => 'MO1 - Confirmation of Implementation Strategy',
-            ],
-            [
-                'statuses_id' => 4,
                 'name' => 'MO1 - Completion of Initial Mobilisation',
             ],
             [
@@ -100,11 +96,11 @@ class MilestoneSeeder extends Seeder
             ],
             [
                 'statuses_id' => 4,
-                'name' => 'MO8 - Completion of Services/Utilities',
+                'name' => 'M08 - Completion of Services/Utilities',
             ],
             [
                 'statuses_id' => 4,
-                'name' => 'MO9 - Issuance of Certificate of Practical Completion',
+                'name' => 'M09 - Issuance of Certificate of Practical Completion',
             ],
             // post-completion stage
             [
