@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\Notification;
 use App\Models\NotificationRecipient;
 use App\Models\Status;
+use App\Models\Milestone;
 use App\Models\ClientMinistry;
 use App\Models\Contractor;
 use App\Models\Architect;
@@ -26,9 +27,18 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::with(['milestones'])->get();
         $mainProjects = Project::whereNull('parent_project_id')->get();
-        return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
+
+        foreach($projects as $project){
+            $milestones = $project->milestones;
+
+            // calculate progress
+            $totalMilestones = $milestones->count();
+            $completedMilestones = $milestones->where('pivot.completed', true)->count();
+            $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+        }
+        return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'progress'));
     }
 
     public function basicdetails($id)
@@ -62,12 +72,20 @@ class ProjectsController extends Controller
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
 
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
         // check if user is Pm
         if(session('roles') == 1)
         {
             return view('pages.admin.forms.basicdetails',
             compact('project', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
-                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects', 'progress'));
         } else if(session('roles') == 2)
         {
             return view('pages.project_manager.forms.basicdetails',
@@ -111,6 +129,15 @@ class ProjectsController extends Controller
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
 
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+
         if(session('roles') == 1){
             // default to Admin view
             return view('pages.admin.forms.basicdetails', compact(
@@ -123,7 +150,8 @@ class ProjectsController extends Controller
                 'mechanicalElectricals',
                 'civilStructurals',
                 'quantitySurveyors',
-                'mainProjects'
+                'mainProjects',
+                'progress'
             ));
         } else if(session('roles') == 2){
             // default to Admin view
@@ -161,7 +189,15 @@ class ProjectsController extends Controller
         // fetch project details using the ID
         $project = Project::findOrFail($id);
 
-        return view('pages.admin.forms.pre_tender', compact('project'));
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.pre_tender', compact('project', 'progress'));
     }
 
     // add  pre_tender method to handle form
@@ -186,7 +222,15 @@ class ProjectsController extends Controller
         // retrieve lists of quantity surveyor
         $quantitySurveyors = QuantitySurveyor::all();
 
-        return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors'));
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
     }
 
     // add designSubmission method to handle form
@@ -195,7 +239,15 @@ class ProjectsController extends Controller
         // fetch project details using the ID
         $project = Project::findOrFail($id);
 
-        return view('pages.admin.forms.design_submission', compact('project'));
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.design_submission', compact('project', 'progress'));
     }
 
     // add tender method to handle form
@@ -204,7 +256,15 @@ class ProjectsController extends Controller
         // fetch project details using the ID
         $project = Project::findOrFail($id);
 
-        return view('pages.admin.forms.tender', compact('project'));
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.tender', compact('project', 'progress'));
     }
 
     // add tender recommendation method to handle form
@@ -212,8 +272,15 @@ class ProjectsController extends Controller
     {
         // fetch project details using the ID
         $project = Project::findOrFail($id);
+        // get all milestones for the project
+        $milestones = $project->milestones;
 
-        return view('pages.admin.forms.tender_recommendation', compact('project'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.tender_recommendation', compact('project', 'progress'));
     }
 
      // add approval of award method to handle form
@@ -221,8 +288,15 @@ class ProjectsController extends Controller
      {
          // fetch project details using the ID
          $project = Project::findOrFail($id);
+         // get all milestones for the project
+        $milestones = $project->milestones;
 
-         return view('pages.admin.forms.approval_award', compact('project'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+         return view('pages.admin.forms.approval_award', compact('project', 'progress'));
      }
 
     // add contract method to handle form
@@ -232,8 +306,15 @@ class ProjectsController extends Controller
         $project = Project::findOrFail($id);
         // retrieve lists of main contractors
         $contractors = Contractor::all();
+        // get all milestones for the project
+        $milestones = $project->milestones;
 
-        return view('pages.admin.forms.contract', compact('project', 'contractors'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.contract', compact('project', 'contractors', 'progress'));
     }
 
     // add bankers guarantee method to handle form
@@ -241,8 +322,15 @@ class ProjectsController extends Controller
     {
         // fetch project details using the ID
         $project = Project::findOrFail($id);
+        // get all milestones for the project
+        $milestones = $project->milestones;
 
-        return view('pages.admin.forms.bankers_guarantee', compact('project'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.bankers_guarantee', compact('project', 'progress'));
     }
 
     // add insurance method to handle form
@@ -250,8 +338,15 @@ class ProjectsController extends Controller
     {
         // fetch project details using the ID
         $project = Project::findOrFail($id);
+        // get all milestones for the project
+        $milestones = $project->milestones;
 
-        return view('pages.admin.forms.insurance', compact('project'));
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.insurance', compact('project', 'progress'));
     }
 
     // store basicdetails form

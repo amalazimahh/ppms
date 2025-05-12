@@ -21,7 +21,10 @@
 
     <!-- progress bar -->
     <div class="progress" style="height: 20px;">
-        <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="formProgressBar" class="progress-bar" role="progressbar"
+             style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+            {{ $progress }}%
+        </div>
     </div>
     <div id="progressLabel" class="mt-2" style="text-align: center;">Project Title: </div>
 
@@ -89,21 +92,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($status->milestones as $milestone)
-                                                <tr>
-                                                    <td>{{ $milestone->name }}</td>
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label">
-                                                                <input type="checkbox" name="completed" class="form-check-input milestone-checkbox" data-milestone-id="{{ $milestone->id }}">
-                                                                <span class="form-check-sign">
-                                                                    <span class="check"></span>
-                                                                </span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                        @foreach($status->milestones as $milestone)
+                                            @php
+                                                $projectMilestone = $milestones->firstWhere('id', $milestone->id);
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $milestone->name }}</td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox"
+                                                                name="completed"
+                                                                class="form-check-input milestone-checkbox"
+                                                                data-milestone-id="{{ $milestone->id }}"
+                                                                {{ $projectMilestone && $projectMilestone->pivot && $projectMilestone->pivot->completed ? 'checked' : '' }}>
+                                                            <span class="form-check-sign">
+                                                                <span class="check"></span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </td>
@@ -135,20 +145,27 @@
 
         // progress bar update logic
         function updateProgressBar(){
+            // Use a Set to store unique milestone IDs
             const checkboxes = document.querySelectorAll('.milestone-checkbox');
             const checked = document.querySelectorAll('.milestone-checkbox:checked');
-            const total = checkboxes.length;
-            const checkedCount = checked.length;
+            const uniqueIds = new Set();
+            const checkedIds = new Set();
+
+            checkboxes.forEach(cb => uniqueIds.add(cb.dataset.milestoneId));
+            checked.forEach(cb => checkedIds.add(cb.dataset.milestoneId));
+
+            const total = uniqueIds.size;
+            const checkedCount = checkedIds.size;
 
             let percent = 0;
             if(total > 0){
                 percent = (checkedCount / total) * 100;
             }
 
-            // round to nearest int
-            percent = Math.round(percent);
+            percent = Math.ceil(percent);
 
-            // update progress bar
+            console.log('Total:', total, 'Checked:', checkedCount, 'Percent:', percent);
+
             const progressBar = document.getElementById('formProgressBar');
             if (progressBar) {
                 progressBar.style.width = percent + '%';
@@ -158,8 +175,21 @@
         }
 
         // attach event listener to milestone checkboxes
-        document.querySelectorAll('.milestone-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', updateProgressBar);
+        $('.milestone-checkbox').on('change', function() {
+            var milestoneId = $(this).data('milestone-id');
+            var completed = $(this).is(':checked') ? 1 : 0;
+            $.ajax({
+                url: '/projects/{{ $project->id }}/milestones/' + milestoneId + '/toggle',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    completed: completed
+                },
+                success: function(response) {
+                    // Optionally show a success message
+                    updateProgressBar(); // <-- Add this line here!
+                }
+            });
         });
 
         updateProgressBar();

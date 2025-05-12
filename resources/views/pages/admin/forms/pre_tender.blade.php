@@ -42,11 +42,22 @@
         }
     </style>
 
-    <!-- Progress Bar -->
-    <div class="progress" style="height: 20px;">
-        <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <!-- to check if it can erad milestone_project for progres bar -->
+    <!-- <pre>
+    Project ID: {{ $project->id }}
+    Milestones: {{ $project->milestones->count() }}
+    @foreach($project->milestones as $milestone)
+        ID: {{ $milestone->id }}, Completed: {{ $milestone->pivot->completed ? 'Yes' : 'No' }}
+    @endforeach
+    </pre> -->
+     <!-- progress bar -->
+     <div class="progress" style="height: 20px;">
+        <div id="formProgressBar" class="progress-bar" role="progressbar"
+             style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+            {{ $progress }}%
+        </div>
     </div>
-    <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
+    <div id="progressLabel" class="mt-2" style="text-align: center;">Project Title: </div>
 
     <!-- Dropdown Navigation (for jumping between forms) -->
     <div class="row mb-3">
@@ -204,6 +215,8 @@
             numeralDecimalScale: 2,
             numeralPositiveOnly: true,
         });
+
+
     });
 </script>
 @endsection

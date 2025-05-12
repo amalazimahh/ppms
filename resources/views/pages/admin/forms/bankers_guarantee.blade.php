@@ -28,11 +28,14 @@
         }
     </style>
 
-    <!-- Progress Bar -->
+    <!-- progress bar -->
     <div class="progress" style="height: 20px;">
-        <div id="formProgressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="formProgressBar" class="progress-bar" role="progressbar"
+             style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+            {{ $progress }}%
+        </div>
     </div>
-    <div id="progressLabel" class="mt-2" style="text-align: center;">Progress: 0%</div>
+    <div id="progressLabel" class="mt-2" style="text-align: center;">Project Title: </div>
 
     <!-- Dropdown Navigation (for jumping between forms) -->
     <div class="row mb-3">
