@@ -33,4 +33,8 @@ class Contract extends Model
         'retAmt',
         'statDec'
     ];
+
+    public function project(){
+        return $this->belongsTo(Project::class);
+    }
 }
