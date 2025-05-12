@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('project')->onDelete('cascade');
             $table->foreignId('contractor_id')->constrained('contractor')->onDelete('cascade');
-            $table->string('contractorNum')->nullable();
+            $table->string('contractNum')->nullable();
             $table->date('start')->nullable();
             $table->date('end')->nullable();
             $table->string('period')->nullable();

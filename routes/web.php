@@ -16,6 +16,7 @@ use App\Http\Controllers\DesignSubmissionController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\TenderRecommendationController;
 use App\Http\Controllers\ApprovalAwardController;
+use App\Http\Controllers\ContractController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -78,7 +79,8 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/tender_recommendation', [TenderRecommendationController::class, 'update'])->name('projects.tender_recommendation.update')->middleware('auth');
     Route::get('admin/projects/{id}/approval_award', [ApprovalAwardController::class, 'edit'])->name('projects.approval_award')->middleware('auth');
     Route::put('admin/projects/{id}/approval_award', [ApprovalAwardController::class, 'update'])->name('projects.approval_award.update')->middleware('auth');
-    Route::get('admin/projects/{id}/contract', [ProjectsController::class, 'contract'])->name('projects.contract')->middleware('auth');
+    Route::get('admin/projects/{id}/contract', [ContractController::class, 'edit'])->name('projects.contract')->middleware('auth');
+    Route::put('admin/projects/{id}/contract', [ContractController::class, 'update'])->name('projects.contract.update')->middleware('auth');
     Route::get('admin/projects/{id}/bankers_guarantee', [ProjectsController::class, 'bankers_guarantee'])->name('projects.bankers_guarantee')->middleware('auth');
     Route::get('admin/projects/{id}/insurance', [ProjectsController::class, 'insurance'])->name('projects.insurance')->middleware('auth');
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
