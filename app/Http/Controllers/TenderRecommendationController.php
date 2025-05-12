@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Projects;
+use App\Models\Project;
 use App\Models\Tender;
 use App\Models\TenderRecommendation;
 use App\Models\Milestone;
