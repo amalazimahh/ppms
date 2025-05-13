@@ -30,15 +30,7 @@ class ProjectsController extends Controller
         $projects = Project::with(['milestones'])->get();
         $mainProjects = Project::whereNull('parent_project_id')->get();
 
-        foreach($projects as $project){
-            $milestones = $project->milestones;
-
-            // calculate progress
-            $totalMilestones = $milestones->count();
-            $completedMilestones = $milestones->where('pivot.completed', true)->count();
-            $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
-        }
-        return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'progress'));
+        return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
     }
 
     public function basicdetails($id)
@@ -363,6 +355,7 @@ class ProjectsController extends Controller
             'voteNum' => 'required|string',
             'title' => 'required|string',
             'client_ministry_id' => 'nullable|integer',
+            'handoverDate' => 'nullable|date',
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
@@ -406,6 +399,7 @@ class ProjectsController extends Controller
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
             'client_ministry_id' => $request['client_ministry_id'],
+            'handoverDate' => $request['handoverDate'],
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],
@@ -446,6 +440,7 @@ class ProjectsController extends Controller
             'voteNum' => 'required|string',
             'title' => 'required|string',
             'client_ministry_id' => 'nullable|integer',
+            'handoverDate' => 'nullable|date',
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
@@ -473,6 +468,7 @@ class ProjectsController extends Controller
             'voteNum' => $request['voteNum'],
             'title' => $request['title'],
             'client_ministry_id' => $request['client_ministry_id'],
+            'handoverDate' => $request['handoverDate'],
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],

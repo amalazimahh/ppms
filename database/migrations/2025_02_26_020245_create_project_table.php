@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('voteNum')->nullable();
             $table->string('title')->nullable();
             $table->foreignId('client_ministry_id')->nullable()->constrained('client_ministry')->onDelete('cascade');
+            $table->date('handoverDate')->nullable();
             $table->string('siteGazette')->nullable();
             $table->text('scope')->nullable();
             $table->text('location')->nullable();

@@ -16,7 +16,7 @@ class Project extends Model
     protected $fillable = [
         'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
         'scope', 'location', 'statuses_id', 'parent_project_id',
-        'client_ministry_id', 'img', 'milestones_id',
+        'client_ministry_id', 'handoverDate', 'img', 'milestones_id',
         'created_by', 'created_at', 'updated_at'
     ];
 

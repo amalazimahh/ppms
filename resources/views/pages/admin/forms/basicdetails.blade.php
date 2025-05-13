@@ -149,6 +149,13 @@
                 </div>
 
                 <div class="row mb-3">
+                    <label for="handoverDate" class="col-sm-2 col-form-label">Project Handover (to DOD)</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="handoverDate" id="handoverDate">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <label for="siteGazette" class="col-sm-2 col-form-label">Site Gazette</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="siteGazette" id="siteGazette" placeholder="Gaz Lot 4054 EDR11247"
