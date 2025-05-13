@@ -84,6 +84,12 @@
             </div>
 
             <div class="card-body">
+                @if($projects->isEmpty())
+                    <div class="alert alert-warning">
+                        No projects available. Please create a new project.
+                    </button>
+                    </div>
+                @else
                 <div class="table-responsive">
                     <table class="table">
                         <thead class=" text-primary">
@@ -96,6 +102,18 @@
                         </thead>
                         <tbody>
                             @foreach ($projects as $project)
+
+                                <!-- calculate progress -->
+                                @php
+                                    foreach($projects as $project){
+                                        $milestones = $project->milestones;
+
+                                        // calculate progress
+                                        $totalMilestones = $milestones->count();
+                                        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+                                        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+                                    }
+                                @endphp
                                 <tr>
                                     <td> {{ $project->fy }} </td>
                                     <td> @if($project->parent_project_id)
@@ -217,6 +235,7 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
             </div>
           </div>
         </div>
