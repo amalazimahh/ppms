@@ -186,8 +186,7 @@
                     completed: completed
                 },
                 success: function(response) {
-                    // Optionally show a success message
-                    updateProgressBar(); // <-- Add this line here!
+                    updateProgressBar();
                 }
             });
         });
