@@ -1,12 +1,26 @@
-@if(session('success'))
-    <script>
-        window.onload = function() {
-            demo.showNotification('top', 'right', "{{ session('success') }}");
-        };
-    </script>
-@endif
-
 @extends('layouts.app', ['pageSlug' => 'basicdetails'])
+
+@if(session('success') || session('error'))
+<div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Success - </b> {!! session('success') !!}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b>Error - </b> {{ session('error') }}</span>
+    </div>
+    @endif
+</div>
+@endif
 
 @section('content')
 
@@ -63,8 +77,12 @@
             <h1 class="card-title">Insurance Form</h1>
         </div>
         <div class="card-body">
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('projects.insurance.update', $project->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+
+                @if(isset($project))
+                    @method('PUT')
+                @endif
 
                 <div class="row mb-3">
                     <label for="insType" class="col-sm-2 col-form-label">Insurance Type</label>
@@ -100,65 +118,4 @@
             </form>
         </div>
     </div>
-
-    <!-- handles financial year, amount user enters -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new Cleave('#sum', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#revSum', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#lad', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#totalLad', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#penAmt', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#retAmt', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-
-        new Cleave('#bgAmt', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: '$',
-            numeralDecimalScale: 2,
-            numeralPositiveOnly: true,
-        });
-    });
-</script>
 @endsection

@@ -18,6 +18,7 @@ use App\Http\Controllers\TenderRecommendationController;
 use App\Http\Controllers\ApprovalAwardController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\BankerGuaranteeController;
+use App\Http\Controllers\InsuranceController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -84,7 +85,8 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/contract', [ContractController::class, 'update'])->name('projects.contract.update')->middleware('auth');
     Route::get('admin/projects/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'edit'])->name('projects.bankers_guarantee')->middleware('auth');
     Route::put('admin/projects/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'update'])->name('projects.bankers_guarantee.update')->middleware('auth');
-    Route::get('admin/projects/{id}/insurance', [ProjectsController::class, 'insurance'])->name('projects.insurance')->middleware('auth');
+    Route::get('admin/projects/{id}/insurance', [InsuranceController::class, 'edit'])->name('projects.insurance')->middleware('auth');
+    Route::put('admin/projects/{id}/insurance', [InsuranceController::class, 'update'])->name('projects.insurance.update')->middleware('auth');
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
     Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
     Route::get('admin/projects/{id}/view', [ProjectsController::class, 'view'])->name('pages.view_project')->middleware('auth');
