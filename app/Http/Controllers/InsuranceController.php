@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Contract;
 use App\Models\Insurance;
+use App\Models\InsuranceType;
 use App\Models\Milestone;
 use App\Models\Notification;
 use App\Models\NotificationRecipient;
@@ -17,8 +18,9 @@ class InsuranceController extends Controller
     // show insurance form
     public function edit($id)
     {
-        $contract = COntract::findOrFail($id);
+        $contract = Contract::findOrFail($id);
         $insurance = Insurance::where('contract_id', $id)->first();
+        $insuranceType = InsuranceType::all();
 
         // get related project via contract
         $project = $contract->project;
@@ -29,7 +31,7 @@ class InsuranceController extends Controller
         $completedMilestones = $milestones->where('pivot.completed', true)->count();
         $progress = $totalMilestones > 0 ? ($completedMilestones / $totalMilestones) * 100 : 0;
 
-        return view('pages.admin.forms.insurance', compact('project', 'contract', 'insurance', 'milestones', 'progress'));
+        return view('pages.admin.forms.insurance', compact('project', 'contract', 'insurance', 'insuranceType', 'milestones', 'progress'));
     }
 
     // update/create insurance form function

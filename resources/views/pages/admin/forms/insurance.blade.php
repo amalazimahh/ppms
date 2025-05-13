@@ -85,10 +85,17 @@
                 @endif
 
                 <div class="row mb-3">
-                    <label for="insType" class="col-sm-2 col-form-label">Insurance Type</label>
+                    <label for="insurance_type_id" class="col-sm-2 col-form-label">Insurance Type</label>
                     <div class="col-sm-10">
-                        <!-- dropdown selection here -->
-                        <input type="text" class="form-control" name="insType" id="insType">
+                        <select id="insurance_type_id" name="insurance_type_id" class="form-control">
+                            <option disabled {{ empty($insurance->insurance_type_id) ? 'selected' : '' }}>-- Select Insurance Type --</option>
+                            @foreach($insuranceType as $types)
+                                <option value="{{ $types->id }}"
+                                {{ (old('insurance_type_id', isset($insurance) ? $insurance->insurance_type_id : '') == $types->id) ? 'selected' : '' }}>
+                                    {{ $types->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 

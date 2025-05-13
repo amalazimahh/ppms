@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('insurance_type', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('insurance_id')->constrained('insurance')->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
         });
