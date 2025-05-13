@@ -47,6 +47,12 @@
                                 <p>{{ __('Projects List') }}</p>
                             </a>
                         </li>
+                        <li @if ($pageSlug == 'users') class="active" @endif>
+                            <a href="{{ route('pages.admin.rkn')  }}">
+                                <i class="tim-icons icon-bullet-list-67"></i>
+                                <p>{{ __('RKN List') }}</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

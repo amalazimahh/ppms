@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('project', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rkn_id')->nullable()->constrained('rkn')->onDelete('cascade');
             $table->string('fy')->nullable();
             $table->decimal('sv', 15, 2)->nullable();
             $table->decimal('av', 15, 2)->nullable();

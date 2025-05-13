@@ -258,7 +258,7 @@
                 @csrf
                 <div class="modal-body">
 
-                    <!-- financial year -->
+                <!-- financial year -->
                 <div class="row mb-3">
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>
                         <div class="col-sm-10">

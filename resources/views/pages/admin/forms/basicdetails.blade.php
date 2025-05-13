@@ -71,6 +71,21 @@
                     @method('PUT')
                 @endif
 
+                <div class="row mb-3">
+                    <label for="rkn_id" class="col-sm-2 col-form-label">RKN No. </label>
+                    <div class="col-sm-10">
+                        <select id="rkn_id" name="rkn_id" class="form-control">
+                            <option disabled selected>-- Select RKN No. --</option>
+                            @foreach($rkns as $rkn)
+                                <option value="{{ $rkn->id }}"
+                                    {{ old('rkn_id', isset($project) ? $project->rkn_id : '') == $rkn->id ? 'selected' : '' }}>
+                                    {{ $rkn->rknNum }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <!-- financial year -->
                 <div class="row mb-3">
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>

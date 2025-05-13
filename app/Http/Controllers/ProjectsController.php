@@ -19,6 +19,7 @@ use App\Models\MechanicalElectrical;
 use App\Models\CivilStructural;
 use App\Models\QuantitySurveyor;
 use App\Models\ProjectTeam;
+use App\Models\RKN;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -37,6 +38,9 @@ class ProjectsController extends Controller
     {
         // fetch project details using the ID
         $project = Project::findOrFail($id);
+
+        // retrieve lists of RKN
+        $rkns = RKN::all();
 
         // retrieve list of statuses
         $statuses = Status::all();
@@ -76,7 +80,7 @@ class ProjectsController extends Controller
         if(session('roles') == 1)
         {
             return view('pages.admin.forms.basicdetails',
-            compact('project', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
+            compact('project', 'rkns', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
                     'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects', 'progress'));
         } else if(session('roles') == 2)
         {
@@ -95,6 +99,10 @@ class ProjectsController extends Controller
     public function edit($id)
     {
         $project = Project::findOrFail($id);
+
+        // retrieve lists of RKN
+        $rkns = RKN::all();
+
         // retrieve list of statuses
         $statuses = Status::all();
 
@@ -134,6 +142,7 @@ class ProjectsController extends Controller
             // default to Admin view
             return view('pages.admin.forms.basicdetails', compact(
                 'project',
+                'rkns',
                 'statuses',
                 'clientMinistries',
                 'projectManagers',
@@ -348,6 +357,7 @@ class ProjectsController extends Controller
 
         // validate input
         $request->validate([
+            'rkn_id' => 'nullable|exists:rkn,id',
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
@@ -392,6 +402,7 @@ class ProjectsController extends Controller
 
         // create a new Project
         $project = Project::create([
+            'rkn_id' => $request['rkn_id'],
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,
@@ -433,6 +444,7 @@ class ProjectsController extends Controller
 
         // Validate input
         $request->validate([
+            'rkn_id' => 'nullable|exists:rkn,id',
             'fy' => 'required|string',
             'sv' => 'required|string',
             'av' => 'required|string',
@@ -461,6 +473,7 @@ class ProjectsController extends Controller
 
         // update the project with the new project_team_id
         $updated = $project->update([
+            'rkn_id' => $request['rkn_id'],
             'fy' => $request['fy'],
             'sv' => $sv,
             'av' => $av,

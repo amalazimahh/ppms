@@ -14,7 +14,7 @@ class Project extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
+        'rkn_id', 'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
         'scope', 'location', 'statuses_id', 'parent_project_id',
         'client_ministry_id', 'handoverDate', 'img', 'milestones_id',
         'created_by', 'created_at', 'updated_at'
@@ -64,5 +64,9 @@ class Project extends Model
 
     public function milestones(){
         return $this->belongsToMany(Milestone::class)->withPivot('completed', 'completed_at')->withTimestamps();
+    }
+
+    public function rkn(){
+        return $this->belongsTo(RKN::class, 'rkn_id');
     }
 }

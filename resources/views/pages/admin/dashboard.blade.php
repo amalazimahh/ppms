@@ -163,24 +163,22 @@
                                 <tr>
                                     <th>Project</th>
                                     <th>Deadline</th>
-                                    <th>Status</th>
-                                    <th>Budget</th>
+                                    <th>Months Left</th>
+                                    <!-- <th>Budget</th> -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Infrastructure A</td>
-                                    <td>15-03-2024</td>
-                                    <td><span class="badge badge-success">65 days</span></td>
-                                    <td><span class="badge badge-success">On Track</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Software B <i class="fa-solid fa-exclamation fa-fade fa-lg" style="color: #ff0000;"></i></td>
-                                    <td>10-02-2024</td>
-                                    <td><span class="badge badge-warning">45 days</span></td>
-                                    <td><span class="badge badge-danger">Over Budget</span></td>
-                                </tr>
-                                <!-- Add more rows -->
+                                @foreach($upcomingDeadlines as $project)
+                                    <tr>
+                                        <td>{{ $project['name'] }}</td>
+                                        <td>{{ $project['deadline'] }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ $project['status'] }}">
+                                                {{ $project['months_left'] }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

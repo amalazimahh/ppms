@@ -19,6 +19,7 @@ use App\Http\Controllers\ApprovalAwardController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\BankerGuaranteeController;
 use App\Http\Controllers\InsuranceController;
+use App\Http\Controllers\RKNController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -90,7 +91,8 @@ Route::middleware(['auth'])->group(function (){
     Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
     Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
     Route::get('admin/projects/{id}/view', [ProjectsController::class, 'view'])->name('pages.view_project')->middleware('auth');
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('pages.admin.dashboard')->middleware('auth');
+    // Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('pages.admin.dashboard')->middleware('auth');
+    Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('pages.admin.dashboard')->middleware('auth');
     Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
     Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'index'])->name('pages.admin.project-dashboard')->middleware('auth');
     // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
@@ -100,6 +102,8 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/admin/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('admin.project_team.deleteDiscipline');
     Route::post('/projects/{project}/milestones/{milestone}/toggle', [ProjectMilestoneController::class, 'toggle'])->name('projects.milestones.toggle');
     Route::get('/projects/{project}/progress', [ProjectMilestoneController::class, 'getProgress'])->name('projects.progress');
+    Route::get('/admin/rkn', [RKNController::class, 'showRKN'])->name('pages.admin.rkn')->middleware('auth');
+    Route::post('/admin/rkn', [RKNController::class, 'store'])->name('pages.admin.rkn.store')->middleware('auth');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
