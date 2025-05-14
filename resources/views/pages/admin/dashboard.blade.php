@@ -1,5 +1,23 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
 
+<style>
+        select {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option:hover{
+            background-color: #525f7f;
+            color: #fff;
+        }
+    </style>
+
+
 @section('content')
 <!-- Filter row -->
 <div class="row">
@@ -7,23 +25,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3">
-                        <select class="form-control" id="projectType">
-                            <option value="">All Project Types</option>
-                            <option value="infrastructure">Infrastructure</option>
-                            <option value="software">Software</option>
-                            <option value="research">Research</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control" id="priority">
-                            <option value="">All Priorities</option>
-                            <option value="high">High</option>
-                            <option value="medium">Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-9">
                         <select class="form-control" id="year">
                             <option value="">Financial Year</option>
                             <option value="2023">2023</option>
@@ -64,7 +66,7 @@
                     <div class="col-12">
                         <div class="numbers">
                             <p class="card-category text-info">ONGOING</p>
-                            <h2 class="card-title">65</h2>
+                            <h2 class="card-title">{{ $ongoingCount }}</h2>
                         </div>
                     </div>
                 </div>
@@ -81,7 +83,7 @@
                     <div class="col-12">
                         <div class="numbers">
                             <p class="card-category text-success">COMPLETED</p>
-                            <h2 class="card-title">75</h2>
+                            <h2 class="card-title">{{ $completedCount }}</h2>
                         </div>
                     </div>
                 </div>
@@ -98,7 +100,7 @@
                     <div class="col-12">
                         <div class="numbers">
                             <p class="card-category text-danger">OVERDUE</p>
-                            <h2 class="card-title">10</h2>
+                            <h2 class="card-title">{{ $overdueCount }}</h2>
                         </div>
                     </div>
                 </div>
@@ -130,7 +132,7 @@
                     <h2 class="card-title">Current Status</h2>
                 </div>
                 <div class="card-body">
-                    <canvas id="projectStagesDonut" style="height: 400px;"></canvas>
+                    <canvas id="projectStagesDonut" style="height: 360px;"></canvas>
                 </div>
             </div>
         </div>
@@ -190,43 +192,24 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            demo.initDashboardPageCharts();
-        });
 
-        // Static data for the sunburst chart
-        const data = {
-            name: "flare",
-            children: [
-                { name: "PMO", children: [{ name: "cluster", value: 3938 }, { name: "graph", value: 3938 }] },
-                { name: "MCYS", children: [{ name: "Easing", value: 17010 }, { name: "FunctionSequence", value: 5842 }] },
-                { name: "MinDef", children: [{ name: "converters", value: 7213 }, { name: "DataUtil", value: 3322 }] },
-                { name: "MoD", children: [{ name: "DirtySprite", value: 8833 }, { name: "LineSprite", value: 1732 }] },
-                { name: "MoE", children: [{ name: "FlareVis", value: 4116 }] },
-                { name: "MoFE", children: [{ name: "DragForce", value: 1082 }, { name: "GravityForce", value: 1336 }] },
-                { name: "MoFA", children: [{ name: "AggregateExpression", value: 1616 }, { name: "And", value: 1027 }] },
-                { name: "MoH", children: [{ name: "IScaleMap", value: 2105 }, { name: "LinearScale", value: 1316 }] },
-                { name: "MoHA", children: [{ name: "Arrays", value: 8258 }, { name: "Colors", value: 10001 }] },
-                { name: "MPRT", children: [{ name: "axis", value: 24593 }, { name: "controls", value: 13598 }] },
-                { name: "MoRA", children: [{ name: "axis", value: 24593 }, { name: "controls", value: 13598 }] },
-                { name: "MTIC", children: [{ name: "axis", value: 24593 }, { name: "controls", value: 13598 }] }
-            ]
-        };
+    <script>
+
+        const data = @json($sunburstData);
+        console.log(data);
 
         // D3 Sunburst Chart
         // Adjust container and chart dimensions
         const container = d3.select("#sunburst-chart")
-            .style("height", "350px")  // Reduced height
+            .style("height", "360px")
             .style("width", "100%")
             .style("display", "flex")
             .style("align-items", "center")
             .style("justify-content", "center");
 
         // Adjust chart dimensions
-        const width = 600;  // Reduced width
-        const height = 350;  // Reduced height
+        const width = 550;  // Reduced width
+        const height = 450;  // Reduced height
         const radius = Math.min(width, height) / 6;  // Further reduced radius ratio
 
         const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
@@ -381,24 +364,24 @@
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '70%',
+            cutout: '60%',
             plugins: {
                 legend: {
-                    position: 'right',
-                    align: 'start',
+                    position: 'top',
+                    align: 'center',
                     labels: {
                         color: '#ffffff',
-                        padding: 20,
+                        padding: 10,
                         font: {
-                            size: 10
+                            size: 12
                         },
-                        boxWidth: 12
+                        boxWidth: 10
                     }
                 }
             },
             layout: {
                 padding: {
-                    right: 100
+                    right: 10
                 }
             }
         }
@@ -414,11 +397,11 @@
         data: {
             labels: ['Pre-Design', 'Design', 'Tender', 'Construction', 'Post-Completion'],
             datasets: [{
-                label: 'Budget Usage',
+                label: 'Physical Status',
                 data: [65, 80, 45, 90, 30],
                 backgroundColor: '#1d8cf8'
             }, {
-                label: 'Timeline Progress',
+                label: 'Financial Status',
                 data: [70, 85, 40, 85, 25],
                 backgroundColor: '#00f2c3'
             }]

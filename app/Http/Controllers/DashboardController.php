@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\ClientMinistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,9 +28,13 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
-        $projects = Project::with('rkn')->get(); // eager load RKN relationship
+        $projects = Project::with(['rkn', 'milestones'])->get();
         $totalProjects = Project::count();
         $upcomingDeadlines = [];
+        $completedCount = 0;
+        $ongoingCount = 0;
+        $overdueCount = 0;
+        $ministries = ClientMinistry::with('projects')->get();
 
         foreach($projects as $project){
             // If project has an RKN assigned, use its endDate as the deadline
@@ -58,6 +63,18 @@ class DashboardController extends Controller
                 $status = 'success'; // green
             }
 
+            // Milestone logic
+            $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+            if ($completedMilestones == 25) {
+                $completedCount++;
+            } else {
+                $ongoingCount++;
+                // Overdue: not completed and red status
+                if ($status == 'danger') {
+                    $overdueCount++;
+                }
+            }
+
             $upcomingDeadlines[] = [
                 'name' => $project->title,
                 'deadline' => $deadline->format('d-m-Y'),
@@ -67,7 +84,39 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('pages.admin.dashboard', compact('projects', 'totalProjects', 'upcomingDeadlines'));
+        // dynamic sunburst chart data
+        $sunburstChildren = [];
+        foreach ($ministries as $ministry) {
+            $ministryNode = [
+                'name' => $ministry->ministryName,
+                'children' => []
+            ];
+            foreach ($ministry->projects as $project) {
+                $ministryNode['children'][] = [
+                    'name' => $project->title,
+                    'value' => 1000
+                ];
+            }
+            if(!empty($ministryNode['children'])){
+                $sunburstChildren[] = $ministryNode;
+            }
+        }
+
+        $sunburstData = [
+            'name' => 'flare',
+            'children' => $sunburstChildren
+        ];
+
+        return view('pages.admin.dashboard', compact(
+            'projects',
+            'totalProjects',
+            'upcomingDeadlines',
+            'completedCount',
+            'ongoingCount',
+            'overdueCount',
+            'ministries',
+            'sunburstData'
+        ));
     }
 
 }

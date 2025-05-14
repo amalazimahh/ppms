@@ -105,14 +105,12 @@
 
                                 <!-- calculate progress -->
                                 @php
-                                    foreach($projects as $project){
                                         $milestones = $project->milestones;
 
                                         // calculate progress
                                         $totalMilestones = $milestones->count();
                                         $completedMilestones = $milestones->where('pivot.completed', true)->count();
                                         $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
-                                    }
                                 @endphp
                                 <tr>
                                     <td> {{ $project->fy }} </td>
