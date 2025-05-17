@@ -418,6 +418,12 @@ class ProjectsController extends Controller
             'created_by' => auth()->id(),
         ]);
 
+        // automatically checked first milestone when project is created
+        $milestones = Milestone::all();
+        foreach($milestones as $index => $milestone) {
+            $project->milestones()->attach($milestone, ['completed' => $index === 0 ? true : false]);
+        }
+
         // Log to confirm insertion
         Log::info('Project created: ', $project->toArray());
         $message = Str::limit('A new project ' . $project->title . ' has been added.', 250);
@@ -488,6 +494,12 @@ class ProjectsController extends Controller
             // img
             'created_by' =>  auth()->id(),
         ]);
+
+        // automatically checked first milestone when project is created
+        $milestones = Milestone::all();
+        foreach($milestones as $index => $milestone) {
+        $project->milestones()->attach($milestone, ['completed' => $index === 0 ? true : false]);
+        }
 
         $message = Str::limit($project->title . ' details have been updated.', 250);
         sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);

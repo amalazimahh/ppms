@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Milestone;
+use App\Models\Status;
 use App\Models\ClientMinistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +30,7 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
+        // calculate the upcoming deadlines of projects
         $projects = Project::with(['rkn', 'milestones'])->get();
         $totalProjects = Project::count();
         $upcomingDeadlines = [];
@@ -63,13 +66,13 @@ class DashboardController extends Controller
                 $status = 'success'; // green
             }
 
-            // Milestone logic
+            // milestone logic
             $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
             if ($completedMilestones == 25) {
                 $completedCount++;
             } else {
                 $ongoingCount++;
-                // Overdue: not completed and red status
+                // overdue: not completed and red status
                 if ($status == 'danger') {
                     $overdueCount++;
                 }
@@ -107,6 +110,21 @@ class DashboardController extends Controller
             'children' => $sunburstChildren
         ];
 
+        // group projects by milestone stage for donut chart
+        $projects = Project::with('milestones.status')->get();
+        $stageCounts = [];
+        foreach($projects as $project){
+            $milestone = $project->milestone;
+            $statusName = $milestone && $milestone->status ? $milestone->status->name : 'Unknown';
+            if(!isset($stageCounts[$statusName])){
+                $stageCounts[$statusName] = 0;
+            }
+            $stageCounts[$statusName]++;
+        }
+
+        $stageLabels = array_keys($stageCounts);
+        $stageData = array_values($stageCounts);
+
         return view('pages.admin.dashboard', compact(
             'projects',
             'totalProjects',
@@ -115,7 +133,9 @@ class DashboardController extends Controller
             'ongoingCount',
             'overdueCount',
             'ministries',
-            'sunburstData'
+            'sunburstData',
+            'stageLabels',
+            'stageData'
         ));
     }
 

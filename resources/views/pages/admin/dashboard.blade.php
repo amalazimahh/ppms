@@ -294,6 +294,37 @@
             .attr("dy", "0.35em")
             .attr("fill-opacity", d => +labelVisible(d.current))
             .attr("transform", d => labelTransform(d.current))
+            .style("font-size", "9px")
+            .each(function(d) {
+                // Remove any existing tspans
+                d3.select(this).selectAll("tspan").remove();
+                const maxWidth = 60; // Adjust as needed for your chart
+                const words = d.data.name.split(/\s+/);
+                let line = [];
+                let lineNumber = 0;
+                let lineHeight = 1.1; // ems
+                let tspan = d3.select(this)
+                    .append("tspan")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("dy", "0em");
+                for (let i = 0; i < words.length; i++) {
+                    line.push(words[i]);
+                    tspan.text(line.join(" "));
+                    if (this.getComputedTextLength && this.getComputedTextLength() > maxWidth) {
+                        line.pop();
+                        tspan.text(line.join(" "));
+                        line = [words[i]];
+                        tspan = d3.select(this)
+                            .append("tspan")
+                            .attr("x", 0)
+                            .attr("y", 0)
+                            .attr("dy", ++lineNumber * lineHeight + "em")
+                            .text(words[i]);
+                    }
+                }
+            })
+            .append("title")
             .text(d => d.data.name);
 
         const parent = svg.append("circle")
@@ -350,9 +381,9 @@
 
     // Project Stages Donut Chart
     const projectStagesData = {
-        labels: ['Pre-Design', 'Design', 'Tender', 'Construction', 'Post-Completion'],
+        labels: @json($stageLabels),
         datasets: [{
-            data: [25, 40, 15, 10, 10],
+            data: @json($stageData),
             backgroundColor: ['#e14eca', '#00f2c3', '#ff8d72', '#1d8cf8', '#fd5d93'],  // Updated colors
             borderWidth: 0
         }]

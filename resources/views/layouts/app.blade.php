@@ -85,7 +85,9 @@
             @csrf
         </form>
     @else
-        @include('layouts.navbars.navbar')
+        @if (!isset($class) || ($class !== 'login-page' && $class !== 'register-page'))
+            @include('layouts.navbars.navbar')
+        @endif
         <div class="wrapper wrapper-full-page">
             <div class="full-page {{ $contentClass ?? '' }}">
                 <div class="content">

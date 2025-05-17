@@ -69,4 +69,8 @@ class Project extends Model
     public function rkn(){
         return $this->belongsTo(RKN::class, 'rkn_id');
     }
+
+    public function milestone(){
+        return $this->belongsTo(Milestone::class, 'milestones_id');
+    }
 }

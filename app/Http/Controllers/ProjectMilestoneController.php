@@ -21,6 +21,16 @@ class ProjectMilestoneController extends Controller
             ]
         ]);
 
+        // Find the latest completed milestone (assuming you have an 'order' or 'id' column for ordering)
+        $latestCompleted = $project->milestones()
+            ->wherePivot('completed', true)
+            ->orderBy('milestones.id', 'desc') // or use your milestone order column if you have one
+            ->first();
+
+        // Update the project's milestone_id
+        $project->milestones_id = $latestCompleted ? $latestCompleted->id : null;
+        $project->save();
+
         return response()->json(['success' => true]);
     }
 
