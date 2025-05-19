@@ -41,6 +41,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -137,6 +138,33 @@
             </ul>
         </div>
     </div> -->
+    @if(session('welcome'))
+<!-- Modal -->
+<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+      </div>
+      <div class="modal-body">
+        {{ session('welcome') }}
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+    @if(session('welcome'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var welcomeModal = document.getElementById('welcomeModal');
+                if (welcomeModal) {
+                    var modal = new bootstrap.Modal(welcomeModal);
+                    modal.show();
+                }
+            });
+        </script>
+    @endif
 
     <!-- Scripts -->
     <script src="{{ asset('black') }}/js/core/jquery.min.js"></script>
