@@ -41,7 +41,6 @@
             }
             .launch-date-card {
                 height: 100%;
-                background: rgba(76, 175, 80, 0.1);
                 border-radius: 8px;
                 padding: 20px;
                 display: flex;
@@ -71,8 +70,7 @@
                 width: 54%;
             }
 
-        /* Budget styles */
-        /* Update the budget card styles */
+        /* budget card styles */
         .budget-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
@@ -84,7 +82,6 @@
             justify-content: center;
         }
 
-        /* Add this to ensure the canvas takes full space */
         .budget-card canvas {
             width: 100% !important;
             height: 100% !important;
@@ -117,7 +114,6 @@
             text-align: center;
         }
 
-        /* Add any missing styles for risk-item and summary-details if needed */
         .risk-item {
             margin-bottom: 20px;
         }
@@ -192,7 +188,7 @@
             display: none;
         }
 
-            /* Timeline styles */
+    /* timeline styles */
     .timeline-item {
         padding-left: 15px;
         border-left: 2px solid rgba(255, 255, 255, 0.1);
@@ -207,14 +203,14 @@
         justify-content: center;
     }
 
-    /* Cost Analysis styles */
+    /* cost analysis styles */
     .cost-item {
         background: rgba(255, 255, 255, 0.05);
         padding: 15px;
         border-radius: 8px;
     }
 
-    /* Timeline & Milestones styles */
+    /* timeline & milestones styles */
     .timeline-horizontal {
         display: flex;
         justify-content: space-between;
@@ -251,7 +247,7 @@
         border-color: #2196F3;
     }
 
-    /* Health Indicators styles */
+    /* health indicators styles */
     .health-item .progress {
         height: 8px;
         background: rgba(255, 255, 255, 0.1);
@@ -313,11 +309,11 @@
                     <h5 class="card-category">Project Summary</h5>
                     <div class="summary-details mt-3">
                         <div class="summary-item text-light bg-dark">
-                            <span>Start Date:</span>
+                            <span>Project Handover (to DoD):</span>
                             <span>01-05-2024</span>
                         </div>
                         <div class="summary-item text-light bg-dark">
-                            <span>End Date:</span>
+                            <span>Project Handover (to Client Ministry):</span>
                             <span>15-12-2024</span>
                         </div>
                         <div class="summary-item text-light bg-dark">
@@ -325,7 +321,7 @@
                             <span>Pg Ayatol</span>
                         </div>
                         <div class="summary-item text-light bg-dark">
-                            <span>Overall Status:</span>
+                            <span>Stage:</span>
                             <span class="text-success">In Time</span>
                         </div>
                     </div>
