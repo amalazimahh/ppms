@@ -20,6 +20,7 @@ use App\Http\Controllers\ContractController;
 use App\Http\Controllers\BankerGuaranteeController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\RKNController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -104,6 +105,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/projects/{project}/progress', [ProjectMilestoneController::class, 'getProgress'])->name('projects.progress');
     Route::get('/admin/rkn', [RKNController::class, 'showRKN'])->name('pages.admin.rkn')->middleware('auth');
     Route::post('/admin/rkn', [RKNController::class, 'store'])->name('pages.admin.rkn.store')->middleware('auth');
+    Route::post('/admin/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('admin.assignRole');
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
