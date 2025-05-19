@@ -1,26 +1,53 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
 
 <style>
-        select {
-            background-color: #f6f9fc;
-            color: #000;
-        }
+    select {
+        background-color: #f6f9fc;
+        color: #000;
+    }
 
-        select option {
-            background-color: #f6f9fc;
-            color: #000;
-        }
+    select option {
+        background-color: #f6f9fc;
+        color: #000;
+    }
 
-        select option:hover{
-            background-color: #525f7f;
-            color: #fff;
-        }
+    select option:hover{
+        background-color: #525f7f;
+        color: #fff;
+    }
+
+    .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .animation{
+        animation: status-fade 0.5s infinite alternate;
+    }
+
+    .status-dot.green {
+        background: #4CAF50;
+    }
+    .status-dot.yellow {
+        background: #FFC107;
+    }
+    .status-dot.red {
+        background: #f44336;
+    }
+    @keyframes status-fade{
+        from{ opacity: 1; }
+        to { opacity: 0.4; }
+    }
     </style>
 
 
 @section('content')
+
 <!-- Filter row -->
-<div class="row">
+<!-- <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
@@ -28,8 +55,10 @@
                     <div class="col-md-9">
                         <select class="form-control" id="year">
                             <option value="">Financial Year</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
+                            <option value="2023">2022/2023</option>
+                            <option value="2022">2023/2024</option>
+                            <option value="2022">2024/2025</option>
+                            <option value="2022">2025/2026</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -39,7 +68,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="row mt-3">
     <div class="col-lg-3">
@@ -111,87 +140,141 @@
         </div>
     </div>
 </div>
+<div class="row mt-2">
+    <div class="col-lg-6">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-warning">SCHEME VALUE</p>
+                            <h2 class="card-title">$ {{ number_format($schemeValue, 2) }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-warning" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-coins" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="numbers">
+                            <p class="card-category text-info">ALLOCATION VALUE</p>
+                            <h2 class="card-title">$ {{ number_format($allocationValue, 2) }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon-big text-center text-info" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                    <i class="tim-icons icon-credit-card" style="font-size: 3em;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Charts Section -->
 <div class="row">
-        <div class="col-lg-7">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Ministry Distribution</h5>
-                    <h2 class="card-title">Project Allocation</h2>
-                </div>
-                <div class="card-body">
-                    <div id="sunburst-chart" style="height: 400px; display: flex; justify-content: center;"></div>
-                </div>
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">Ministry Distribution</h5>
+                <h2 class="card-title">Project Allocation</h2>
             </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Project Stages</h5>
-                    <h2 class="card-title">Current Status</h2>
-                </div>
-                <div class="card-body">
-                    <canvas id="projectStagesDonut" style="height: 360px;"></canvas>
-                </div>
+            <div class="card-body">
+                <div id="sunburst-chart" style="height: 400px; display: flex; justify-content: center;"></div>
             </div>
         </div>
     </div>
-
-    <!-- After the first row of stat cards -->
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Budget vs Timeline</h5>
-                    <h2 class="card-title">Project Progress</h2>
-                </div>
-                <div class="card-body">
-                    <canvas id="projectProgressChart" height="300"></canvas>
-                </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">Project Stages</h5>
+                <h2 class="card-title">Current Status</h2>
+            </div>
+            <div class="card-body">
+                <canvas id="projectStagesDonut" style="height: 360px;"></canvas>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category">Timeline Overview</h5>
-                    <h2 class="card-title">Upcoming Deadlines</h2>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
+<!-- Bar chart for physical and financial status in its own row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">Budget vs Timeline</h5>
+                <h2 class="card-title">Project Progress</h2>
+            </div>
+            <div class="card-body">
+                <canvas id="projectProgressChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Deadlines table in its own row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">Timeline Overview</h5>
+                <h2 class="card-title">Upcoming Deadlines</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Officer-in-Charge</th>
+                                <th>RKN</th>
+                                <th>Countdown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($upcomingDeadlines as $project)
                                 <tr>
-                                    <th>Project</th>
-                                    <th>Deadline</th>
-                                    <th>Months Left</th>
-                                    <!-- <th>Budget</th> -->
+                                    <td>@if($project['main_project'])
+                                            {{ $project ['main_project'] }} -
+                                        @endif
+                                        {{ $project['name'] }}
+                                    </td>
+                                    <td>
+                                        {{ $project['officer_in_charge'] ?? 'N/A' }}
+                                    </td>
+                                    <td>{{ $project['deadline'] }}</td>
+                                    <td>
+                                        @if($project['status'] === 'danger')
+                                            <span class="status-dot red animation"></span>
+                                        @elseif($project['status'] === 'success')
+                                            <span class="status-dot green"></span>
+                                        @elseif($project['status'] === 'warning')
+                                            <span class="status-dot yellow"></span>
+                                        @else
+                                            <span class="status-dot green"></span>
+                                        @endif
+                                        {{ $project['months_left'] }}
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($upcomingDeadlines as $project)
-                                    <tr>
-                                        <td>{{ $project['name'] }}</td>
-                                        <td>{{ $project['deadline'] }}</td>
-                                        <td>
-                                            <span class="badge badge-{{ $project['status'] }}">
-                                                {{ $project['months_left'] }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 @endsection
 
 @push('js')
+
 
     <script>
 
@@ -426,19 +509,22 @@
     new Chart(progressCtx, {
         type: 'bar',
         data: {
-            labels: ['Pre-Design', 'Design', 'Tender', 'Construction', 'Post-Completion'],
+            labels: @json($projectNames),
             datasets: [{
-                label: 'Physical Status',
-                data: [65, 80, 45, 90, 30],
-                backgroundColor: '#1d8cf8'
+                label: 'Physical Progress',
+                data: @json($physicalProgress),
+                backgroundColor: '#1d8cf8',
+                barThickness: 18
             }, {
-                label: 'Financial Status',
-                data: [70, 85, 40, 85, 25],
-                backgroundColor: '#00f2c3'
+                label: 'Financial Progress',
+                data: @json($financialProgress),
+                backgroundColor: '#00f2c3',
+                barThickness: 18
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -455,7 +541,10 @@
                         color: 'rgba(255,255,255,0.1)'
                     },
                     ticks: {
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
                     }
                 }
             },
