@@ -43,14 +43,17 @@ class LoginController extends Controller
         ]);
 
         if ($user->roles_id == 1) {
+            session()->flash('welcome', 'Welcome Back, you are currently logged in as Admin.');
             return redirect('/admin/dashboard');
         } elseif ($user->roles_id == 2) {
+            session()->flash('welcome', 'Welcome Back, you are currently logged in as Project Manager.');
             return redirect('/project_manager/dashboard');
         } elseif ($user->roles_id == 3) {
+            session()->flash('welcome', 'Welcome Back, you are currently logged in as Executive.');
             return redirect('/executive/dashboard');
         }
 
-        return redirect('/home'); // Fallback if role_id is not recognized
+        return redirect('/home');
     }
 
     protected function redirectTo()
