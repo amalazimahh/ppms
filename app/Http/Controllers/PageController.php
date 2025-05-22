@@ -92,21 +92,10 @@ class PageController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    // public function dashboard()
-    // {
-    //     $user = Auth::user();
-    //     $role = DB::table('roles')->where('id', $user->role_id)->value('name');
-
-    //     if($role === 'Admin'){
-    //         return view('pages.admin.dashboard');
-    //     } elseif ($role === 'Project Manager'){
-    //         return view('pages.project_manager.dashboard');
-    //     } elseif($role === 'Executive'){
-    //         return view('pages.executive.dashboard');
-    //     }
-
-    //     return redirect()->route('home');
-    // }
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
 
     public function adminDashboard()
     {
