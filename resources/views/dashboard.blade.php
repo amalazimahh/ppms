@@ -1,119 +1,333 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
+<style>
+    .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .animation{
+        animation: status-fade 0.5s infinite alternate;
+    }
+
+    .status-dot.green {
+        background: #4CAF50;
+    }
+    .status-dot.yellow {
+        background: #FFC107;
+    }
+    .status-dot.red {
+        background: #f44336;
+    }
+    @keyframes status-fade{
+        from{ opacity: 1; }
+        to { opacity: 0.4; }
+    }
+</style>
 
 @section('content')
     <div class="row">
-        <div class="col-12">
-            <div class="card card-chart">
-                <div class="card-header ">
+        <div class="col-lg-3">
+            <div class="card card-stats">
+                <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-6 text-left">
-                            <h5 class="card-category">Total Shipments</h5>
-                            <h2 class="card-title">Performance</h2>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                                <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                                    <input type="radio" name="options" checked>
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-single-02"></i>
-                                    </span>
-                                </label>
-                                <label class="btn btn-sm btn-primary btn-simple" id="1">
-                                    <input type="radio" class="d-none d-sm-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-gift-2"></i>
-                                    </span>
-                                </label>
-                                <label class="btn btn-sm btn-primary btn-simple" id="2">
-                                    <input type="radio" class="d-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
-                                    <span class="d-block d-sm-none">
-                                        <i class="tim-icons icon-tap-02"></i>
-                                    </span>
-                                </label>
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-primary">TOTAL PROJECTS</p>
+                                <h2 class="card-title">12</h2>
                             </div>
                         </div>
                     </div>
+                    <div class="icon-big text-center text-primary" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-chart-pie-36" style="font-size: 3em;"></i>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-stats">
                 <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartBig1"></canvas>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-info">ONGOING</p>
+                                <h2 class="card-title">9</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-big text-center text-info" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-refresh-02" style="font-size: 3em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-success">COMPLETED</p>
+                                <h2 class="card-title">3</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-big text-center text-success" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-check-2" style="font-size: 3em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-danger">OVERDUE</p>
+                                <h2 class="card-title">2</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-big text-center text-danger" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-alert-circle-exc" style="font-size: 3em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-6">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-warning">SCHEME VALUE</p>
+                                <h2 class="card-title">$64,000.00</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-big text-center text-warning" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-coins" style="font-size: 3em;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="numbers">
+                                <p class="card-category text-info">ALLOCATION VALUE</p>
+                                <h2 class="card-title">$32,000.00</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon-big text-center text-info" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                        <i class="tim-icons icon-credit-card" style="font-size: 3em;"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- D3 Sunburst Chart -->
+    <!-- Charts Section -->
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">Sunburst Chart</h5>
-                    <h2 class="card-title">Zoomable Sunburst</h2>
+                    <h5 class="card-category">Ministry Distribution</h5>
+                    <h2 class="card-title">Project Allocation</h2>
                 </div>
-                <div class="card-body">
-                    <div id="sunburst-chart"></div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div id="sunburst-chart" style="height: 400px; width: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Project Stages</h5>
+                    <h2 class="card-title">Current Status</h2>
+                </div>
+                 <div class="card-body d-flex justify-content-center align-items-cente">
+                    <canvas id="projectStagesDonut" style="height: 400px; width: 500px;"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bar chart for physical and financial status in its own row -->
     <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-chart">
+        <div class="col-lg-12">
+            <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">Total Shipments</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
+                    <h5 class="card-category">Budget vs Timeline</h5>
+                    <h2 class="card-title">Project Progress</h2>
                 </div>
                 <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartLinePurple"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card-chart">
-                <div class="card-header">
-                    <h5 class="card-category">Daily Sales</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="CountryChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card-chart">
-                <div class="card-header">
-                    <h5 class="card-category">Completed Tasks</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="chartLineGreen"></canvas>
-                    </div>
+                    <canvas id="projectProgressChart" height="50"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Upcoming Deadlines table in its own row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Timeline Overview</h5>
+                    <h2 class="card-title">Upcoming Deadlines</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Officer-in-Charge</th>
+                                    <th>Countdown</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong</td>
+                                    <td>Afiqah</td>
+                                    <td>
+                                        <span class="status-dot red animation"></span>
+                                        1 month
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Masjid Baru RPN Kg. Mengkubau</td>
+                                    <td>Zulmajdi</td>
+                                    <td>
+                                        <span class="status-dot yellow"></span>
+                                        2 months
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UTB Phase 4 - School of Applied Sciences and Mathematics</td>
+                                    <td>Mohd</td>
+                                    <td>
+                                        <span class="status-dot green"></span>
+                                        12 months
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pelan Induk Akademi Pasukan Polis Diraja Brunei</td>
+                                    <td>Pg Ayatol</td>
+                                    <td>
+                                        <span class="status-dot green"></span>
+                                        6 months
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
 @push('js')
-    <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         $(document).ready(function() {
-            demo.initDashboardPageCharts();
-        });
 
-        // Static data for the sunburst chart
+            // Donut Chart for Project Stages
+            const stageLabels = ['Pre-Design', 'Design', 'Tender', 'Ongoing', 'Post-Completion'];
+            const stageData = [3, 5, 2, 1, 4];
+            const ctxDonut = document.getElementById('projectStagesDonut').getContext('2d');
+            const projectStagesDonut = new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: stageLabels,
+                    datasets: [{
+                        data: stageData,
+                        backgroundColor: [
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#FF6384',
+                            '#9966FF'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+
+            // Bar Chart for Project Progress
+            const barLabels = [
+                'UTB Phase 4 - School of Applied Sciences and Mathematics',
+                'Masjid Baru RPN Kg. Mengkubau',
+                'Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong',
+                'Pelan Induk Akademi Pasukan Polis Diraja Brunei'
+            ];
+            const physicalProgress = [80, 60, 90, 70];
+            const financialProgress = [70, 55, 85, 65];
+            const ctxBar = document.getElementById('projectProgressChart').getContext('2d');
+            const projectProgressChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: barLabels,
+                    datasets: [
+                        {
+                            label: 'Physical Progress (%)',
+                            data: physicalProgress,
+                            backgroundColor: '#36A2EB'
+                        },
+                        {
+                            label: 'Financial Progress (%)',
+                            data: financialProgress,
+                            backgroundColor: '#FFCE56'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    const label = this.getLabelForValue(value);
+                                    return label.match(/.{1,18}(\s|$)/g);
+                                },
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+        // sunburst chart
         const data = {
             name: "flare",
             children: [
@@ -132,10 +346,17 @@
             ]
         };
 
-        // D3 Sunburst Chart
-        const width = 928;
-        const height = width;
-        const radius = width / 6;
+        // Container styling
+        const container = d3.select("#sunburst-chart")
+            .style("height", "400px")
+            .style("width", "100%")
+            .style("display", "flex")
+            .style("align-items", "center")
+            .style("justify-content", "center");
+
+        const width = 550;
+        const height = 450;
+        const radius = Math.min(width, height) / 6;
 
         const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
 
@@ -155,10 +376,39 @@
             .innerRadius(d => d.y0 * radius)
             .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
 
-        const svg = d3.select("#sunburst-chart")
+        const svg = container
             .append("svg")
-            .attr("viewBox", [-width / 2, -height / 2, width, width])
-            .style("font", "10px sans-serif");
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("viewBox", [-width / 4, -height / 2, width, height])
+            .style("font", "11px sans-serif");
+
+        // Legend
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width/1.6}, ${-height/3.8})`);
+
+        const legendItems = legend.selectAll("g")
+            .data(data.children)
+            .enter()
+            .append("g")
+            .attr("transform", (d, i) => `translate(0, ${i * 20})`);
+
+        legendItems.append("rect")
+            .attr("width", 18)
+            .attr("height", 18)
+            .attr("rx", 4)
+            .attr("fill", d => color(d.name))
+            .attr("fill-opacity", 0.8);
+
+        legendItems.append("text")
+            .attr("x", 28)
+            .attr("y", 12)
+            .attr("dy", "0.35em")
+            .attr("fill", "#ffffff")
+            .style("font-size", "16px") // larger font
+            .text(d => d.name);
 
         const path = svg.append("g")
             .selectAll("path")
@@ -187,6 +437,36 @@
             .attr("dy", "0.35em")
             .attr("fill-opacity", d => +labelVisible(d.current))
             .attr("transform", d => labelTransform(d.current))
+            .style("font-size", "10px")
+            .each(function(d) {
+                d3.select(this).selectAll("tspan").remove();
+                const maxWidth = 60;
+                const words = d.data.name.split(/\s+/);
+                let line = [];
+                let lineNumber = 0;
+                let lineHeight = 1.1;
+                let tspan = d3.select(this)
+                    .append("tspan")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("dy", "0em");
+                for (let i = 0; i < words.length; i++) {
+                    line.push(words[i]);
+                    tspan.text(line.join(" "));
+                    if (this.getComputedTextLength && this.getComputedTextLength() > maxWidth) {
+                        line.pop();
+                        tspan.text(line.join(" "));
+                        line = [words[i]];
+                        tspan = d3.select(this)
+                            .append("tspan")
+                            .attr("x", 0)
+                            .attr("y", 0)
+                            .attr("dy", ++lineNumber * lineHeight + "em")
+                            .text(words[i]);
+                    }
+                }
+            })
+            .append("title")
             .text(d => d.data.name);
 
         const parent = svg.append("circle")
@@ -240,5 +520,7 @@
             const y = (d.y0 + d.y1) / 2 * radius;
             return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
         }
+
+    });
     </script>
 @endpush
