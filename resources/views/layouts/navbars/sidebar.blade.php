@@ -41,7 +41,7 @@
                                 <p>{{ __('Project Dashboard') }}</p>
                             </a>
                         </li>
-                        <li @if ($pageSlug == 'users') class="active" @endif>
+                        <li @if ($pageSlug == 'projectsList') class="active" @endif>
                             <a href="{{ route('pages.admin.projectsList')  }}">
                                 <i class="tim-icons icon-bullet-list-67"></i>
                                 <p>{{ __('Projects List') }}</p>
