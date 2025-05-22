@@ -92,7 +92,7 @@
         <div class="wrapper wrapper-full-page">
             <div class="full-page {{ $contentClass ?? '' }}">
                 <div class="content">
-                    <div class="container">
+                    <div class="container-fluid">
                         @yield('content')
                     </div>
                 </div>
@@ -139,20 +139,19 @@
         </div>
     </div> -->
     @if(session('welcome'))
-<!-- Modal -->
-<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
-      </div>
-      <div class="modal-body">
-        {{ session('welcome') }}
-      </div>
-    </div>
-  </div>
-</div>
-@endif
+        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ session('welcome') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     @if(session('welcome'))
         <script>
@@ -176,15 +175,5 @@
     <script src="{{ asset('black') }}/js/theme.js"></script>
 
     @stack('js')
-
-    <script>
-        // $(document).ready(function() {
-        //     if (typeof demo.initDashboardPageCharts === 'function') {
-        //         demo.initDashboardPageCharts(); // Initialize the charts
-        //     }
-        // });
-
-
-    </script>
 </body>
 </html>
