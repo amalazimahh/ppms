@@ -33,8 +33,8 @@
                 height: 60px;
                 margin: 0 auto 15px;
                 border-radius: 50%;
-                background: rgba(76, 175, 80, 0.1);
-                border: 3px solid #4CAF50;
+                background: rgba(152, 76, 175, 0.1);
+                border: 3px solid #823a97;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -49,7 +49,7 @@
                 align-items: center;
             }
             .launch-date-card i {
-                font-size: 32px;
+                font-size: 64px;
                 margin-bottom: 15px;
             }
             .row {
@@ -59,15 +59,15 @@
             .progress-bar-container {
                 width: 100%;
                 background: rgba(255, 255, 255, 0.1);
-                height: 8px;
+                height: 20px;
                 border-radius: 4px;
                 margin-bottom: 20px;
             }
             .progress-bar-fill {
                 height: 100%;
-                background: #4CAF50;
-                border-radius: 4px;
-                width: 54%;
+                background: #ad23cf;
+                border-radius: 10px;
+                width: 72%;
             }
 
         /* budget card styles */
@@ -126,20 +126,14 @@
             display: flex;
             justify-content: space-between;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: transparent;
         }
-        .card {
-            height: 100%;
-            margin-bottom: 20px;
+
+        .summary-item:last-child{
+            border-bottom: none;
         }
-        .card-body {
-            height: 100%;
-            min-height: 250px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
+
         .phase-item {
             height: 100%;
             padding: 20px;
@@ -154,23 +148,10 @@
             min-height: 160px;
         }
 
-        .progress-circle {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 15px;
-            border-radius: 50%;
-            background: rgba(76, 175, 80, 0.1);
-            border: 3px solid #4CAF50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
         .progress-circle h4 {
             margin: 0;
             font-size: 18px;
-            color: #4CAF50;
+            color:rgb(166, 141, 182);
         }
 
         .phase-item::after {
@@ -275,18 +256,16 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-9">
-                        <form action="{{ route('pages.admin.project-dashboard') }}" method="get">
+                <form action="{{ route('pages.admin.project-dashboard') }}" method="get">
+                    <div class="row align-items-center">
+                        <div class="col-md-9">
                             <input type="text" name="project_name" id="project_name" class="form-control" placeholder="Enter a project name...">
-                        </form>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-block">Search</button>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary btn-block">Search</button>
-                    </div>
-                </div>
-            </div>
+                </form>
         </div>
     </div>
 
@@ -308,21 +287,21 @@
                 <div class="card-body">
                     <h5 class="card-category">Project Summary</h5>
                     <div class="summary-details mt-3">
-                        <div class="summary-item text-light bg-dark">
+                        <div class="summary-item text-light">
                             <span>Project Handover (to DoD):</span>
-                            <span>01-05-2024</span>
+                            <span>22-05-2023</span>
                         </div>
-                        <div class="summary-item text-light bg-dark">
+                        <div class="summary-item text-light">
                             <span>Project Handover (to Client Ministry):</span>
-                            <span>15-12-2024</span>
+                            <span>N/A</span>
                         </div>
-                        <div class="summary-item text-light bg-dark">
+                        <div class="summary-item text-light">
                             <span>Officer-in-Charge:</span>
-                            <span>Pg Ayatol</span>
+                            <span>Mohd</span>
                         </div>
-                        <div class="summary-item text-light bg-dark">
+                        <div class="summary-item text-light">
                             <span>Stage:</span>
-                            <span class="text-success">In Time</span>
+                            <span class="text-primary">Ongoing (Construction)</span>
                         </div>
                     </div>
                 </div>
@@ -333,11 +312,12 @@
         <div class="col-lg-3">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-category">Projected Launch Date</h5>
+                    <h5 class="card-category">Countdown to Launch</h5>
                     <div class="launch-date-card mt-3">
-                        <i class="tim-icons icon-calendar-60 text-success"></i>
-                        <h4>Thursday, November 01</h4>
-                        <h3 class="text-success mt-2">121 Days</h3>
+                        <i class="fa-solid fa-rocket" style="color: #d133e6;"></i>
+                        <div id="countdown-days" class="mb-2" style="font-size: 2em; color: #ffff;">-- Days</div>
+                        <h2 id="countdown-hours" class="text-danger" style="font-size: 1.5em; margin-bottom: 0;">--:--:--:--</h2>
+                        <h5 class="text-muted" style="margin-top: 0;">DD : HH : MM : SS</h5>
                     </div>
                 </div>
             </div>
@@ -369,19 +349,19 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="phase-item in-progress">
-                                <div class="progress-circle">
-                                    <h4>67%</h4>
-                                </div>
+                            <div class="phase-item completed">
+                                <i class="tim-icons icon-check-2 text-success"></i>
                                 <h6>Tender</h6>
-                                <span class="text-info">In Progress</span>
+                                <span class="text-success">Completed</span>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="phase-item waiting">
-                                <i class="tim-icons icon-time-alarm text-muted"></i>
-                                <h6>Construction</h6>
-                                <span class="text-muted">Waiting</span>
+                            <div class="phase-item in-progress">
+                                <div class="progress-circle">
+                                    <h4>72%</h4>
+                                </div>
+                                <h6>Ongoing</h6>
+                                <span class="text-warning">In Progress</span>
                             </div>
                         </div>
                         <div class="col">
@@ -398,162 +378,34 @@
     </div>
 
     <!-- Third row: Budget, Milestones, and Project Updates -->
-    <div class="row mt-4">
-        <!-- Left Column: Budget and Milestones -->
-        <div class="col-lg-8">
-            <!-- Upcoming Milestones -->
-            <div class="row mb-4">
-                <div class="col-lg-7">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-category">Upcoming Milestones</h5>
-                            <div class="table-responsive">
-                                <table class="table milestone-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Task</th>
-                                            <th>Due Date</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tender Documentation</td>
-                                            <td>15-09-2024</td>
-                                            <td>
-                                                <span class="status-dot green"></span>
-                                                On Track
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Contractor Selection</td>
-                                            <td>30-09-2024</td>
-                                            <td>
-                                                <span class="status-dot yellow"></span>
-                                                At Risk
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Construction Planning</td>
-                                            <td>15-10-2024</td>
-                                            <td>
-                                                <span class="status-dot green"></span>
-                                                On Track
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-category">Overdue Milestones</h5>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="overdue-badge">5 days</span>
-                                                Budget Review Meeting
-                                            </td>
-                                            <td>15-08-2024</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="overdue-badge">3 days</span>
-                                                Tender Documents Review
-                                            </td>
-                                            <td>17-08-2024</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project Budget -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-category">Project Budget</h5>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="budget-card">
-                                        <canvas id="budgetChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="budget-info">
-                                        <div class="budget-stat">
-                                            <div>
-                                                <h6 class="text-muted">Total Budget</h6>
-                                                <h3>$52,000</h3>
-                                            </div>
-                                        </div>
-                                        <div class="budget-stat">
-                                            <div>
-                                                <h6 class="text-muted">Remaining</h6>
-                                                <h3>$8,770</h3>
-                                            </div>
-                                        </div>
-                                        <div class="budget-warning">
-                                        <i class="fa-solid fa-exclamation fa-fade fa-lg" style="color: #ff0000;"></i>
-                                            <h5 class="text-danger mb-0">8.1% Over Target</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-category">Project Health</h5>
-                            <div class="health-indicators mt-3">
-                                <div class="health-item mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Schedule Performance</span>
-                                        <span class="text-success">92%</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 92%"></div>
-                                    </div>
-                                </div>
-                                <div class="health-item mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Quality Metrics</span>
-                                        <span class="text-info">87%</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 87%"></div>
-                                    </div>
-                                </div>
-                                <div class="health-item">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Team Velocity</span>
-                                        <span class="text-warning">76%</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 76%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-category">Physical Progress</h5>
+                    <div style="height:200px;">
+                        <canvas id="physicalProgressChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Project Updates -->
-        <div class="col-lg-4">
-            <div class="card" style="height: calc(100% - 20px);">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-category">Financial Progress</h5>
+                    <div style="height:200px;">
+                        <canvas id="financialProgressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- fouth row: project updates -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
                 <div class="card-body">
                     <h5 class="card-category">Recent Project Updates</h5>
                     <div class="timeline">
@@ -604,13 +456,12 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        $(document).ready(function() {
+        document.addEventListener('DOMContentLoaded', function() {
             // Overall Progress Chart
             var options = {
-                series: [78],
+                series: [72],
                 chart: {
                     height: 200,
                     type: 'radialBar',
@@ -618,7 +469,7 @@
                 plotOptions: {
                     radialBar: {
                         hollow: {
-                            size: '70%',
+                            size: '72%',
                         },
                         track: {
                             background: '#2c2c2c',
@@ -637,68 +488,132 @@
                         }
                     },
                 },
-                colors: ['#4CAF50'],
+                colors: ['#ad23cf'],
             };
 
+            // Progress Bar Chart
             var chart = new ApexCharts(document.querySelector("#progressChart"), options);
             chart.render();
 
-            // Project Budget Chart
-            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
-            // In your JavaScript, update the Chart options
-            new Chart(budgetCtx, {
+                const launchDate = new Date('2026-03-31T00:00:00');
+                const daysElem = document.getElementById('countdown-days');
+                const hoursElem = document.getElementById('countdown-hours');
+
+                function updateCountdown() {
+                    const now = new Date();
+                    let diff = launchDate - now;
+                    if (diff <= 0) {
+                        daysElem.textContent = "0 Days";
+                        hoursElem.textContent = "00:00:00";
+                        return;
+                    }
+
+                    // Calculate days, hours, minutes, seconds left
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                    const seconds = Math.floor((diff / 1000) % 60);
+
+                    daysElem.textContent = days + (days === 1 ? " Day" : " Days");
+                    hoursElem.textContent =
+                        days.toString().padStart(2, '0') + ':'+
+                        hours.toString().padStart(2, '0') + ':' +
+                        minutes.toString().padStart(2, '0') + ':' +
+                        seconds.toString().padStart(2, '0');
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            });
+
+            // physical progress chart
+            var ctx = document.getElementById('physicalProgressChart').getContext('2d');
+            var physicalProgressChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Total Budget', 'Amount Used', 'Target Amount'],
-                    datasets: [{
-                        data: [52000, 44230, 46000],
-                        backgroundColor: ['#2196F3', '#4CAF50', '#FFC107'],
-                        barThickness: 20
-                    }]
+                    labels: ['Physical Progress'],
+                    datasets: [
+                        {
+                            label: 'Expected',
+                            data: [65],
+                            backgroundColor: 'rgba(173, 35, 207, 0.7)',
+                            borderColor: 'rgba(173, 35, 207, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Actual',
+                            data: [50],
+                            backgroundColor: 'rgba(218, 136, 28, 0.7)',
+                            borderColor: 'rgba(218, 136, 28, 1)',
+                            borderWidth: 2
+                        }
+                    ]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 20,
-                            right: 30,
-                            top: 10,
-                            bottom: 10
-                        }
-                    },
                     plugins: {
-                        legend: {
-                            display: false
-                        }
+                        legend: { display: true },
+                        title: { display: false }
                     },
                     scales: {
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: '#fff',
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
                         y: {
+                            beginAtZero: true,
+                            max: 100,
                             grid: {
-                                display: false
+                                color: 'rgba(255,255,255,0.1)'
                             },
-                            ticks: {
-                                color: '#fff',
-                                font: {
-                                    size: 12
-                                }
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
                             }
                         }
                     }
                 }
             });
-        });
+
+            var ctx = document.getElementById('financialProgressChart').getContext('2d');
+            var financialProgressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Financial Progress'],
+                    datasets: [
+                        {
+                            label: 'Expected',
+                            data: [75],
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Actual',
+                            data: [65],
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true },
+                        title: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
     </script>
+
 @endpush
