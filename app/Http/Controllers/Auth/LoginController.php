@@ -51,9 +51,10 @@ class LoginController extends Controller
         } elseif ($user->roles_id == 3) {
             session()->flash('welcome', 'Welcome Back, you are currently logged in as Executive.');
             return redirect('/executive/dashboard');
+        } else {
+            session()->flash('welcome', 'You have not been assigned a role yet. You are currently a guest.');
+            return redirect()->route('dashboard');
         }
-
-        return redirect('/home');
     }
 
     protected function redirectTo()
