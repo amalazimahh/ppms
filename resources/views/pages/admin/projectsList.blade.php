@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'table', 'titlePage' => __('Table List')])
+@extends('layouts.app', ['pageSlug' => 'projectsList'])
 
 @if(session('success') || session('error'))
 <div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
@@ -139,7 +139,7 @@
                                         <div class="modal fade" id="projectDetailsModal{{ $project->id }}" tabindex="-1" aria-labelledby="projectDetailsModalLabel{{ $project->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                                                 <div class="modal-content" style="border-radius: 12px;">
-                                                    <div class="modal-header" style="border-bottom: 2px solid #8bc34a;">
+                                                    <div class="modal-header" style="border-bottom: 2px solid #052d9b;">
                                                         <h4 class="modal-title" id="projectDetailsModalLabel{{ $project->id }}">
                                                             <span style="font-weight: bold; color: #4caf50;">Project Details</span>
                                                         </h4>
@@ -181,11 +181,11 @@
                                                                 </div>
                                                             </div>
                                                             @endif
-                                                            <div class="modal-footer" style="border-top: 2px solid #8bc34a;">
-                                                                <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-danger" target="_blank">
+                                                            <div class="modal-footer" style="border-top: 2px solid #287aa0;">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-primary" target="_blank">
                                                                     <i class="fa fa-file-pdf-o"></i> Download PDF
                                                                 </a>
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                             </div>
                                                         </div>
                                                     </div>
