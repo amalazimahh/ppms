@@ -256,22 +256,22 @@
 
     <div class="row">
         <div class="col-12">
-                <form action="{{ route('pages.admin.project-dashboard') }}" method="get">
-                    <div class="row align-items-center">
-                        <div class="col-md-9">
-                            <input type="text" name="project_name" id="project_name" class="form-control" placeholder="Enter a project name...">
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-primary btn-block">Search</button>
-                        </div>
+            <form action="{{ route('pages.admin.project-dashboard') }}" method="get">
+                <div class="row align-items-center">
+                    <div class="col-md-9">
+                        <input type="text" name="project_name" id="project_name" class="form-control" placeholder="Enter a project name...">
                     </div>
-                </form>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-block">Search</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Overall Progress, Project Summary, Launch Date -->
     <div class="row">
-        <!-- Overall Progress -->
+        <!-- overall progress -->
         <div class="col-lg-3">
             <div class="card">
                 <div class="card-body text-center">
@@ -281,7 +281,7 @@
             </div>
         </div>
 
-        <!-- Project Summary -->
+        <!-- project summary -->
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
@@ -289,26 +289,26 @@
                     <div class="summary-details mt-3">
                         <div class="summary-item text-light">
                             <span>Project Handover (to DoD):</span>
-                            <span>22-05-2023</span>
+                            <span>{{ $project ? ($project->created_at ?? 'N/A') : 'N/A'}}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Project Handover (to Client Ministry):</span>
-                            <span>N/A</span>
+                            <span>{{ $project ? ($project->rkn_id->endDate ?? 'N/A') : 'N/A'}}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Officer-in-Charge:</span>
-                            <span>Mohd</span>
+                            <span>{{ $project ? ($project->officer_in_charge ?? 'N/A') : 'N/A'}}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Stage:</span>
-                            <span class="text-primary">Ongoing (Construction)</span>
+                            <span class="text-primary">{{ $project ? ($project->milestones_id ?? 'N/A') : 'N/A'}}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Projected Launch Date -->
+        <!-- countdown to deadline -->
         <div class="col-lg-3">
             <div class="card">
                 <div class="card-body text-center">
@@ -324,7 +324,7 @@
         </div>
     </div>
 
-    <!-- Second row Project Phases -->
+    <!-- project bar timeline -->
     <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card">
@@ -377,7 +377,7 @@
         </div>
     </div>
 
-    <!-- Third row: Budget, Milestones, and Project Updates -->
+    <!-- bar chart - physical and financial progress status -->
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
@@ -402,7 +402,7 @@
         </div>
     </div>
 
-        <!-- fouth row: project updates -->
+    <!-- project updates -->
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -491,7 +491,7 @@
                 colors: ['#ad23cf'],
             };
 
-            // Progress Bar Chart
+            // countdown
             var chart = new ApexCharts(document.querySelector("#progressChart"), options);
             chart.render();
 
