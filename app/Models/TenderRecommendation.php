@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Tender;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -20,4 +21,9 @@ class TenderRecommendation extends Model
         'ltkApproval',
         'discLetter'
     ];
+
+    public function tender()
+    {
+        return $this->belongsTo(Tender::class);
+    }
 }
