@@ -17,11 +17,11 @@ class BankerGuaranteeController extends Controller
     // show banker guarantee form
     public function edit($id)
     {
-        $contract = Contract::findOrFail($id);
-        $bankerGuarantee = BankerGuarantee::where('contract_id', $id)->first();
+        $contract = Contract::where('project_id', $id)->first();
+        $bankerGuarantee = $contract ? BankerGuarantee::where('contract_id', $contract->id)->first() : null;
 
         // get related project via contract
-        $project = $contract->project;
+        $project = $contract ? $contract->project : Project::findOrFail($id);
 
         // get milestones from project
         $milestones = $project ? $project->milestones:collect();

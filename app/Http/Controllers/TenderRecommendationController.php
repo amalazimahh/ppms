@@ -17,11 +17,11 @@ class TenderRecommendationController extends Controller
     // show tender recommendation form
     public function edit($id)
     {
-        $tender = Tender::findOrFail($id);
-        $recommendation = TenderRecommendation::where('tender_id', $id)->first();
+        $tender = Tender::where('project_id', $id)->first();
+        $recommendation = $tender ? TenderRecommendation::where('tender_id', $tender->id)->first() : null;
 
         // get related project via tender
-        $project = $tender->project;
+        $project = $tender ? $tender->project : Project::findOrFail($id);
 
         // get milestones from project
         $milestones = $project ? $project->milestones:collect();

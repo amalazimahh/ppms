@@ -18,12 +18,12 @@ class InsuranceController extends Controller
     // show insurance form
     public function edit($id)
     {
-        $contract = Contract::findOrFail($id);
-        $insurance = Insurance::where('contract_id', $id)->first();
+        $contract = Contract::where('project_id', $id)->first();
+        $insurance = $contract ? Insurance::where('contract_id', $contract->id)->first() : null;
         $insuranceType = InsuranceType::all();
 
         // get related project via contract
-        $project = $contract->project;
+        $project = $contract ? $contract->project : Project::findOrFail($id);
 
         // get milestones from project
         $milestones = $project ? $project->milestones:collect();
