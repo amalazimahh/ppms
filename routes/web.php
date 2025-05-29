@@ -21,6 +21,7 @@ use App\Http\Controllers\BankerGuaranteeController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\RKNController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProjectHealthController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -68,7 +69,7 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/projects/store', [ProjectsController::class, 'store'])->name('projects.store')->middleware('auth');
     Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
     Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
-    Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
+    Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
     Route::get('admin/projects/{id}/status', [MilestoneController::class, 'milestone'])->name('projects.status')->middleware('auth');
     Route::get('admin/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team')->middleware('auth');
@@ -106,6 +107,9 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/admin/rkn', [RKNController::class, 'showRKN'])->name('pages.admin.rkn')->middleware('auth');
     Route::post('/admin/rkn', [RKNController::class, 'store'])->name('pages.admin.rkn.store')->middleware('auth');
     Route::post('/admin/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('admin.assignRole');
+    Route::get('admin/projects/{id}/project_health', [ProjectHealthController::class, 'show'])->name('projects.project_health')->middleware('auth');
+    Route::put('admin/projects/{id}/project_health', [ProjectHealthController::class, 'update'])->name('projects.project_health.update')->middleware('auth');
+
 
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
