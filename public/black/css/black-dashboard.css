@@ -611,6 +611,20 @@ pre code {
   .container {
     max-width: 540px;
   }
+  .modal-fullscreen {
+    width: 100vw;
+    max-width: none;
+    height: 35vh;
+    margin: 0;
+  }
+  .modal-fullscreen .modal-content {
+    height: 55vh;
+    border-radius: 0;
+  }
+  .modal-fullscreen .modal-body {
+    overflow-y: auto;
+    height: calc(100vh - 56px - 56px);
+  }
 }
 
 @media (min-width: 768px) {
