@@ -49,25 +49,35 @@
             {{ $progress }}%
         </div>
     </div>
-    <div id="progressLabel" class="mt-2" style="text-align: center;">Project Title: </div>
 
-    <!-- Dropdown Navigation (for jumping between forms) -->
+    <hr>
+
+    <!-- project title -->
+    <div class="row mb-2">
+        <label for="projectTitle" class="col-sm-2 col-form-label">Project Title: </label>
+        <div class="col-sm-10">
+            <input type="text" name="projectTitle" id="projectTitle" value="{{ $project->title }}" class="form-control text-white" disabled>
+        </div>
+     </div>
+
+    <!-- dropdown navigation -->
     <div class="row mb-3">
         <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to Form: </label>
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
                 <option disabled selected>-- Select Form --</option>
-                <option value="{{ route('projects.status', $project->id) }}">Project Status</option>
-                <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">Project Terms of Reference Form</option>
-                <option value="{{ route('projects.pre_tender', $project->id) }}">Pre-Design Form</option>
-                <option value="{{ route('projects.project_team', $project->id) }}">Project Team Form</option>
-                <option value="{{ route('projects.design_submission', $project->id) }}">Design Submission Form</option>
-                <option value="{{ route('projects.tender', $project->id) }}">Opening/Closing Tender Form</option>
-                <option value="{{ route('projects.tender_recommendation', $project->id) }}">Evaluation/Recommendation of Tender Form</option>
-                <option value="{{ route('projects.approval_award', $project->id) }}">Approval of Award Form</option>
-                <option value="{{ route('projects.contract', $project->id) }}">Contract Form</option>
-                <option value="{{ route('projects.bankers_guarantee', $project->id) }}">Banker's Guarantee Form</option>
-                <option value="{{ route('projects.insurance', $project->id) }}">Insurance Form</option>
+                <option value="{{ route('projects.status', $project->id) }}">1. Project Status</option>
+                <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">2. Project Terms of Reference Form</option>
+                <option value="{{ route('projects.pre_tender', $project->id) }}">3. Pre-Design Form</option>
+                <option value="{{ route('projects.project_team', $project->id) }}">4. Project Team Form</option>
+                <option value="{{ route('projects.design_submission', $project->id) }}">5. Design Submission Form</option>
+                <option value="{{ route('projects.tender', $project->id) }}">6. Opening/Closing Tender Form</option>
+                <option value="{{ route('projects.tender_recommendation', $project->id) }}">6.1 Evaluation/Recommendation of Tender Form</option>
+                <option value="{{ route('projects.approval_award', $project->id) }}">6.2 Approval of Award Form</option>
+                <option value="{{ route('projects.contract', $project->id) }}">7. Contract Form</option>
+                <option value="{{ route('projects.bankers_guarantee', $project->id) }}">7.1 Banker's Guarantee Form</option>
+                <option value="{{ route('projects.insurance', $project->id) }}">7.2 Insurance Form</option>
+                <option value="{{ route('projects.project_health', $project->id) }}">8. Project Progress Status</option>
             </select>
         </div>
     </div>
