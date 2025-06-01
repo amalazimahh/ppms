@@ -15,4 +15,11 @@ class RKN extends Model
         'startDate',
         'endDate',
     ];
+
+    protected $casts = [
+        'startDate' => 'datetime',
+        'endDate' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
 }
