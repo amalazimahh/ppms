@@ -29,12 +29,18 @@ class ProjectDashboardController extends Controller
         $project = null;
         $progress = 0;
         $stages = [];
-        // store project notifications
         $projectUpdates = collect();
 
         if($request->has('project_name')){
             $project = Project::where('title', 'LIKE', '%' . $request->project_name . '%')
-                ->with(['physical_status', 'financial_status', 'milestones.status'])
+                ->with([
+                    'physical_status',
+                    'financial_status',
+                    'milestones.status',
+                    'rkn',
+                    'milestone',
+                    'projectTeam.officerInCharge'
+                ])
                 ->first();
 
             if($project) {
