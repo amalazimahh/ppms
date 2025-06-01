@@ -89,4 +89,8 @@ class Project extends Model
     public function tender(){
         return $this->hasOne(Tender::class);
     }
+
+    public function projectTeam() {
+        return $this->hasOne(ProjectTeam::class);
+    }
 }
