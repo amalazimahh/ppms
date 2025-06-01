@@ -74,6 +74,14 @@ class Project extends Model
         return $this->belongsTo(Milestone::class, 'milestones_id');
     }
 
+    public function physical_status() {
+        return $this->hasOne(PhysicalStatus::class);
+    }
+
+    public function financial_status() {
+        return $this->hasOne(FinancialStatus::class);
+    }
+
     public function contract(){
         return $this->hasOne(Contract::class);
     }
