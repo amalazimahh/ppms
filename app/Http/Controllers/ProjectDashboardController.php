@@ -9,6 +9,7 @@ use App\Models\Status;
 use App\Models\Milestone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
 
 class ProjectDashboardController extends Controller
 {
@@ -28,6 +29,8 @@ class ProjectDashboardController extends Controller
         $project = null;
         $progress = 0;
         $stages = [];
+        // store project notifications
+        $projectUpdates = collect();
 
         if($request->has('project_name')){
             $project = Project::where('title', 'LIKE', '%' . $request->project_name . '%')
@@ -35,6 +38,11 @@ class ProjectDashboardController extends Controller
                 ->first();
 
             if($project) {
+                // retrieve project-related notifications with pagination
+                $projectUpdates = Notification::where('message', 'LIKE', '%' . $project->title . '%')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+
                 // calculate overall progress (progress bar)
                 $totalMilestones = $project->milestones->unique('id')->count();
                 $completedMilestones = $project->milestones->where('pivot.completed', true)->unique('id')->count();
@@ -77,6 +85,6 @@ class ProjectDashboardController extends Controller
             }
         }
 
-        return view('pages.admin.project-dashboard', compact('project', 'progress', 'stages'));
+        return view('pages.admin.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
     }
 }
