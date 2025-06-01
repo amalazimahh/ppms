@@ -46,30 +46,6 @@
 
 @section('content')
 
-<!-- Filter row -->
-<!-- <div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-9">
-                        <select class="form-control" id="year">
-                            <option value="">Financial Year</option>
-                            <option value="2023">2022/2023</option>
-                            <option value="2022">2023/2024</option>
-                            <option value="2022">2024/2025</option>
-                            <option value="2022">2025/2026</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary btn-block">Apply Filters</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div class="row mt-3">
     <div class="col-lg-3">
         <div class="card card-stats">
@@ -203,22 +179,22 @@
     </div>
 </div>
 
-<!-- Bar chart for physical and financial status in its own row -->
+<!-- bar chart for physical and financial status in its own row -->
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-category">Budget vs Timeline</h5>
+                <h5 class="card-category">Physical vs Financial Progress</h5>
                 <h2 class="card-title">Project Progress</h2>
             </div>
             <div class="card-body">
-                <canvas id="projectProgressChart" height="100"></canvas>
+                <canvas id="projectProgressChart" height="300"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Upcoming Deadlines table in its own row -->
+<!-- upcoming deadlines table -->
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -233,7 +209,7 @@
                             <tr>
                                 <th>Project</th>
                                 <th>Officer-in-Charge</th>
-                                <th>RKN</th>
+                                <th>Deadline</th>
                                 <th>Countdown</th>
                             </tr>
                         </thead>
@@ -282,7 +258,6 @@
         console.log(data);
 
         // D3 Sunburst Chart
-        // Adjust container and chart dimensions
         const container = d3.select("#sunburst-chart")
             .style("height", "360px")
             .style("width", "100%")
@@ -290,10 +265,10 @@
             .style("align-items", "center")
             .style("justify-content", "center");
 
-        // Adjust chart dimensions
-        const width = 550;  // Reduced width
-        const height = 450;  // Reduced height
-        const radius = Math.min(width, height) / 6;  // Further reduced radius ratio
+        // adjust chart dimensions
+        const width = 550;
+        const height = 450;
+        const radius = Math.min(width, height) / 6;
 
         const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
 
@@ -321,19 +296,17 @@
             .attr("viewBox", [-width / 4, -height / 2, width, height])
             .style("font", "11px sans-serif");
 
-        // Single column legend with better positioning
+        // legend for sunburst chart
         const legend = svg.append("g")
             .attr("class", "legend")
             .attr("transform", `translate(${width/2.2}, ${-height/2.5})`);
 
-        // Single column layout
         const legendItems = legend.selectAll("g")
             .data(data.children)
             .enter()
             .append("g")
-            .attr("transform", (d, i) => `translate(0, ${i * 18})`);  // Adjusted spacing
+            .attr("transform", (d, i) => `translate(0, ${i * 18})`);
 
-        // Smaller legend items
         legendItems.append("rect")
             .attr("width", 12)
             .attr("height", 12)
@@ -341,7 +314,7 @@
             .attr("fill", d => color(d.name))
             .attr("fill-opacity", 0.8);
 
-        // Adjust legend text
+        // adjust legend text
         legendItems.append("text")
             .attr("x", 16)
             .attr("y", 6)
@@ -462,12 +435,12 @@
             return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
         }
 
-    // Project Stages Donut Chart
+    // project stages donut chart
     const projectStagesData = {
         labels: @json($stageLabels),
         datasets: [{
             data: @json($stageData),
-            backgroundColor: ['#e14eca', '#00f2c3', '#ff8d72', '#1d8cf8', '#fd5d93'],  // Updated colors
+            backgroundColor: ['#e14eca', '#00f2c3', '#ff8d72', '#1d8cf8', '#fd5d93'],
             borderWidth: 0
         }]
     };
@@ -504,27 +477,36 @@
     const projectStagesCtx = document.getElementById('projectStagesDonut').getContext('2d');
     new Chart(projectStagesCtx, projectStagesConfig);
 
-    // After the existing charts initialization
     const progressCtx = document.getElementById('projectProgressChart').getContext('2d');
     new Chart(progressCtx, {
         type: 'bar',
         data: {
             labels: @json($projectNames),
             datasets: [{
-                label: 'Physical Progress',
+                label: 'Physical Progress (%)',
                 data: @json($physicalProgress),
                 backgroundColor: '#1d8cf8',
-                barThickness: 18
+                barPercentage: 0.8,
+                categoryPercentage: 0.8
             }, {
-                label: 'Financial Progress',
+                label: 'Financial Progress (%)',
                 data: @json($financialProgress),
                 backgroundColor: '#00f2c3',
-                barThickness: 18
+                barPercentage: 0.8,
+                categoryPercentage: 0.8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -533,7 +515,13 @@
                         color: 'rgba(255,255,255,0.1)'
                     },
                     ticks: {
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value) {
+                            return value + '%';
+                        }
                     }
                 },
                 x: {
@@ -543,15 +531,35 @@
                     ticks: {
                         color: '#ffffff',
                         autoSkip: false,
-                        maxRotation: 45,
-                        minRotation: 45
+                        maxRotation: 0,
+                        minRotation: 0,
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value, index) {
+                            const label = this.getLabelForValue(value);
+                            return label.match(/.{1,18}(\s|$)/g);
+                        }
                     }
                 }
             },
             plugins: {
                 legend: {
+                    display: true,
+                    position: 'top',
                     labels: {
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        font: {
+                            size: 12
+                        },
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y + '%';
+                        }
                     }
                 }
             }
