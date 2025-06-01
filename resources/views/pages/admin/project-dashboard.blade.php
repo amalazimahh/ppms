@@ -269,7 +269,7 @@
         </div>
     </div>
 
-    <!-- Overall Progress, Project Summary, Launch Date -->
+    <!-- overall progress, project summary, deadline countdown -->
     <div class="row">
         <!-- overall progress -->
         <div class="col-lg-3">
@@ -289,19 +289,19 @@
                     <div class="summary-details mt-3">
                         <div class="summary-item text-light">
                             <span>Project Handover (to DoD):</span>
-                            <span>{{ $project ? ($project->created_at ?? 'N/A') : 'N/A'}}</span>
+                            <span>{{ $project ? (is_string($project->created_at) ? $project->created_at : $project->created_at->format('d/m/Y')) : 'N/A' }}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Project Handover (to Client Ministry):</span>
-                            <span>{{ $project ? ($project->rkn_id->endDate ?? 'N/A') : 'N/A'}}</span>
+                            <span>{{ $project && $project->rkn && $project->rkn->endDate ? (is_string($project->rkn->endDate) ? $project->rkn->endDate : $project->rkn->endDate->format('d/m/Y')) : 'N/A' }}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Officer-in-Charge:</span>
-                            <span>{{ $project ? ($project->officer_in_charge ?? 'N/A') : 'N/A'}}</span>
+                            <span>{{ $project && $project->projectTeam && $project->projectTeam->officerInCharge ? $project->projectTeam->officerInCharge->name : 'N/A' }}</span>
                         </div>
                         <div class="summary-item text-light">
                             <span>Stage:</span>
-                            <span class="text-primary">{{ $project ? ($project->milestones_id ?? 'N/A') : 'N/A'}}</span>
+                            <span class="text-primary">{{ $project && $project->milestone ? $project->milestone->name : 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
@@ -315,9 +315,11 @@
                     <h5 class="card-category">Countdown to Launch</h5>
                     <div class="launch-date-card mt-3">
                         <i class="fa-solid fa-rocket" style="color: #d133e6;"></i>
-                        <div id="countdown-days" class="mb-2" style="font-size: 2em; color: #ffff;">-- Days</div>
-                        <h2 id="countdown-hours" class="text-danger" style="font-size: 1.5em; margin-bottom: 0;">--:--:--:--</h2>
-                        <h5 class="text-muted" style="margin-top: 0;">DD : HH : MM : SS</h5>
+                        <div id="countdown-days" class="mb-2 d-flex align-items-center justify-content-center" style="font-size: 2em; color: #00ffd0;"></div>
+                        <div class="countdown-container">
+                            <div id="countdown-hours" class="text-danger" style="font-size: 1.5em; margin-bottom: 5px;"></div>
+                            <!-- <div class="text-muted" style="font-size: 0.8em;">Days : Hours : Minutes : Seconds</div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -331,46 +333,32 @@
                 <div class="card-body">
                     <h5 class="card-category">Project Development Stages</h5>
                     <div class="progress-bar-container mt-3">
-                        <div class="progress-bar-fill"></div>
+                        <div class="progress-bar-fill" style="width: {{ $progress }}%"></div>
                     </div>
                     <div class="row h-100 align-items-center">
-                        <div class="col">
-                            <div class="phase-item completed">
-                                <i class="tim-icons icon-check-2 text-success"></i>
-                                <h6>Pre-Design</h6>
-                                <span class="text-success">Completed</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="phase-item completed">
-                                <i class="tim-icons icon-check-2 text-success"></i>
-                                <h6>Design</h6>
-                                <span class="text-success">Completed</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="phase-item completed">
-                                <i class="tim-icons icon-check-2 text-success"></i>
-                                <h6>Tender</h6>
-                                <span class="text-success">Completed</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="phase-item in-progress">
-                                <div class="progress-circle">
-                                    <h4>72%</h4>
+                        @forelse($stages as $stage)
+                            <div class="col">
+                                <div class="phase-item {{ $stage['completed'] ? 'completed' : ($stage['current'] ? 'in-progress' : 'waiting') }}">
+                                    @if($stage['completed'])
+                                        <i class="tim-icons icon-check-2 text-success"></i>
+                                    @elseif($stage['current'])
+                                        <div class="progress-circle">
+                                            <h4>{{ $stage['progress'] }}%</h4>
+                                        </div>
+                                    @else
+                                        <i class="tim-icons icon-time-alarm text-muted"></i>
+                                    @endif
+                                    <h6>{{ $stage['name'] }}</h6>
+                                    <span class="{{ $stage['completed'] ? 'text-success' : ($stage['current'] ? 'text-warning' : 'text-muted') }}">
+                                        {{ $stage['completed'] ? 'Completed' : ($stage['current'] ? 'In Progress' : 'Waiting') }}
+                                    </span>
                                 </div>
-                                <h6>Ongoing</h6>
-                                <span class="text-warning">In Progress</span>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="phase-item waiting">
-                                <i class="tim-icons icon-time-alarm text-muted"></i>
-                                <h6>Post-Completion</h6>
-                                <span class="text-muted">Waiting</span>
+                        @empty
+                            <div class="col text-center">
+                                <p class="text-muted">No stages found for this project</p>
                             </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -409,46 +397,57 @@
                 <div class="card-body">
                     <h5 class="card-category">Recent Project Updates</h5>
                     <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="timeline-icon">
-                                    <!-- <i class="tim-icons icon-notes text-info"></i> -->
-                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #8f36a1;"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <h6 class="mb-0">Design Documentation Updated</h6>
-                                    <small class="text-muted">2 hours ago by Amal</small>
-                                    <p class="mb-0 mt-2">Updated UI/UX specifications for mobile view</p>
+                        @forelse($projectUpdates as $update)
+                            <div class="timeline-item">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="timeline-icon">
+                                        @switch($update->type)
+                                            @case('new_user')
+                                                <i class="fa-solid fa-user-plus fa-2xl" style="color: #4CAF50;"></i>
+                                                @break
+                                            @case('reset_password')
+                                                <i class="fa-solid fa-key fa-2xl" style="color: #FFC107;"></i>
+                                                @break
+                                            @case('new_project')
+                                                <i class="fa-solid fa-folder-plus fa-2xl" style="color: #2196F3;"></i>
+                                                @break
+                                            @case('update_project_details')
+                                                <i class="fa-solid fa-pen-to-square fa-2xl" style="color: #8f36a1;"></i>
+                                                @break
+                                            @case('update_project_status')
+                                                <i class="fa-solid fa-arrows-rotate fa-2xl" style="color: #9d3f88;"></i>
+                                                @break
+                                            @case('upcoming_deadline')
+                                                <i class="fa-solid fa-clock fa-2xl" style="color: #FF9800;"></i>
+                                                @break
+                                            @case('overbudget')
+                                                <i class="fa-solid fa-money-bill-trend-up fa-2xl" style="color: #f44336;"></i>
+                                                @break
+                                            @case('overdue')
+                                                <i class="fa-solid fa-calendar-xmark fa-2xl" style="color: #d32f2f;"></i>
+                                                @break
+                                            @default
+                                                <i class="fa-solid fa-circle-info fa-2xl" style="color: #2f70ac;"></i>
+                                        @endswitch
+                                    </div>
+                                    <div class="ml-3">
+                                        <h6 class="mb-0">{{ ucfirst(str_replace('_', ' ', $update->type)) }}</h6>
+                                        <small class="text-muted">{{ $update->created_at->diffForHumans() }}</small>
+                                        <p class="mb-0 mt-2">{{ $update->message }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="timeline-icon">
-                                    <!-- <i class="tim-icons icon-check-2 text-success"></i> -->
-                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #2f70ac;"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <h6 class="mb-0">Mobile View Configuration Completed</h6>
-                                    <small class="text-muted">Yesterday by Amal</small>
-                                    <p class="mb-0 mt-2">Responsive design implementation finished</p>
-                                </div>
+                        @empty
+                            <div class="text-center text-muted">
+                                <p>No recent updates for this project</p>
                             </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="d-flex align-items-center">
-                                <div class="timeline-icon">
-                                    <!-- <i class="tim-icons icon-alert-circle-exc text-warning"></i> -->
-                                    <i class="fa-solid fa-user-pen fa-2xl" style="color: #9d3f88;"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <h6 class="mb-0">Budget Adjustment Required</h6>
-                                    <small class="text-muted">2 days ago by Amal</small>
-                                    <p class="mb-0 mt-2">Additional resources needed for testing phase</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
+                    @if($project && method_exists($projectUpdates, 'links'))
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $projectUpdates->appends(['project_name' => request('project_name')])->links('pagination::bootstrap-5') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -459,9 +458,9 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Overall Progress Chart
+            // overall progress chart
             var options = {
-                series: [72],
+                series: [{{ $progress ?? 0 }}],
                 chart: {
                     height: 200,
                     type: 'radialBar',
@@ -491,129 +490,144 @@
                 colors: ['#ad23cf'],
             };
 
-            // countdown
             var chart = new ApexCharts(document.querySelector("#progressChart"), options);
             chart.render();
 
-                const launchDate = new Date('2026-03-31T00:00:00');
+            // countdown to deadline
+            function initializeCountdown() {
+                @if($project && $project->rkn && $project->rkn->endDate)
+                    const launchDate = new Date('{{ $project->rkn->endDate }}');
+                @else
+                    const launchDate = new Date(); // set to current date if no deadline
+                @endif
                 const daysElem = document.getElementById('countdown-days');
                 const hoursElem = document.getElementById('countdown-hours');
+
+                if (!daysElem || !hoursElem) return;
 
                 function updateCountdown() {
                     const now = new Date();
                     let diff = launchDate - now;
+
                     if (diff <= 0) {
                         daysElem.textContent = "0 Days";
                         hoursElem.textContent = "00:00:00";
+                        daysElem.classList.add('text-danger');
+                        hoursElem.classList.add('text-danger');
                         return;
                     }
 
-                    // Calculate days, hours, minutes, seconds left
+                    // calculate days, hours, minutes, seconds left
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const totalHours = Math.floor(diff / (1000 * 60 * 60));
                     const minutes = Math.floor((diff / (1000 * 60)) % 60);
                     const seconds = Math.floor((diff / 1000) % 60);
 
-                    daysElem.textContent = days + (days === 1 ? " Day" : " Days");
+                    // update countdown display
+                    daysElem.innerHTML = `<span style="margin-right: 10px;">${days}</span><span>Days</span>`;
                     hoursElem.textContent =
-                        days.toString().padStart(2, '0') + ':'+
-                        hours.toString().padStart(2, '0') + ':' +
+                        totalHours.toString().padStart(2, '0') + ':' +
                         minutes.toString().padStart(2, '0') + ':' +
                         seconds.toString().padStart(2, '0');
                 }
 
                 updateCountdown();
-                setInterval(updateCountdown, 1000);
-            });
+                return setInterval(updateCountdown, 1000);
+            }
 
-            // physical progress chart
-            var ctx = document.getElementById('physicalProgressChart').getContext('2d');
-            var physicalProgressChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Physical Progress'],
-                    datasets: [
-                        {
-                            label: 'Expected',
-                            data: [65],
-                            backgroundColor: 'rgba(173, 35, 207, 0.7)',
-                            borderColor: 'rgba(173, 35, 207, 1)',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Actual',
-                            data: [50],
-                            backgroundColor: 'rgba(218, 136, 28, 0.7)',
-                            borderColor: 'rgba(218, 136, 28, 1)',
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: true },
-                        title: { display: false }
+            const countdownInterval = initializeCountdown();
+
+            window.addEventListener('beforeunload', function() {
+                if (countdownInterval) clearInterval(countdownInterval);
+            });
+        });
+
+        // physical progress chart
+        var ctx = document.getElementById('physicalProgressChart').getContext('2d');
+        var physicalProgressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Physical Progress'],
+                datasets: [
+                    {
+                        label: 'Expected',
+                        data: [{{ $project && $project->physical_status ? $project->physical_status->scheduled : 0 }}],
+                        backgroundColor: 'rgba(173, 35, 207, 0.7)',
+                        borderColor: 'rgba(173, 35, 207, 1)',
+                        borderWidth: 2
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            grid: {
-                                color: 'rgba(255,255,255,0.1)'
-                            },
-                            title: {
-                                display: true,
-                                text: 'Percentage (%)'
-                            }
+                    {
+                        label: 'Actual',
+                        data: [{{ $project && $project->physical_status ? $project->physical_status->actual : 0 }}],
+                        backgroundColor: 'rgba(218, 136, 28, 0.7)',
+                        borderColor: 'rgba(218, 136, 28, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255,255,255,0.1)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
                         }
                     }
                 }
-            });
+            }
+        });
 
-            var ctx = document.getElementById('financialProgressChart').getContext('2d');
-            var financialProgressChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Financial Progress'],
-                    datasets: [
-                        {
-                            label: 'Expected',
-                            data: [75],
-                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
-                            borderColor: 'rgba(52, 152, 219, 1)',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Actual',
-                            data: [65],
-                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
-                            borderColor: 'rgba(46, 204, 113, 1)',
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: true },
-                        title: { display: false }
+        var ctx = document.getElementById('financialProgressChart').getContext('2d');
+        var financialProgressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Financial Progress'],
+                datasets: [
+                    {
+                        label: 'Expected',
+                        data: [{{ $project && $project->financial_status ? $project->financial_status->scheduled : 0 }}],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: 'Percentage (%)'
-                            }
+                    {
+                        label: 'Actual',
+                        data: [{{ $project && $project->financial_status ? $project->financial_status->actual : 0 }}],
+                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
                         }
                     }
                 }
-            });
-
+            }
+        });
     </script>
-
 @endpush
