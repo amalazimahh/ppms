@@ -95,7 +95,7 @@ class ProjectsController extends Controller
         }
     }
 
-    // retrieve project details and pass them to the basic details form
+    // retrieve project details and pass to the basic details form
     public function edit($id)
     {
         $project = Project::findOrFail($id);
@@ -337,21 +337,21 @@ class ProjectsController extends Controller
         $message = Str::limit($project->title . ' details have been updated.', 250);
         sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
 
-        // Log success or failure of project update
+        // log success or failure of project update
         if ($updated) {
             Log::info('Project Updated successfully', $project->toArray());
         } else {
             Log::info('Project Update failed: ', $project->toArray());
         }
 
-        // Return the success response
+        // return the success response
         return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
     }
 
     public function getVoteNum($id)
     {
         $parentProject = Project::findOrFail($id);
-        return response()->json(['voteNum' => $parentProject->voteNum]); // return correct voteNum
+        return response()->json(['voteNum' => $parentProject->voteNum]); // return corresponding voteNum
     }
 
     public function view($id)
@@ -387,6 +387,39 @@ class ProjectsController extends Controller
         $pdf = PDF::loadView('pages.admin.report-pdf', compact('project'));
         $pdf->setPaper('a3', 'landscape');
         return $pdf->download('project-details-' . $project->id . '.pdf');
+    }
+
+    // add  project_team method to handle project team form
+    public function project_team($id)
+    {
+        // fetch project details using the ID
+        $project = Project::findOrFail($id);
+
+        // retrieve lists of project managers (oic)
+        $projectManagerRoleId = 2;
+        $projectManagers = User::where('roles_id', 2)->get();
+
+        // retrieve lists of architect
+        $architects = Architect::all();
+
+        // retrieve lists of mechanical electrical
+        $mechanicalElectricals = MechanicalElectrical::all();
+
+        // retrieve lists of civil structural
+        $civilStructurals = CivilStructural::all();
+
+        // retrieve lists of quantity surveyor
+        $quantitySurveyors = QuantitySurveyor::all();
+
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
     }
 
 }
