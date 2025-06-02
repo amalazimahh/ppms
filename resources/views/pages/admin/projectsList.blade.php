@@ -137,8 +137,77 @@
 
                                         <!-- Project Details Modal -->
                                         <div class="modal fade" id="projectDetailsModal{{ $project->id }}" tabindex="-1" aria-labelledby="projectDetailsModalLabel{{ $project->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
-                                                <div class="modal-content" style="border-radius: 12px;">
+                                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <style>
+                                                        .modal-xl {
+                                                            max-width: 85%;
+                                                            margin: 2.5rem auto;
+                                                        }
+                                                        .modal-dialog-scrollable {
+                                                            max-height: calc(100vh - 5rem);
+                                                        }
+                                                        .modal-dialog-scrollable .modal-content {
+                                                            border-radius: 15px;
+                                                        }
+                                                        .modal-dialog-scrollable .modal-body {
+                                                            overflow-y: auto;
+                                                            padding: 25px 35px;
+                                                        }
+                                                        .modal-header, .modal-footer {
+                                                            flex-shrink: 0;
+                                                            background: #fff;
+                                                            padding: 1rem 2rem;
+                                                        }
+                                                        .section-title {
+                                                            background: rgb(101, 56, 143);
+                                                            color: white;
+                                                            padding: 10px 15px;
+                                                            margin: 20px 0 15px 0;
+                                                            border-radius: 8px;
+                                                            font-size: 1.1rem;
+                                                            font-weight: 600;
+                                                        }
+                                                        .details-group {
+                                                            display: grid;
+                                                            grid-template-columns: repeat(1, 1fr);
+                                                            gap: 8px;
+                                                        }
+                                                        .details-row {
+                                                            background: #f8f9fa;
+                                                            padding: 12px 20px;
+                                                            margin-bottom: 8px;
+                                                            border-radius: 5px;
+                                                            border-left: 4px solid rgb(101, 56, 143);
+                                                            display: flex;
+                                                            flex-wrap: wrap;
+                                                            gap: 30px;
+                                                        }
+                                                        .details-item {
+                                                            flex: 1;
+                                                            min-width: 300px;
+                                                            display: flex;
+                                                            align-items: center;
+                                                        }
+                                                        .details-item strong {
+                                                            color: #444;
+                                                            font-size: 0.9rem;
+                                                            min-width: 180px;
+                                                            margin-right: 10px;
+                                                        }
+                                                        .details-item div {
+                                                            color: #000;
+                                                            flex: 1;
+                                                        }
+                                                        .details-full {
+                                                            flex: 0 0 100%;
+                                                        }
+                                                        .details-row img {
+                                                            max-width: 100%;
+                                                            height: auto;
+                                                            margin-top: 10px;
+                                                        }
+                                                    </style>
                                                     <div class="modal-header">
                                                         <h4 class="modal-title" id="projectDetailsModalLabel{{ $project->id }}">
                                                             <span style="font-weight: bold; color:rgb(101, 56, 143);">PROJECT DETAILS/SUMMARY REPORT</span>
@@ -147,208 +216,454 @@
                                                             <i class="tim-icons icon-simple-remove"></i>
                                                         </button>
                                                     </div>
-                                                    <div class="modal-body text-dark" style="background: #f9f9f9; overflow-y: auto;">
-                                                        <div>
-                                                            <span style="font-weight: bold; color:rgb(101, 56, 143);">PROJECT TERMS OF REFERENCE</span>
-                                                        </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Financial Year: </strong> {{ $project->fy }}</div>
-                                                                <div class="col-6"><strong>Vote No.: </strong> {{ $project->voteNum }}</div>
-                                                                <!-- <div class="col-3"><strong>Status:</strong></div> -->
+                                                    <div class="modal-body text-dark" style="background: #fff;">
+                                                        <div class="section-title">PROJECT TERMS OF REFERENCE</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Financial Year:</strong>
+                                                                    <div>{{ $project->fy }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Vote No.:</strong>
+                                                                    <div>{{ $project->voteNum }}</div>
+                                                                </div>
                                                             </div>
-
+                                                            
                                                             @if($project->parent_project_id)
-                                                            <div class="row mb-3">
-                                                                <div class="col-12"><strong>Parent Project:</strong><div>{{ $project->parentProject->title ?? '' }}</div></div>
+                                                            <div class="details-row">
+                                                                <div class="details-item details-full">
+                                                                    <strong>Parent Project:</strong>
+                                                                    <div>{{ $project->parentProject->title ?? '' }}</div>
+                                                                </div>
                                                             </div>
                                                             @endif
 
-                                                            <div class="row mb-3">
-                                                                <div class="col-12"><strong>Title:</strong><div>{{ $project->title }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Scheme Value: </strong>${{ $project->sv }}</div>
-                                                                <div class="col-6"><strong>Allocation Value: </strong>${{ $project->av }}</div>
-                                                            </div>
-
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>RKN:</strong><div>{{ $project->rkn->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Client Ministry:</strong><div>{{ $project->clientMinistry->name ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Location:</strong><div>{{ $project->location }}</div></div>
-                                                                <div class="col-6"><strong>Scope:</strong><div>{{ $project->scope }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Site Gazette:</strong><div>{{ $project->siteGazette }}</div></div>
-                                                                <div class="col-6"><strong>Handover Date:</strong><div>{{ $project->handoverDate }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-12"><strong>Image:</strong><div>@if($project->img)<img src="{{ asset('storage/' . $project->img) }}" alt="Project Image" style="max-width:100%;height:auto;">@endif</div></div>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <span style="font-weight: bold; color:rgb(101, 56, 143);">PROJECT TEAM</span>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Officer in Charge:</strong><div>{{ $project->projectTeam->officerInCharge->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Architect:</strong><div>{{ $project->projectTeam->architect->name ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Mechanical/Electrical Engineer:</strong><div>{{ $project->projectTeam->mechanicalElectrical->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Civil/Structural Engineer:</strong><div>{{ $project->projectTeam->civilStructural->name ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Quantity Surveyor:</strong><div>{{ $project->projectTeam->quantitySurveyor->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Others:</strong><div>{{ $project->projectTeam->others->name ?? '' }}</div></div>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <span style="font-weight: bold; color:rgb(101, 56, 143);">PRE-DESIGN DETAILS</span>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>RFP/RFQ Number:</strong><div>{{ $project->preTender->rfpRfqNum ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>RFQ Title:</strong><div>{{ $project->preTender->rfqTitle ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>RFQ Fee:</strong><div>{{ $project->preTender->rfqFee ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Tender Number:</strong><div>{{ $project->tender->tenderNum ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Cost Amount:</strong><div>{{ $project->tender->costAmt ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Cost Date:</strong><div>{{ $project->tender->costDate ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Confirmed Fund Date:</strong><div>{{ $project->tender->confirmFund ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Opened Date:</strong><div>{{ $project->preTender->opened ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Closed Date:</strong><div>{{ $project->preTender->closed ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Extension Date:</strong><div>{{ $project->preTender->ext ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Validity Extension:</strong><div>{{ $project->preTender->validity_ext ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>JKMKKP Recommendation:</strong><div>{{ $project->preTender->jkmkkp_recomm ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>JKMKKP Approval:</strong><div>{{ $project->preTender->jkmkkp_approval ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>LOA Date:</strong><div>{{ $project->preTender->loa ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>AAC Date:</strong><div>{{ $project->preTender->aac ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Soil Investigation:</strong><div>{{ $project->preTender->soilInv ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Topographical Survey:</strong><div>{{ $project->preTender->topoSurvey ?? '' }}</div></div>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <span style="font-weight: bold; color:rgb(101, 56, 143);">DESIGN SUBMISSION DETAILS</span>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>KOM Date:</strong><div>{{ $project->designSubmission->kom ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Concept Approval:</strong><div>{{ $project->designSubmission->conAppr ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Design Review:</strong><div>{{ $project->designSubmission->designRev ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Detailed Review:</strong><div>{{ $project->designSubmission->detailedRev ?? '' }}</div></div>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <span style="font-weight: bold; color:rgb(101, 56, 143);">TENDER DETAILS</span>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>To Consultant:</strong><div>{{ $project->tenderRecommendation->toConsultant ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>From Consultant:</strong><div>{{ $project->tenderRecommendation->fromConsultant ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>From BPP:</strong><div>{{ $project->tenderRecommendation->fromBPP ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>To DG:</strong><div>{{ $project->tenderRecommendation->toDG ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>To LTK:</strong><div>{{ $project->tenderRecommendation->toLTK ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>LTK Approval:</strong><div>{{ $project->tenderRecommendation->ltkApproval ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Discount Letter:</strong><div>{{ $project->tenderRecommendation->discLetter ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>LOA Issued:</strong><div>{{ $project->approvalAward->loaIssued ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>LOA:</strong><div>{{ $project->approvalAward->loa ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>LAD Day:</strong><div>{{ $project->approvalAward->ladDay ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Document Preparation:</strong><div>{{ $project->approvalAward->docPrep ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Contract Signed:</strong><div>{{ $project->approvalAward->conSigned ?? '' }}</div></div>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <span style="font-weight: bold; color:rgb(101, 56, 143);">CONTRACT DETAILS</span>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Contractor:</strong><div>{{ $project->contract->contractor->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Contract Number:</strong><div>{{ $project->contract->contractorNum ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Contract Start Date:</strong><div>{{ $project->contract->start ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Contract End Date:</strong><div>{{ $project->contract->end ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Contract Period:</strong><div>{{ $project->contract->period ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Contract Sum:</strong><div>{{ $project->contract->sum ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Revised Sum:</strong><div>{{ $project->contract->revSum ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>LAD:</strong><div>{{ $project->contract->lad ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Total LAD:</strong><div>{{ $project->contract->totalLad ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>CNC:</strong><div>{{ $project->contract->cnc ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Revised Completion:</strong><div>{{ $project->contract->revComp ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Actual Completion:</strong><div>{{ $project->contract->actualComp ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>CPC:</strong><div>{{ $project->contract->cpc ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>EDLP:</strong><div>{{ $project->contract->edlp ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>CMGD:</strong><div>{{ $project->contract->cmgd ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>LSK:</strong><div>{{ $project->contract->lsk ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Penalty Amount:</strong><div>{{ $project->contract->penAmt ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Retention Amount:</strong><div>{{ $project->contract->retAmt ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Statutory Declaration:</strong><div>{{ $project->contract->statDec ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Insurance Type:</strong><div>{{ $project->insurance->insuranceType->name ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Insurance Issued:</strong><div>{{ $project->insurance->insIssued ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Insurance Expiry:</strong><div>{{ $project->insurance->insExpiry ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>Insurance Extension:</strong><div>{{ $project->insurance->insExt ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>Bankers Guarantee Amount:</strong><div>{{ $project->bankersGuarantee->bgAmt ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>BG Issued:</strong><div>{{ $project->bankersGuarantee->bgIssued ?? '' }}</div></div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-6"><strong>BG Expiry:</strong><div>{{ $project->bankersGuarantee->bgExpiry ?? '' }}</div></div>
-                                                                <div class="col-6"><strong>BG Extension:</strong><div>{{ $project->bankersGuarantee->bgExt ?? '' }}</div></div>
+                                                            <div class="details-row">
+                                                                <div class="details-item details-full">
+                                                                    <strong>Title:</strong>
+                                                                    <div>{{ $project->title }}</div>
+                                                                </div>
                                                             </div>
 
-                                                            <div class="modal-footer" style="background: #fff; position:sticky; bottom:0; z-index:1020;">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-primary" target="_blank">
-                                                                    <i class="fa fa-file-pdf-o"></i> Download PDF
-                                                                </a>
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Scheme Value:</strong>
+                                                                    <div>${{ $project->sv }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Allocation Value:</strong>
+                                                                    <div>${{ $project->av }}</div>
+                                                                </div>
                                                             </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>RKN:</strong>
+                                                                    <div>{{ $project->rkn->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Client Ministry:</strong>
+                                                                    <div>{{ $project->clientMinistry->name ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Location:</strong>
+                                                                    <div>{{ $project->location }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Scope:</strong>
+                                                                    <div>{{ $project->scope }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Site Gazette:</strong>
+                                                                    <div>{{ $project->siteGazette }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Handover Date:</strong>
+                                                                    <div>{{ $project->handoverDate }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            @if($project->img)
+                                                            <div class="details-row details-full">
+                                                                <strong>Image:</strong>
+                                                                <div><img src="{{ asset('storage/' . $project->img) }}" alt="Project Image" style="max-width:100%;height:auto;margin-top:10px;"></div>
+                                                            </div>
+                                                            @endif
+                                                        </div>
+
+                                                        <div class="section-title">PROJECT TEAM</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Officer in Charge:</strong>
+                                                                    <div>{{ $project->projectTeam->officerInCharge->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Architect:</strong>
+                                                                    <div>{{ $project->projectTeam->architect->name ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>M/E Engineer:</strong>
+                                                                    <div>{{ $project->projectTeam->mechanicalElectrical->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>C/S Engineer:</strong>
+                                                                    <div>{{ $project->projectTeam->civilStructural->name ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Quantity Surveyor:</strong>
+                                                                    <div>{{ $project->projectTeam->quantitySurveyor->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Others:</strong>
+                                                                    <div>{{ $project->projectTeam->others->name ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">PRE-DESIGN DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>RFP/RFQ Number:</strong>
+                                                                    <div>{{ $project->preTender->rfpRfqNum ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>RFQ Title:</strong>
+                                                                    <div>{{ $project->preTender->rfqTitle ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>RFQ Fee:</strong>
+                                                                    <div>{{ $project->preTender->rfqFee ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Tender Number:</strong>
+                                                                    <div>{{ $project->tender->tenderNum ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Cost Amount:</strong>
+                                                                    <div>{{ $project->tender->costAmt ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Cost Date:</strong>
+                                                                    <div>{{ $project->tender->costDate ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Confirmed Fund Date:</strong>
+                                                                    <div>{{ $project->tender->confirmFund ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Opened Date:</strong>
+                                                                    <div>{{ $project->preTender->opened ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Closed Date:</strong>
+                                                                    <div>{{ $project->preTender->closed ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Extension Date:</strong>
+                                                                    <div>{{ $project->preTender->ext ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Validity Extension:</strong>
+                                                                    <div>{{ $project->preTender->validity_ext ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>JKMKKP Recommendation:</strong>
+                                                                    <div>{{ $project->preTender->jkmkkp_recomm ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>JKMKKP Approval:</strong>
+                                                                    <div>{{ $project->preTender->jkmkkp_approval ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>LOA Date:</strong>
+                                                                    <div>{{ $project->preTender->loa ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>AAC Date:</strong>
+                                                                    <div>{{ $project->preTender->aac ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Soil Investigation:</strong>
+                                                                    <div>{{ $project->preTender->soilInv ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Topographical Survey:</strong>
+                                                                    <div>{{ $project->preTender->topoSurvey ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">DESIGN SUBMISSION DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>KOM Date:</strong>
+                                                                    <div>{{ $project->designSubmission->kom ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Concept Approval:</strong>
+                                                                    <div>{{ $project->designSubmission->conAppr ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Design Review:</strong>
+                                                                    <div>{{ $project->designSubmission->designRev ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Detailed Review:</strong>
+                                                                    <div>{{ $project->designSubmission->detailedRev ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">TENDER DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>To Consultant:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->toConsultant ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>From Consultant:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->fromConsultant ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>From BPP:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->fromBPP ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>To DG:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->toDG ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>To LTK:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->toLTK ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>LTK Approval:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->ltkApproval ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Discount Letter:</strong>
+                                                                    <div>{{ $project->tenderRecommendation->discLetter ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">CONTRACT DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Contractor:</strong>
+                                                                    <div>{{ $project->contract->contractor->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Contract Number:</strong>
+                                                                    <div>{{ $project->contract->contractorNum ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Contract Start Date:</strong>
+                                                                    <div>{{ $project->contract->start ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Contract End Date:</strong>
+                                                                    <div>{{ $project->contract->end ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Contract Period:</strong>
+                                                                    <div>{{ $project->contract->period ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Contract Sum:</strong>
+                                                                    <div>{{ $project->contract->sum ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Revised Sum:</strong>
+                                                                    <div>{{ $project->contract->revSum ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>LAD:</strong>
+                                                                    <div>{{ $project->contract->lad ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Total LAD:</strong>
+                                                                    <div>{{ $project->contract->totalLad ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>CNC:</strong>
+                                                                    <div>{{ $project->contract->cnc ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Revised Completion:</strong>
+                                                                    <div>{{ $project->contract->revComp ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Actual Completion:</strong>
+                                                                    <div>{{ $project->contract->actualComp ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>CPC:</strong>
+                                                                    <div>{{ $project->contract->cpc ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>EDLP:</strong>
+                                                                    <div>{{ $project->contract->edlp ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>CMGD:</strong>
+                                                                    <div>{{ $project->contract->cmgd ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>LSK:</strong>
+                                                                    <div>{{ $project->contract->lsk ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Penalty Amount:</strong>
+                                                                    <div>{{ $project->contract->penAmt ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Retention Amount:</strong>
+                                                                    <div>{{ $project->contract->retAmt ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Statutory Declaration:</strong>
+                                                                    <div>{{ $project->contract->statDec ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">INSURANCE DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Insurance Type:</strong>
+                                                                    <div>{{ $project->insurance->insuranceType->name ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Insurance Issued:</strong>
+                                                                    <div>{{ $project->insurance->insIssued ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Insurance Expiry:</strong>
+                                                                    <div>{{ $project->insurance->insExpiry ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>Insurance Extension:</strong>
+                                                                    <div>{{ $project->insurance->insExt ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="section-title">BANKERS GUARANTEE DETAILS</div>
+                                                        <div class="details-group">
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>Bankers Guarantee Amount:</strong>
+                                                                    <div>{{ $project->bankersGuarantee->bgAmt ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>BG Issued:</strong>
+                                                                    <div>{{ $project->bankersGuarantee->bgIssued ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="details-row">
+                                                                <div class="details-item">
+                                                                    <strong>BG Expiry:</strong>
+                                                                    <div>{{ $project->bankersGuarantee->bgExpiry ?? '' }}</div>
+                                                                </div>
+                                                                <div class="details-item">
+                                                                    <strong>BG Extension:</strong>
+                                                                    <div>{{ $project->bankersGuarantee->bgExt ?? '' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer" style="background: #fff; position:sticky; bottom:0; z-index:1020;">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <a href="{{ route('projects.downloadPDF', $project->id) }}" class="btn btn-primary" target="_blank">
+                                                                <i class="fa fa-file-pdf-o"></i> Download PDF
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
