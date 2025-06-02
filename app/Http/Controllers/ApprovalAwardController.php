@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Tender;
+use App\Models\TenderRecommendation;
 use App\Models\ApprovalAward;
 use App\Models\Milestone;
 use App\Models\Notification;
@@ -17,11 +18,11 @@ class ApprovalAwardController extends Controller
     // show approval of award form
     public function edit($id)
     {
-        $tender = Tender::findOrFail($id);
-        $award = ApprovalAward::where('tender_id', $id)->first();
+        $tender = Tender::where('project_id', $id)->first();
+        $award = $tender ? TenderRecommendation::where('tender_id', $tender->id)->first() : null;
 
         // get related project via tender
-        $project = $tender->project;
+        $project = $tender ? $tender->project : Project::findOrFail($id);
 
         // get milestones from project
         $milestones = $project ? $project->milestones:collect();
