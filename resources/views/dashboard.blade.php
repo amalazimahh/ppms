@@ -36,7 +36,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-primary">TOTAL PROJECTS</p>
-                                <h2 class="card-title">12</h2>
+                                <h2 class="card-title">{{ $totalProjects }}</h2>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-info">ONGOING</p>
-                                <h2 class="card-title">9</h2>
+                                <h2 class="card-title">{{ $ongoingCount }}</h2>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-success">COMPLETED</p>
-                                <h2 class="card-title">3</h2>
+                                <h2 class="card-title">{{ $completedCount }}</h2>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-danger">OVERDUE</p>
-                                <h2 class="card-title">2</h2>
+                                <h2 class="card-title">{{ $overdueCount }}</h2>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-warning">SCHEME VALUE</p>
-                                <h2 class="card-title">$64,000.00</h2>
+                                <h2 class="card-title">${{ number_format($schemeValue, 2) }}</h2>
                             </div>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                         <div class="col-12">
                             <div class="numbers">
                                 <p class="card-category text-info">ALLOCATION VALUE</p>
-                                <h2 class="card-title">$32,000.00</h2>
+                                <h2 class="card-title">${{ number_format($allocationValue, 2) }}</h2>
                             </div>
                         </div>
                     </div>
@@ -195,38 +195,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong</td>
-                                    <td>Afiqah</td>
-                                    <td>
-                                        <span class="status-dot red animation"></span>
-                                        1 month
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Masjid Baru RPN Kg. Mengkubau</td>
-                                    <td>Zulmajdi</td>
-                                    <td>
-                                        <span class="status-dot yellow"></span>
-                                        2 months
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>UTB Phase 4 - School of Applied Sciences and Mathematics</td>
-                                    <td>Mohd</td>
-                                    <td>
-                                        <span class="status-dot green"></span>
-                                        12 months
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Pelan Induk Akademi Pasukan Polis Diraja Brunei</td>
-                                    <td>Pg Ayatol</td>
-                                    <td>
-                                        <span class="status-dot green"></span>
-                                        6 months
-                                    </td>
-                                </tr>
+                                @foreach($upcomingDeadlines as $project)
+                                    <tr>
+                                        <td>
+                                            @if($project['main_project'])
+                                                {{ $project['main_project'] }} -
+                                            @endif
+                                            {{ $project['name'] }}
+                                        </td>
+                                        <td>{{ $project['officer_in_charge'] }}</td>
+                                        <td>
+                                            @if($project['status'] === 'danger')
+                                                <span class="status-dot red animation"></span>
+                                            @elseif($project['status'] === 'warning')
+                                                <span class="status-dot yellow"></span>
+                                            @else
+                                                <span class="status-dot green"></span>
+                                            @endif
+                                            {{ $project['months_left'] }} months
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -240,17 +229,14 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         $(document).ready(function() {
-
             // Donut Chart for Project Stages
-            const stageLabels = ['Pre-Design', 'Design', 'Tender', 'Ongoing', 'Post-Completion'];
-            const stageData = [3, 5, 2, 1, 4];
             const ctxDonut = document.getElementById('projectStagesDonut').getContext('2d');
             const projectStagesDonut = new Chart(ctxDonut, {
                 type: 'doughnut',
                 data: {
-                    labels: stageLabels,
+                    labels: @json($stageLabels),
                     datasets: [{
-                        data: stageData,
+                        data: @json($stageData),
                         backgroundColor: [
                             '#36A2EB',
                             '#FFCE56',
@@ -273,28 +259,20 @@
             });
 
             // Bar Chart for Project Progress
-            const barLabels = [
-                'UTB Phase 4 - School of Applied Sciences and Mathematics',
-                'Masjid Baru RPN Kg. Mengkubau',
-                'Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong',
-                'Pelan Induk Akademi Pasukan Polis Diraja Brunei'
-            ];
-            const physicalProgress = [80, 60, 90, 70];
-            const financialProgress = [70, 55, 85, 65];
             const ctxBar = document.getElementById('projectProgressChart').getContext('2d');
             const projectProgressChart = new Chart(ctxBar, {
                 type: 'bar',
                 data: {
-                    labels: barLabels,
+                    labels: @json($projectNames),
                     datasets: [
                         {
                             label: 'Physical Progress (%)',
-                            data: physicalProgress,
+                            data: @json($physicalProgress),
                             backgroundColor: '#36A2EB'
                         },
                         {
                             label: 'Financial Progress (%)',
-                            data: financialProgress,
+                            data: @json($financialProgress),
                             backgroundColor: '#FFCE56'
                         }
                     ]
@@ -327,200 +305,183 @@
                 }
             });
 
-        // sunburst chart
-        const data = {
-            name: "flare",
-            children: [
-                { name: "PMO", children: [{ name: "project 1", value: 3938 }, { name: "project 2", value: 3938 }] },
-                { name: "MCYS", children: [{ name: "project 1", value: 17010 }, { name: "project 2", value: 5842 }] },
-                { name: "MinDef", children: [{ name: "project 1", value: 7213 }, { name: "project 2", value: 3322 }] },
-                { name: "MoD", children: [{ name: "project 1", value: 8833 }, { name: "project 2", value: 1732 }] },
-                { name: "MoE", children: [{ name: "project 1", value: 4116 }] },
-                { name: "MoFE", children: [{ name: "project 1", value: 1082 }, { name: "project 2", value: 1336 }] },
-                { name: "MoFA", children: [{ name: "project 1", value: 1616 }, { name: "project 2", value: 1027 }] },
-                { name: "MoH", children: [{ name: "project 1", value: 2105 }, { name: "project 2", value: 1316 }] },
-                { name: "MoHA", children: [{ name: "project 1", value: 3938 }, { name: "project 2", value: 8258 }, {name: "project 3", value: 1001}] },
-                { name: "MPRT", children: [{ name: "project 1", value: 24593 }, { name: "project 2", value: 13598 }] },
-                { name: "MoRA", children: [{ name: "project 1", value: 24593 }, { name: "project 2", value: 13598 }] },
-                { name: "MTIC", children: [{ name: "project 1", value: 24593 }, { name: "project 2", value: 13598 }] }
-            ]
-        };
+            // Sunburst chart data
+            const data = @json($sunburstData);
 
-        // Container styling
-        const container = d3.select("#sunburst-chart")
-            .style("height", "400px")
-            .style("width", "100%")
-            .style("display", "flex")
-            .style("align-items", "center")
-            .style("justify-content", "center");
+            // Container styling
+            const container = d3.select("#sunburst-chart")
+                .style("height", "400px")
+                .style("width", "100%")
+                .style("display", "flex")
+                .style("align-items", "center")
+                .style("justify-content", "center");
 
-        const width = 550;
-        const height = 450;
-        const radius = Math.min(width, height) / 6;
+            const width = 550;
+            const height = 450;
+            const radius = Math.min(width, height) / 6;
 
-        const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
+            const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
 
-        const hierarchy = d3.hierarchy(data)
-            .sum(d => d.value)
-            .sort((a, b) => b.value - a.value);
-        const root = d3.partition()
-            .size([2 * Math.PI, hierarchy.height + 1])
-            (hierarchy);
-        root.each(d => d.current = d);
+            const hierarchy = d3.hierarchy(data)
+                .sum(d => d.value)
+                .sort((a, b) => b.value - a.value);
+            const root = d3.partition()
+                .size([2 * Math.PI, hierarchy.height + 1])
+                (hierarchy);
+            root.each(d => d.current = d);
 
-        const arc = d3.arc()
-            .startAngle(d => d.x0)
-            .endAngle(d => d.x1)
-            .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-            .padRadius(radius * 1.5)
-            .innerRadius(d => d.y0 * radius)
-            .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
+            const arc = d3.arc()
+                .startAngle(d => d.x0)
+                .endAngle(d => d.x1)
+                .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+                .padRadius(radius * 1.5)
+                .innerRadius(d => d.y0 * radius)
+                .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
 
-        const svg = container
-            .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("preserveAspectRatio", "xMidYMid meet")
-            .attr("viewBox", [-width / 4, -height / 2, width, height])
-            .style("font", "11px sans-serif");
+            const svg = container
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .attr("viewBox", [-width / 4, -height / 2, width, height])
+                .style("font", "11px sans-serif");
 
-        // Legend
-        const legend = svg.append("g")
-            .attr("class", "legend")
-            .attr("transform", `translate(${width/1.6}, ${-height/3.8})`);
+            // Legend
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width/1.6}, ${-height/3.8})`);
 
-        const legendItems = legend.selectAll("g")
-            .data(data.children)
-            .enter()
-            .append("g")
-            .attr("transform", (d, i) => `translate(0, ${i * 20})`);
+            const legendItems = legend.selectAll("g")
+                .data(data.children)
+                .enter()
+                .append("g")
+                .attr("transform", (d, i) => `translate(0, ${i * 20})`);
 
-        legendItems.append("rect")
-            .attr("width", 18)
-            .attr("height", 18)
-            .attr("rx", 4)
-            .attr("fill", d => color(d.name))
-            .attr("fill-opacity", 0.8);
+            legendItems.append("rect")
+                .attr("width", 18)
+                .attr("height", 18)
+                .attr("rx", 4)
+                .attr("fill", d => color(d.name))
+                .attr("fill-opacity", 0.8);
 
-        legendItems.append("text")
-            .attr("x", 28)
-            .attr("y", 12)
-            .attr("dy", "0.35em")
-            .attr("fill", "#ffffff")
-            .style("font-size", "16px") // larger font
-            .text(d => d.name);
+            legendItems.append("text")
+                .attr("x", 28)
+                .attr("y", 12)
+                .attr("dy", "0.35em")
+                .attr("fill", "#ffffff")
+                .style("font-size", "16px")
+                .text(d => d.name);
 
-        const path = svg.append("g")
-            .selectAll("path")
-            .data(root.descendants().slice(1))
-            .join("path")
-            .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
-            .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
-            .attr("pointer-events", d => arcVisible(d.current) ? "auto" : "none")
-            .attr("d", d => arc(d.current));
+            const path = svg.append("g")
+                .selectAll("path")
+                .data(root.descendants().slice(1))
+                .join("path")
+                .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
+                .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+                .attr("pointer-events", d => arcVisible(d.current) ? "auto" : "none")
+                .attr("d", d => arc(d.current));
 
-        path.filter(d => d.children)
-            .style("cursor", "pointer")
-            .on("click", clicked);
+            path.filter(d => d.children)
+                .style("cursor", "pointer")
+                .on("click", clicked);
 
-        const format = d3.format(",d");
-        path.append("title")
-            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
+            const format = d3.format(",d");
+            path.append("title")
+                .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
 
-        const label = svg.append("g")
-            .attr("pointer-events", "none")
-            .attr("text-anchor", "middle")
-            .style("user-select", "none")
-            .selectAll("text")
-            .data(root.descendants().slice(1))
-            .join("text")
-            .attr("dy", "0.35em")
-            .attr("fill-opacity", d => +labelVisible(d.current))
-            .attr("transform", d => labelTransform(d.current))
-            .style("font-size", "10px")
-            .each(function(d) {
-                d3.select(this).selectAll("tspan").remove();
-                const maxWidth = 60;
-                const words = d.data.name.split(/\s+/);
-                let line = [];
-                let lineNumber = 0;
-                let lineHeight = 1.1;
-                let tspan = d3.select(this)
-                    .append("tspan")
-                    .attr("x", 0)
-                    .attr("y", 0)
-                    .attr("dy", "0em");
-                for (let i = 0; i < words.length; i++) {
-                    line.push(words[i]);
-                    tspan.text(line.join(" "));
-                    if (this.getComputedTextLength && this.getComputedTextLength() > maxWidth) {
-                        line.pop();
+            const label = svg.append("g")
+                .attr("pointer-events", "none")
+                .attr("text-anchor", "middle")
+                .style("user-select", "none")
+                .selectAll("text")
+                .data(root.descendants().slice(1))
+                .join("text")
+                .attr("dy", "0.35em")
+                .attr("fill-opacity", d => +labelVisible(d.current))
+                .attr("transform", d => labelTransform(d.current))
+                .style("font-size", "10px")
+                .each(function(d) {
+                    d3.select(this).selectAll("tspan").remove();
+                    const maxWidth = 60;
+                    const words = d.data.name.split(/\s+/);
+                    let line = [];
+                    let lineNumber = 0;
+                    let lineHeight = 1.1;
+                    let tspan = d3.select(this)
+                        .append("tspan")
+                        .attr("x", 0)
+                        .attr("y", 0)
+                        .attr("dy", "0em");
+                    for (let i = 0; i < words.length; i++) {
+                        line.push(words[i]);
                         tspan.text(line.join(" "));
-                        line = [words[i]];
-                        tspan = d3.select(this)
-                            .append("tspan")
-                            .attr("x", 0)
-                            .attr("y", 0)
-                            .attr("dy", ++lineNumber * lineHeight + "em")
-                            .text(words[i]);
+                        if (this.getComputedTextLength && this.getComputedTextLength() > maxWidth) {
+                            line.pop();
+                            tspan.text(line.join(" "));
+                            line = [words[i]];
+                            tspan = d3.select(this)
+                                .append("tspan")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("dy", ++lineNumber * lineHeight + "em")
+                                .text(words[i]);
+                        }
                     }
-                }
-            })
-            .append("title")
-            .text(d => d.data.name);
-
-        const parent = svg.append("circle")
-            .datum(root)
-            .attr("r", radius)
-            .attr("fill", "none")
-            .attr("pointer-events", "all")
-            .on("click", clicked);
-
-        function clicked(event, p) {
-            parent.datum(p.parent || root);
-
-            root.each(d => d.target = {
-                x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-                x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-                y0: Math.max(0, d.y0 - p.depth),
-                y1: Math.max(0, d.y1 - p.depth)
-            });
-
-            const t = svg.transition().duration(event.altKey ? 7500 : 750);
-
-            path.transition(t)
-                .tween("data", d => {
-                    const i = d3.interpolate(d.current, d.target);
-                    return t => d.current = i(t);
                 })
-                .filter(function(d) {
-                    return +this.getAttribute("fill-opacity") || arcVisible(d.target);
-                })
-                .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
-                .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
-                .attrTween("d", d => () => arc(d.current));
+                .append("title")
+                .text(d => d.data.name);
 
-            label.filter(function(d) {
-                return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-            }).transition(t)
-                .attr("fill-opacity", d => +labelVisible(d.target))
-                .attrTween("transform", d => () => labelTransform(d.current));
-        }
+            const parent = svg.append("circle")
+                .datum(root)
+                .attr("r", radius)
+                .attr("fill", "none")
+                .attr("pointer-events", "all")
+                .on("click", clicked);
 
-        function arcVisible(d) {
-            return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-        }
+            function clicked(event, p) {
+                parent.datum(p.parent || root);
 
-        function labelVisible(d) {
-            return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
-        }
+                root.each(d => d.target = {
+                    x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                    x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                    y0: Math.max(0, d.y0 - p.depth),
+                    y1: Math.max(0, d.y1 - p.depth)
+                });
 
-        function labelTransform(d) {
-            const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-            const y = (d.y0 + d.y1) / 2 * radius;
-            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-        }
+                const t = svg.transition().duration(event.altKey ? 7500 : 750);
 
-    });
+                path.transition(t)
+                    .tween("data", d => {
+                        const i = d3.interpolate(d.current, d.target);
+                        return t => d.current = i(t);
+                    })
+                    .filter(function(d) {
+                        return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+                    })
+                    .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
+                    .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
+                    .attrTween("d", d => () => arc(d.current));
+
+                label.filter(function(d) {
+                    return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+                }).transition(t)
+                    .attr("fill-opacity", d => +labelVisible(d.target))
+                    .attrTween("transform", d => () => labelTransform(d.current));
+            }
+
+            function arcVisible(d) {
+                return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+            }
+
+            function labelVisible(d) {
+                return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+            }
+
+            function labelTransform(d) {
+                const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+                const y = (d.y0 + d.y1) / 2 * radius;
+                return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+            }
+        });
     </script>
 @endpush
