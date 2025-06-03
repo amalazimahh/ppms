@@ -8,12 +8,6 @@
             <a href="#" class="simple-text logo-normal">{{ __('Dashboard') }}</a>
         </div>
         <ul class="nav">
-            <!-- <li @if ($pageSlug == 'dashboard') class="active" @endif>
-                <a href="{{ route('home') }}">
-                    <i class="tim-icons icon-chart-pie-36"></i>
-                    <p>{{ __('Dashboard') }}</p>
-                </a>
-            </li> -->
 
             <!-- Conditional links based on role -->
              @if(session('roles') == 1)
@@ -65,13 +59,6 @@
                 </a>
             </li>
 
-            <!-- <li @if ($pageSlug == 'users') class="active" @endif>
-                <a href="{{ route('pages.admin.user_management')  }}">
-                    <i class="tim-icons icon-single-02"></i>
-                    <p>{{ __('Manage Projects') }}</p>
-                </a>
-            </li> -->
-
             <!-- Notification Tab -->
             <li @if ($pageSlug == 'notifications') class="active" @endif>
                 <a href="{{ route('pages.notification.index')  }}">
@@ -90,7 +77,7 @@
 
             <!-- Notification Tab -->
             <li @if ($pageSlug == 'notifications') class="active" @endif>
-                <a href="{{ route('pages.admin.user_management')  }}">
+                <a href="{{ route('pages.admin.contractor')  }}">
                     <i class="tim-icons icon-bus-front-12"></i>
                     <p>{{ __('Contractors') }}</p>
                 </a>
