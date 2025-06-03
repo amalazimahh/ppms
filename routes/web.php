@@ -22,23 +22,17 @@ use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\RKNController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectHealthController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [PageController::class, 'dashboard']);
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Auth::routes();
-
-Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
 Route::group(['middleware' => 'auth'], function () {
         Route::get('addprojects', [ProjectsController::class, 'addprojects'])->name('pages.addprojects');
         Route::post('addprojects/store', [ProjectsController::class, 'store'])->name('projects.store');
-        // Route::post('notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-        // Route::get('notifications/get', [NotificationController::class, 'getNotifications'])->name('notifications.get');
 		Route::get('icons', ['as' => 'pages.icons', 'uses' => 'App\Http\Controllers\PageController@icons']);
 		Route::get('maps', ['as' => 'pages.maps', 'uses' => 'App\Http\Controllers\PageController@maps']);
 		Route::get('rtl', ['as' => 'pages.rtl', 'uses' => 'App\Http\Controllers\PageController@rtl']);
@@ -61,13 +55,11 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
 
-    // admin
-    // Route::get('/admin/dashboard', [PageController::class, 'adminDashboard'])->name('pages.admin.dashboard')->middleware('auth');
-    // Route::get('/admin/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
     Route::get('/admin/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::post('/admin/basicdetails/store', [ProjectsController::class, 'store'])->name('pages.admin.forms.basicdetails.store')->middleware('auth');
     Route::post('/projects/store', [ProjectsController::class, 'store'])->name('projects.store')->middleware('auth');
     Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
+    Route::get('/admin/contractor', [PageController::class, 'manageContractors'])->name('pages.admin.contractor')->middleware('auth');
     Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
     Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('pages.admin.forms.basicdetails')->middleware('auth');
     Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
@@ -110,7 +102,6 @@ Route::middleware(['auth'])->group(function (){
     Route::get('admin/projects/{id}/project_health', [ProjectHealthController::class, 'show'])->name('projects.project_health')->middleware('auth');
     Route::put('admin/projects/{id}/project_health', [ProjectHealthController::class, 'update'])->name('projects.project_health.update')->middleware('auth');
 
-
     // project manager
     Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
     Route::get('/project_manager/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.project_manager.forms.basicdetails')->middleware('auth');
@@ -125,5 +116,3 @@ Route::middleware(['auth'])->group(function (){
 
 });
 
-// route for creating new project team
-// Route::post('/projects/{id}/project_team', [ProjectTeamController::class, 'store'])->name('projects.project_team.store');
