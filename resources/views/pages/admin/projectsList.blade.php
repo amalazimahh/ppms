@@ -31,39 +31,34 @@
         color: #000;
     }
 
-        /* Table container styling */
-        .table-responsive {
-        overflow-x: visible; /* Prevent horizontal scroll */
+    .table-responsive {
+        overflow-x: visible;
     }
 
-    /* Table styling */
     .table {
         width: 100%;
-        table-layout: fixed; /* Use fixed table layout */
+        table-layout: fixed;
     }
-    /* Add table cell styling */
+
     .table td {
-        white-space: normal; /* Allow text wrapping */
-        word-wrap: break-word; /* Break long words if needed */
-        vertical-align: middle; /* Center content vertically */
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: middle;
         overflow: hidden;
     }
 
-    /* Style for the title column specifically */
     .table td.project-title {
         width: 60%;
         padding-right: 15px;
     }
 
-    /* Style for the progress column */
     .table td.progress-column {
         width: 10%;
     }
 
-    /* Style for the action buttons column */
     .table td.action-buttons {
         width: 30%;
-        white-space: nowrap; /* Keep buttons on one line */
+        white-space: nowrap;
     }
 
     /* animation for notif */
