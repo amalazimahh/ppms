@@ -31,6 +31,41 @@
         color: #000;
     }
 
+        /* Table container styling */
+        .table-responsive {
+        overflow-x: visible; /* Prevent horizontal scroll */
+    }
+
+    /* Table styling */
+    .table {
+        width: 100%;
+        table-layout: fixed; /* Use fixed table layout */
+    }
+    /* Add table cell styling */
+    .table td {
+        white-space: normal; /* Allow text wrapping */
+        word-wrap: break-word; /* Break long words if needed */
+        vertical-align: middle; /* Center content vertically */
+        overflow: hidden;
+    }
+
+    /* Style for the title column specifically */
+    .table td.project-title {
+        width: 60%;
+        padding-right: 15px;
+    }
+
+    /* Style for the progress column */
+    .table td.progress-column {
+        width: 10%;
+    }
+
+    /* Style for the action buttons column */
+    .table td.action-buttons {
+        width: 30%;
+        white-space: nowrap; /* Keep buttons on one line */
+    }
+
     /* animation for notif */
     .alert {
         box-shadow: 0 4px 20px 0 rgba(0,0,0,.14),
@@ -94,10 +129,9 @@
                     <table class="table">
                         <thead class=" text-primary">
                             <tr>
-                                <th>Financial Year</th>
-                                <th>Title</th>
-                                <th>Progress</th>
-                                <th>Action</th>
+                                <th style="width: 45%">Title</th>
+                                <th style="width: 10%">Progress</th>
+                                <th style="width: 35%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,14 +147,13 @@
                                         $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
                                 @endphp
                                 <tr>
-                                    <td> {{ $project->fy }} </td>
-                                    <td> @if($project->parent_project_id)
+                                    <td class="project-title"> @if($project->parent_project_id)
                                             {{ $project->parentProject->title }} -
                                         @endif
                                         {{ $project->title }}
 
                                     </td>
-                                    <td>
+                                    <td class="progress-column">
                                         <!-- progress bar -->
                                         <div class="progress" style="height: 20px;">
                                             <div id="formProgressBar" class="progress-bar" role="progressbar"
@@ -129,7 +162,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="action-buttons">
                                         <!-- view details button -->
                                         <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#projectDetailsModal{{ $project->id }}">
                                             <i class="tim-icons icon-zoom-split"></i> View Details
@@ -229,7 +262,7 @@
                                                                     <div>{{ $project->voteNum }}</div>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             @if($project->parent_project_id)
                                                             <div class="details-row">
                                                                 <div class="details-item details-full">
