@@ -28,10 +28,29 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        $projects = Project::with(['milestones'])->get();
-        $mainProjects = Project::whereNull('parent_project_id')->get();
+        $user = auth()->user();
+        $projects = collect();
+        $mainProjects = collect();
 
-        return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
+        if (session('roles') == 1) {
+            // Admin sees all projects
+            $projects = Project::with(['milestones', 'projectTeam.officerInCharge'])->get();
+            $mainProjects = Project::whereNull('parent_project_id')->get();
+            return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
+        } elseif (session('roles') == 2) {
+            // Project Manager sees only their projects where they are officer in charge
+            $projects = Project::whereHas('projectTeam', function($query) use ($user) {
+                $query->where('officer_in_charge', $user->id);
+            })->with(['milestones', 'projectTeam.officerInCharge'])->get();
+            
+            $mainProjects = Project::whereHas('projectTeam', function($query) use ($user) {
+                $query->where('officer_in_charge', $user->id);
+            })->whereNull('parent_project_id')->get();
+            
+            return view('pages.project_manager.projectsList', compact('projects', 'mainProjects'));
+        }
+
+        return redirect()->route('home')->with('error', 'Unauthorized access');
     }
 
     public function basicdetails($id)

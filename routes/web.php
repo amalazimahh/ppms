@@ -48,71 +48,87 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 });
 
-Route::middleware(['auth'])->group(function (){
+Route::middleware(['auth'])->group(function () {
+    // Common routes accessible by all authenticated users
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('pages.notification.index');
     Route::post('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
     Route::get('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
 
-    Route::get('/admin/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.admin.forms.basicdetails')->middleware('auth');
-    Route::post('/admin/basicdetails/store', [ProjectsController::class, 'store'])->name('pages.admin.forms.basicdetails.store')->middleware('auth');
-    Route::post('/projects/store', [ProjectsController::class, 'store'])->name('projects.store')->middleware('auth');
-    Route::get('/admin/user_management', [PageController::class, 'manageUsers'])->name('pages.admin.user_management')->middleware('auth');
-    Route::get('/admin/contractor', [PageController::class, 'manageContractors'])->name('pages.admin.contractor')->middleware('auth');
-    Route::get('/admin/projectsList', [ProjectsController::class, 'index'])->name('pages.admin.projectsList')->middleware('auth');
-    Route::get('admin/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('pages.admin.forms.basicdetails')->middleware('auth');
-    Route::put('admin/projects/{id}/update', [ProjectsController::class, 'update'])->name('pages.admin.forms.basicdetails.update');
-    Route::get('admin/projects/{id}/status', [MilestoneController::class, 'milestone'])->name('projects.status')->middleware('auth');
-    Route::get('admin/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team')->middleware('auth');
-    Route::put('/projects/{id}/project_team', [ProjectTeamController::class, 'update'])->name('projects.project_team.update');
-    Route::get('admin/projects/{id}/pre_tender', [PreTenderController::class, 'edit'])->name('projects.pre_tender')->middleware('auth');
-    Route::put('admin/projects/{id}/pre_tender', [PreTenderController::class, 'update'])->name('projects.pre_tender.update')->middleware('auth');
-    Route::get('admin/projects/{id}/design_submission', [DesignSubmissionController::class, 'edit'])->name('projects.design_submission')->middleware('auth');
-    Route::put('admin/projects/{id}/design_submission', [DesignSubmissionController::class, 'update'])->name('projects.design_submission.update')->middleware('auth');
-    Route::get('admin/projects/{id}/tender', [TenderController::class, 'edit'])->name('projects.tender')->middleware('auth');
-    Route::put('admin/projects/{id}/tender', [TenderController::class, 'update'])->name('projects.tender.update')->middleware('auth');
-    Route::get('admin/projects/{id}/tender_recommendation', [TenderRecommendationController::class, 'edit'])->name('projects.tender_recommendation')->middleware('auth');
-    Route::put('admin/projects/{id}/tender_recommendation', [TenderRecommendationController::class, 'update'])->name('projects.tender_recommendation.update')->middleware('auth');
-    Route::get('admin/projects/{id}/approval_award', [ApprovalAwardController::class, 'edit'])->name('projects.approval_award')->middleware('auth');
-    Route::put('admin/projects/{id}/approval_award', [ApprovalAwardController::class, 'update'])->name('projects.approval_award.update')->middleware('auth');
-    Route::get('admin/projects/{id}/contract', [ContractController::class, 'edit'])->name('projects.contract')->middleware('auth');
-    Route::put('admin/projects/{id}/contract', [ContractController::class, 'update'])->name('projects.contract.update')->middleware('auth');
-    Route::get('admin/projects/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'edit'])->name('projects.bankers_guarantee')->middleware('auth');
-    Route::put('admin/projects/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'update'])->name('projects.bankers_guarantee.update')->middleware('auth');
-    Route::get('admin/projects/{id}/insurance', [InsuranceController::class, 'edit'])->name('projects.insurance')->middleware('auth');
-    Route::put('admin/projects/{id}/insurance', [InsuranceController::class, 'update'])->name('projects.insurance.update')->middleware('auth');
-    Route::delete('admin/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy')->middleware('auth');
-    Route::get('admin/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->middleware('auth');
-    Route::get('admin/projects/{id}/view', [ProjectsController::class, 'view'])->name('pages.view_project')->middleware('auth');
-    // Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('pages.admin.dashboard')->middleware('auth');
-    Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('pages.admin.dashboard')->middleware('auth');
-    Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'projectSpecificDashboard'])->name('pages.admin.project-dashboard')->middleware('auth');
-    Route::get('/admin/project-dashboard', [ProjectDashboardController::class, 'index'])->name('pages.admin.project-dashboard')->middleware('auth');
-    // Route::get('/admin/project_team', [ProjectTeam::class, 'manageTeam'])->name('pages.admin.project_team')->middleware('auth');
-    Route::get('/admin/projects/{id}/download-PDF', [ProjectsController::class, 'downloadPDF'])->name('projects.downloadPDF')->middleware('auth');
-    Route::get('/admin/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('pages.admin.project_team')->middleware('auth');
-    Route::post('/admin/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('admin.project_team.addDiscipline');
-    Route::post('/admin/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('admin.project_team.deleteDiscipline');
+    // Common project routes used across roles
     Route::post('/projects/{project}/milestones/{milestone}/toggle', [ProjectMilestoneController::class, 'toggle'])->name('projects.milestones.toggle');
     Route::get('/projects/{project}/progress', [ProjectMilestoneController::class, 'getProgress'])->name('projects.progress');
-    Route::get('/admin/rkn', [RKNController::class, 'showRKN'])->name('pages.admin.rkn')->middleware('auth');
-    Route::post('/admin/rkn', [RKNController::class, 'store'])->name('pages.admin.rkn.store')->middleware('auth');
-    Route::post('/admin/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('admin.assignRole');
-    Route::get('admin/projects/{id}/project_health', [ProjectHealthController::class, 'show'])->name('projects.project_health')->middleware('auth');
-    Route::put('admin/projects/{id}/project_health', [ProjectHealthController::class, 'update'])->name('projects.project_health.update')->middleware('auth');
+    Route::put('/projects/{id}/project_team', [ProjectTeamController::class, 'update'])->name('projects.project_team.update');
 
-    // project manager
-    Route::get('/project_manager/dashboard', [DashboardController::class, 'dashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
-    Route::get('/project_manager/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.project_manager.forms.basicdetails')->middleware('auth');
-    Route::get('/project_manager/project-dashboard', [ProjectDashboardController::class, 'index'])->name('pages.project_manager.project-dashboard')->middleware('auth');
-    Route::get('/project_manager/projectsList', [PageController::class, 'projectList'])->name('pages.project_manager.projectsList')->middleware('auth');
-    Route::get('/project_manager/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit')->middleware('auth');
+    // Admin Routes
+    Route::prefix('admin')->name('pages.admin.')->group(function () {
+        // Dashboard & Overview
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/project-dashboard', [ProjectDashboardController::class, 'index'])->name('project-dashboard');
 
-    // executive
-    Route::get('/executive/dashboard', [PageController::class, 'executiveDashboard'])->name('pages.executive.dashboard')->middleware('auth');
-    Route::get('/executive/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.executive.project-dashboard')->middleware('auth');
-    Route::get('/executive/projectsList', [PageController::class, 'projectList'])->name('pages.executive.projectsList')->middleware('auth');
+        // Project Management
+        Route::prefix('projects')->group(function () {
+            Route::get('/', [ProjectsController::class, 'index'])->name('projectsList');
+            Route::get('/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
+            Route::post('/basicdetails/store', [ProjectsController::class, 'store'])->name('forms.basicdetails.store');
+            Route::get('/{id}/edit', [ProjectsController::class, 'edit'])->name('forms.basicdetails');
+            Route::put('/{id}/update', [ProjectsController::class, 'update'])->name('forms.basicdetails.update');
+            Route::delete('/{id}', [ProjectsController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}/view', [ProjectsController::class, 'view'])->name('view_project');
+            Route::get('/{id}/download-PDF', [ProjectsController::class, 'downloadPDF'])->name('downloadPDF');
 
+            // Project Components
+            Route::get('/{id}/status', [MilestoneController::class, 'milestone'])->name('status');
+            Route::get('/{id}/project_team', [ProjectsController::class, 'project_team'])->name('project_team');
+            Route::get('/{id}/pre_tender', [PreTenderController::class, 'edit'])->name('pre_tender');
+            Route::put('/{id}/pre_tender', [PreTenderController::class, 'update'])->name('pre_tender.update');
+            Route::get('/{id}/design_submission', [DesignSubmissionController::class, 'edit'])->name('design_submission');
+            Route::put('/{id}/design_submission', [DesignSubmissionController::class, 'update'])->name('design_submission.update');
+            Route::get('/{id}/tender', [TenderController::class, 'edit'])->name('tender');
+            Route::put('/{id}/tender', [TenderController::class, 'update'])->name('tender.update');
+            Route::get('/{id}/tender_recommendation', [TenderRecommendationController::class, 'edit'])->name('tender_recommendation');
+            Route::put('/{id}/tender_recommendation', [TenderRecommendationController::class, 'update'])->name('tender_recommendation.update');
+            Route::get('/{id}/approval_award', [ApprovalAwardController::class, 'edit'])->name('approval_award');
+            Route::put('/{id}/approval_award', [ApprovalAwardController::class, 'update'])->name('approval_award.update');
+            Route::get('/{id}/contract', [ContractController::class, 'edit'])->name('contract');
+            Route::put('/{id}/contract', [ContractController::class, 'update'])->name('contract.update');
+            Route::get('/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'edit'])->name('bankers_guarantee');
+            Route::put('/{id}/bankers_guarantee', [BankerGuaranteeController::class, 'update'])->name('bankers_guarantee.update');
+            Route::get('/{id}/insurance', [InsuranceController::class, 'edit'])->name('insurance');
+            Route::put('/{id}/insurance', [InsuranceController::class, 'update'])->name('insurance.update');
+            Route::get('/{id}/project_health', [ProjectHealthController::class, 'show'])->name('project_health');
+            Route::put('/{id}/project_health', [ProjectHealthController::class, 'update'])->name('project_health.update');
+            Route::get('/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->name('getVoteNum');
+        });
+
+        // Team Management
+        Route::get('/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('project_team');
+        Route::post('/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('project_team.addDiscipline');
+        Route::post('/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('project_team.deleteDiscipline');
+
+        // Other Admin Features
+        Route::get('/user_management', [PageController::class, 'manageUsers'])->name('user_management');
+        Route::get('/contractor', [PageController::class, 'manageContractors'])->name('contractor');
+        Route::get('/rkn', [RKNController::class, 'showRKN'])->name('rkn');
+        Route::post('/rkn', [RKNController::class, 'store'])->name('rkn.store');
+        Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('assignRole');
+    });
+
+    // Project Manager Routes
+    Route::prefix('project_manager')->name('pages.project_manager.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/project-dashboard', [ProjectDashboardController::class, 'index'])->name('project-dashboard');
+        Route::get('/projectsList', [ProjectsController::class, 'index'])->name('projectsList');
+        Route::get('/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
+        Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('edit');
+    });
+
+    // Executive Routes
+    Route::prefix('executive')->name('pages.executive.')->group(function () {
+        Route::get('/dashboard', [PageController::class, 'executiveDashboard'])->name('dashboard');
+        Route::get('/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('project-dashboard');
+        Route::get('/projectsList', [PageController::class, 'projectList'])->name('projectsList');
+    });
 });
 
