@@ -42,11 +42,11 @@ class ProjectsController extends Controller
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
             })->with(['milestones', 'projectTeam.officerInCharge'])->get();
-            
+
             $mainProjects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
             })->whereNull('parent_project_id')->get();
-            
+
             return view('pages.project_manager.projectsList', compact('projects', 'mainProjects'));
         }
 
@@ -104,13 +104,13 @@ class ProjectsController extends Controller
         } else if(session('roles') == 2)
         {
             return view('pages.project_manager.forms.basicdetails',
-            compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
-                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+            compact('project', 'rkns', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects', 'progress'));
         } else if(session('roles') == 3)
         {
             return view('pages.project_manager.forms.basicdetails',
-            compact('statuses', 'clientMinistries', 'projectManagers', 'contractors',
-                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects'));
+            compact('project', 'rkns', 'statuses', 'clientMinistries', 'projectManagers', 'contractors',
+                    'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'mainProjects', 'progress'));
         }
     }
 
@@ -174,9 +174,9 @@ class ProjectsController extends Controller
                 'progress'
             ));
         } else if(session('roles') == 2){
-            // default to Admin view
-        return view('pages.project_manager.forms.basicdetails', compact(
+            return view('pages.project_manager.forms.basicdetails', compact(
                 'project',
+                'rkns',
                 'statuses',
                 'clientMinistries',
                 'projectManagers',
@@ -185,7 +185,8 @@ class ProjectsController extends Controller
                 'mechanicalElectricals',
                 'civilStructurals',
                 'quantitySurveyors',
-                'mainProjects'
+                'mainProjects',
+                'progress'
             ));
         }
     }
@@ -206,7 +207,7 @@ class ProjectsController extends Controller
             $project->delete();
             $message = Str::limit($project->title.' has been deleted.', 250);
             sendNotification('update_project_details', $message, ['Admin', 'Project Manager', 'Executive']);
-            
+
             // Redirect based on user role
             if(session('roles') == 1) {
                 return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was deleted successfully.');
@@ -435,7 +436,7 @@ class ProjectsController extends Controller
 
         // Use different views based on role
         $view = session('roles') == 1 ? 'pages.admin.report-pdf' : 'pages.project_manager.report-pdf';
-        
+
         $pdf = PDF::loadView($view, compact('project'));
         $pdf->setPaper('a3', 'landscape');
         return $pdf->download('project-details-' . $project->id . '.pdf');

@@ -699,7 +699,7 @@
                                         </div>
 
                                         <!-- edit forms button -->
-                                        <a href="{{ route('pages.admin.forms.basicdetails', $project->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('pages.project_manager.forms.basicdetails', $project->id) }}" class="btn btn-primary btn-sm">
                                             <i class="tim-icons icon-pencil"></i> Edit
                                         </a>
 

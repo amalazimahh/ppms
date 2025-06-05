@@ -125,6 +125,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/projectsList', [ProjectsController::class, 'index'])->name('projectsList');
         Route::get('/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
         Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('edit');
+        Route::get('/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
+        Route::post('/projects/basicdetails/store', [ProjectsController::class, 'store'])->name('forms.basicdetails.store');
+        Route::put('/projects/{id}/basicdetails/update', [ProjectsController::class, 'update'])->name('forms.basicdetails.update');
     });
 
     // Executive Routes
