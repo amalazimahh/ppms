@@ -92,7 +92,7 @@ class ProjectDashboardController extends Controller
         }
 
         if(session('roles') == 1) {
-            return view('pages.admin.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
+        return view('pages.admin.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
         } elseif(session('roles') == 2) {
             return view('pages.project_manager.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
         }

@@ -4,18 +4,97 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
-use App\Models\ProjectTeam;
-use App\Models\Notification;
-use App\Models\NotificationRecipient;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Models\User;
 use App\Models\Architect;
 use App\Models\MechanicalElectrical;
 use App\Models\CivilStructural;
 use App\Models\QuantitySurveyor;
+use App\Models\ProjectTeam;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ProjectTeamController extends Controller
 {
+    public function edit($id)
+    {
+        $user = auth()->user();
+        $project = Project::with('projectTeam')->findOrFail($id);
+
+        // Check if user is admin or the project manager in charge
+        if (session('roles') != 1 && // not admin
+            (!$project->projectTeam || // no project team
+             $project->projectTeam->officer_in_charge != $user->id)) { // not the officer in charge
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+
+        // retrieve lists of project managers (oic)
+        $projectManagers = User::where('roles_id', 2)->get();
+
+        // retrieve lists of other team members
+        $architects = Architect::all();
+        $mechanicalElectricals = MechanicalElectrical::all();
+        $civilStructurals = CivilStructural::all();
+        $quantitySurveyors = QuantitySurveyor::all();
+
+        // get all milestones for the project
+        $milestones = $project->milestones;
+
+        // calculate progress
+        $totalMilestones = $milestones->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+
+        // Return appropriate view based on role
+        if (session('roles') == 1) {
+            return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
+        } else {
+            return view('pages.project_manager.forms.project_team', compact('project', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $project = Project::findOrFail($id);
+
+        // Check if user is admin or the project manager in charge
+        if (session('roles') != 1 && // not admin
+            (!$project->projectTeam || // no project team
+             $project->projectTeam->officer_in_charge != $user->id)) { // not the officer in charge
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+
+        // Validate input
+        $validated = $request->validate([
+            'officer_in_charge' => 'required|exists:users,id',
+            'architect_id' => 'nullable|exists:architect,id',
+            'mechanical_electrical_id' => 'nullable|exists:mechanical_electrical,id',
+            'civil_structural_id' => 'nullable|exists:civil_structural,id',
+            'quantity_surveyor_id' => 'nullable|exists:quantity_surveyor,id',
+            'others_id' => 'nullable|string'
+        ]);
+
+        try {
+            // For project managers, ensure they can't change the officer_in_charge
+            if (session('roles') == 2) {
+                $validated['officer_in_charge'] = $user->id;
+            }
+
+            $projectTeam = ProjectTeam::updateOrCreate(
+                ['project_id' => $id],
+                $validated
+            );
+
+            $message = Str::limit($project->title . ' project team details have been updated.', 250);
+            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+
+            return redirect()->route('projects.project_team', $project->id)
+                ->with('success', 'Project team details updated successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to update project team details. Please try again.');
+        }
+    }
+
     public function manageProjectTeam()
     {
         $architects = Architect::all();
@@ -38,55 +117,6 @@ class ProjectTeamController extends Controller
         }
 
         return view('pages.admin.project_team', compact('architects', 'civilEngineers', 'mechanicalElectricals', 'quantitySurveyors'));
-    }
-
-    public function edit($id){
-        $project = Project::findOrFail($id);
-        $projectTeam = $project->projectTeam ?? new ProjectTeam();
-        return view('pages.admin.forms.project_team', compact('project', 'projectTeam'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Correct logging of request data
-        Log::info('ProjectTeam Request Data:', ['data' => $request->all()]);
-        $project = Project::findOrFail($id);
-
-        // Validate input
-        $validated = $request->validate([
-            'officer_in_charge' => 'nullable|exists:users,id',
-            'architect_id' => 'nullable|exists:architect,id',
-            'mechanical_electrical_id' => 'nullable|exists:mechanical_electrical,id',
-            'civil_structural_id' => 'nullable|exists:civil_structural,id',
-            'quantity_surveyor_id' => 'nullable|exists:quantity_surveyor,id',
-            'others_id' => 'nullable|string'
-        ]);
-
-        try {
-            $projectTeam = ProjectTeam::updateOrCreate(
-                ['project_id' => $id],
-                $validated
-            );
-
-            Log::info('ProjectTeam Updated successfully', [
-                'project_team' => $projectTeam->toArray(),
-                'changes' => $projectTeam->getChanges()
-            ]);
-
-            $message = Str::limit($project->title . ' project team details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
-
-            return redirect()->route('projects.project_team', $project->id)
-                ->with('success', 'Project team details updated successfully!');
-        } catch (\Exception $e) {
-            Log::error('ProjectTeam Update failed', [
-                'error' => $e->getMessage(),
-                'project_id' => $id,
-                'input' => $validated
-            ]);
-
-            return back()->with('error', 'Failed to update project team details. Please try again.');
-        }
     }
 
     public function addDiscipline(Request $request)

@@ -40,7 +40,7 @@ class MilestoneController extends Controller
 
         // Return appropriate view based on role
         if (session('roles') == 1) {
-            return view('pages.admin.forms.status', compact('project', 'statuses', 'milestones', 'progress'));
+        return view('pages.admin.forms.status', compact('project', 'statuses', 'milestones', 'progress'));
         } else {
             return view('pages.project_manager.forms.status', compact('project', 'statuses', 'milestones', 'progress'));
         }

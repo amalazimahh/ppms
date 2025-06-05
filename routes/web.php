@@ -97,7 +97,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projects/{id}/download-PDF', [ProjectsController::class, 'downloadPDF'])->name('projects.downloadPDF');
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
     Route::get('/projects/{id}/status', [MilestoneController::class, 'milestone'])->name('projects.status');
-    Route::get('/projects/{id}/project_team', [ProjectsController::class, 'project_team'])->name('projects.project_team');
+    Route::get('/projects/{id}/project_team', [ProjectTeamController::class, 'edit'])->name('projects.project_team');
+    Route::put('/projects/{id}/project_team', [ProjectTeamController::class, 'update'])->name('projects.project_team.update');
     Route::get('/projects/{id}/pre_tender', [PreTenderController::class, 'edit'])->name('projects.pre_tender');
     Route::put('/{id}/pre_tender', [PreTenderController::class, 'update'])->name('projects.pre_tender.update');
     Route::get('/{id}/design_submission', [DesignSubmissionController::class, 'edit'])->name('projects.design_submission');
