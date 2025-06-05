@@ -192,14 +192,35 @@ class ProjectsController extends Controller
 
     public function destroy($id)
     {
-        $project = Project::findOrFail($id);
+        $user = auth()->user();
+        $project = Project::with(['projectTeam.officerInCharge'])->findOrFail($id);
+
+        // Check if user is admin or the project manager in charge
+        if (session('roles') != 1 && // not admin
+            (!$project->projectTeam || // no project team
+             $project->projectTeam->officer_in_charge != $user->id)) { // not the officer in charge
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+
         if($project){
             $project->delete();
             $message = Str::limit($project->title.' has been deleted.', 250);
             sendNotification('update_project_details', $message, ['Admin', 'Project Manager', 'Executive']);
-            return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was deleted successfully.');
+            
+            // Redirect based on user role
+            if(session('roles') == 1) {
+                return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was deleted successfully.');
+            } else {
+                return redirect()->route('pages.project_manager.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was deleted successfully.');
+            }
         }
-        return redirect()->route('pages.admin.projectsList')->with('error', 'Project not found.');
+
+        // Redirect based on user role
+        if(session('roles') == 1) {
+            return redirect()->route('pages.admin.projectsList')->with('error', 'Project not found.');
+        } else {
+            return redirect()->route('pages.project_manager.projectsList')->with('error', 'Project not found.');
+        }
     }
 
     // store basicdetails form
@@ -402,8 +423,20 @@ class ProjectsController extends Controller
 
     public function downloadPdf($id)
     {
-        $project = Project::findOrFail($id);
-        $pdf = PDF::loadView('pages.admin.report-pdf', compact('project'));
+        $user = auth()->user();
+        $project = Project::with(['projectTeam.officerInCharge'])->findOrFail($id);
+
+        // Check if user is admin or the project manager in charge
+        if (session('roles') != 1 && // not admin
+            (!$project->projectTeam || // no project team
+             $project->projectTeam->officer_in_charge != $user->id)) { // not the officer in charge
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+
+        // Use different views based on role
+        $view = session('roles') == 1 ? 'pages.admin.report-pdf' : 'pages.project_manager.report-pdf';
+        
+        $pdf = PDF::loadView($view, compact('project'));
         $pdf->setPaper('a3', 'landscape');
         return $pdf->download('project-details-' . $project->id . '.pdf');
     }
