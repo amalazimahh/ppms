@@ -103,7 +103,7 @@ Route::middleware(['auth'])->group(function (){
     Route::put('admin/projects/{id}/project_health', [ProjectHealthController::class, 'update'])->name('projects.project_health.update')->middleware('auth');
 
     // project manager
-    Route::get('/project_manager/dashboard', [PageController::class, 'projectDashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
+    Route::get('/project_manager/dashboard', [DashboardController::class, 'dashboard'])->name('pages.project_manager.dashboard')->middleware('auth');
     Route::get('/project_manager/basicdetails', [ProjectsController::class, 'basicdetails'])->name('pages.project_manager.forms.basicdetails')->middleware('auth');
     Route::get('/project_manager/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('pages.project_manager.project-dashboard')->middleware('auth');
     Route::get('/project_manager/projectsList', [PageController::class, 'projectList'])->name('pages.project_manager.projectsList')->middleware('auth');

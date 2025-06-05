@@ -143,6 +143,7 @@ class DashboardController extends Controller
                 'stageLabels', 'stageData'
             ));
         } else if(session('roles') == 2){
+
             return view('pages.project_manager.dashboard', ['pageSlug' => 'dashboard']);
         } else {
             return view('pages.dashboard');
@@ -290,7 +291,146 @@ class DashboardController extends Controller
                 'financialProgress'
             ));
         } else if(session('roles') == 2){
-            return view('pages.project_manager.dashboard');
+            $user = Auth::user();
+
+            // Get projects where the user is the officer in charge
+            $projects = Project::whereHas('projectTeam', function($query) use ($user) {
+                $query->where('officer_in_charge', $user->id);
+            })->with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
+
+            $totalProjects = $projects->count();
+            $upcomingDeadlines = [];
+            $completedCount = 0;
+            $ongoingCount = 0;
+            $overdueCount = 0;
+            $ministries = ClientMinistry::whereHas('projects', function($query) use ($user) {
+            $query->whereHas('projectTeam', function($q) use ($user) {
+                    $q->where('officer_in_charge', $user->id);
+            });
+            })->with(['projects' => function($query) use ($user) {
+            $query->whereHas('projectTeam', function($q) use ($user) {
+                $q->where('officer_in_charge', $user->id);
+            });
+            }])->get();
+
+            $projectNames = [];
+            $physicalProgress = [];
+            $financialProgress = [];
+
+            foreach($projects as $project){
+                // project data for the progress chart
+                $projectNames[] = $project->title;
+                $physicalProgress[] = $project->physical_status ? $project->physical_status->actual : 0;
+                $financialProgress[] = $project->financial_status ? $project->financial_status->actual : 0;
+
+                // use endDate as the deadline
+                if ($project->rkn && $project->rkn->endDate) {
+                    $deadline = \Carbon\Carbon::parse($project->rkn->endDate);
+                } else {
+                    // if no RKN assigned then use default date
+                    $handover = \Carbon\Carbon::parse($project->handoverDate);
+                    $fyStartYear = $handover->month < 4 ? $handover->year : $handover->year + 1;
+                    $fyStart = \Carbon\Carbon::create($fyStartYear,4, 1);
+                    $deadline = $fyStart->copy()->addYears(5)->subDay();
+                }
+
+                $now = \Carbon\Carbon::now();
+                $diffInMonths = floor($now->diffInMonths($deadline, false));
+                $diffInDays =  $now->diffInDays($deadline, false);
+
+                // assign traffic light color for deadline
+                if($diffInMonths > 2){
+                    $status = 'success'; // green
+                } elseif($diffInMonths == 2){
+                    $status = 'warning'; // yellow
+                } else if($diffInMonths < 1){
+                    $status = 'danger'; // red
+                } else {
+                    $status = 'success'; // green
+                }
+
+                // milestone logic
+                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+                if ($completedMilestones == 25) {
+                    $completedCount++;
+                } else {
+                    $ongoingCount++;
+                    // overdue: not completed and red status
+                    if ($status == 'danger') {
+                        $overdueCount++;
+                    }
+                }
+
+                        $upcomingDeadlines[] = [
+                            'name' => $project->title,
+                            'main_project' => $project->parent_project_id
+                                ? optional(Project::find($project->parent_project_id))->title
+                                : null,
+                            'deadline' => $deadline->format('d-m-Y'),
+                            'months_left' => $diffInMonths,
+                            'status' => $status,
+                            'officer_in_charge' => $user->name
+                        ];
+                    }
+
+                    // calculate total sch and av for PM's projects
+                    $schemeValue = $projects->sum('sv');
+                    $allocationValue = $projects->sum('av');
+
+                    // dynamic sunburst chart data
+                    $sunburstChildren = [];
+                    foreach ($ministries as $ministry) {
+                        $ministryNode = [
+                            'name' => $ministry->ministryName,
+                            'children' => []
+                        ];
+                        foreach ($ministry->projects as $project) {
+                            $ministryNode['children'][] = [
+                                'name' => $project->title,
+                                'value' => 1000
+                            ];
+                        }
+                        if(!empty($ministryNode['children'])){
+                            $sunburstChildren[] = $ministryNode;
+                        }
+                    }
+
+                    $sunburstData = [
+                        'name' => 'flare',
+                        'children' => $sunburstChildren
+                    ];
+
+                    // group projects by milestone stage for donut chart
+                    $stageCounts = [];
+                    foreach($projects as $project){
+                        $milestone = $project->milestone;
+                        $statusName = $milestone && $milestone->status ? $milestone->status->name : 'Unknown';
+                        if(!isset($stageCounts[$statusName])){
+                            $stageCounts[$statusName] = 0;
+                        }
+                        $stageCounts[$statusName]++;
+                    }
+
+                    $stageLabels = array_keys($stageCounts);
+                    $stageData = array_values($stageCounts);
+
+                    return view('pages.project_manager.dashboard', compact(
+                        'projects',
+                        'totalProjects',
+                        'upcomingDeadlines',
+                        'completedCount',
+                        'ongoingCount',
+                        'overdueCount',
+                        'schemeValue',
+                        'allocationValue',
+                        'ministries',
+                        'sunburstData',
+                        'stageLabels',
+                        'stageData',
+                        'projectNames',
+                        'physicalProgress',
+                        'financialProgress'
+                    ));
         } else {
             return view('pages.dashboard');
         }
