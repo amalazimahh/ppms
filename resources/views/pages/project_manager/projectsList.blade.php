@@ -124,8 +124,8 @@
                     <table class="table">
                         <thead class=" text-primary">
                             <tr>
-                                <th style="width: 45%">Title</th>
-                                <th style="width: 10%">Progress</th>
+                                <th style="width: 50%">Title</th>
+                                <th style="width: 15%">Progress</th>
                                 <th style="width: 35%">Action</th>
                             </tr>
                         </thead>
@@ -702,36 +702,6 @@
                                         <a href="{{ route('pages.project_manager.forms.basicdetails', $project->id) }}" class="btn btn-primary btn-sm">
                                             <i class="tim-icons icon-pencil"></i> Edit
                                         </a>
-
-                                         <!-- Delete Button -->
-                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl('{{ route('projects.destroy', $project->id) }}')">
-                                            <i class="tim-icons icon-trash-simple"></i> Delete
-                                        </button>
-
-                                        <!-- bootstrap delete modal -->
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-dark">
-                                                    Are you sure you want to delete this project? This action cannot be undone.
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-                                                    <!-- Delete Form -->
-                                                    <form id="deleteForm" method="POST" style="display: inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
