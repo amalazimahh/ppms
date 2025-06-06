@@ -824,6 +824,7 @@
     </div>
  </div>
 
+@push('js')
 <script>
     function setDeleteUrl(url) {
         document.getElementById('deleteForm').action = url;
@@ -866,18 +867,18 @@
         document.body.classList.add('fade-out');
     });
 
-// Auto-dismiss after 5 seconds
+// auto-close after 5 seconds
 document.addEventListener('DOMContentLoaded', function() {
     const alerts = document.querySelectorAll('.alert');
 
     alerts.forEach(alert => {
-        // Manual close
+        // close manually
         alert.querySelector('.close').addEventListener('click', function() {
             alert.style.opacity = '0';
             setTimeout(() => alert.remove(), 300);
         });
 
-        // Auto-dismiss
+        // auto-close
         setTimeout(() => {
             alert.style.opacity = '0';
             setTimeout(() => alert.remove(), 300);
@@ -913,17 +914,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateVoteNum();
     });
 
-</script>
-
-@endsection
-
-@push('js')
-<script>
     $(document).ready(function() {
         let typingTimer;
-        const doneTypingInterval = 500; // Wait for 500ms after user stops typing
+        const doneTypingInterval = 500;
 
-        // Function to update the project list
+        // update the project list
         function updateProjects(title = '', rknId = '') {
             $.ajax({
                 url: "{{ route('pages.project_manager.projects.search') }}",
@@ -1000,3 +995,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 </script>
 @endpush
+
+@endsection
