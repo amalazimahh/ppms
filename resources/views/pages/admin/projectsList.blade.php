@@ -24,6 +24,20 @@
 
 @section('content')
 <style>
+    select {
+            background-color: #f6f9fc,
+            color: #000;
+        }
+
+        select option {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option:hover{
+            background-color: #525f7f;
+            color: #fff;
+        }
     .form-control:focus {
         color: #000;
     }
@@ -114,6 +128,53 @@
             </div>
 
             <div class="card-body">
+                <div class="row mb-3">
+                    <!-- filter by rkn -->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="filterRKN">Filter by RKN</label>
+                            <select class="form-control text-white" id="filterRKN">
+                                <option value="">All RKNs</option>
+                                @foreach($rkns as $rkn)
+                                    <option value="{{ $rkn->id }}">{{ $rkn->rknNum }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- search specific projects -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="searchTitle">Search by Title</label>
+                            <input type="text" class="form-control" id="searchTitle" placeholder="Enter project title...">
+                        </div>
+                    </div>
+
+                    <!-- filter by client ministry -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filterClientMinistry">Filter by Client Ministry</label>
+                            <select class="form-control text-white" id="filterClientMinistry">
+                                <option value="">All Client Ministry</option>
+                                @foreach($clientMinistries as $client)
+                                    <option value="{{ $client->id }}">{{ $client->ministryName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- filter by status -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filterStatus">Filter by Status</label>
+                            <select class="form-control text-white" id="filterStatus">
+                                <option value="">All Status</option>
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 @if($projects->isEmpty())
                     <div class="alert alert-warning">
                         No projects available. Please create a new project.
@@ -920,6 +981,89 @@ document.addEventListener('DOMContentLoaded', function() {
         parentProjectSelect.addEventListener('change', updateVoteNum);
 
         updateVoteNum();
+    });
+
+    $(document).ready(function() {
+        let typingTimer;
+        const doneTypingInterval = 500;
+
+        function updateProjects(title = '', rknId = '', clientMinistryId = '', statusId = '') {
+            $.ajax({
+                url: "{{ route('pages.admin.projects.search') }}",
+                method: 'GET',
+                data: {
+                    title: title,
+                    rkn_id: rknId,
+                    client_ministry_id: clientMinistryId,
+                    status_id: statusId
+                },
+                success: function(response) {
+                    let tbody = $('table tbody');
+                    tbody.empty();
+
+                    if (response.projects.length === 0) {
+                        tbody.append(`
+                            <tr>
+                                <td colspan="4" class="text-center">No projects found</td>
+                            </tr>
+                        `);
+                        return;
+                    }
+
+                    response.projects.forEach(project => {
+                        tbody.append(`
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="project-title">
+                                            <h4>${project.title}</h4>
+                                            <small>Vote No: ${project.voteNum}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="project-info">
+                                        <p><strong>RKN:</strong> ${project.rkn ? project.rkn.rknNum : 'N/A'}</p>
+                                        <p><strong>Financial Year:</strong> ${project.fy}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="project-progress">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: ${project.progress}%"></div>
+                                        </div>
+                                        <small>${project.progress}% Complete</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="/admin/projects/${project.id}/edit" class="btn btn-primary btn-sm">
+                                        <i class="tim-icons icon-pencil"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error fetching projects:', xhr);
+                }
+            });
+        }
+
+        function triggerUpdate() {
+            updateProjects(
+                $('#searchTitle').val(),
+                $('#filterRKN').val(),
+                $('#filterClient').val(),
+                $('#filterStatus').val()
+            );
+        }
+
+        $('#searchTitle').on('keyup', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(triggerUpdate, doneTypingInterval);
+        });
+        $('#filterRKN, #filterClient, #filterStatus').on('change', triggerUpdate);
     });
 
 </script>

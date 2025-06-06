@@ -76,10 +76,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [ProjectsController::class, 'edit'])->name('forms.basicdetails');
             Route::put('/{id}/update', [ProjectsController::class, 'update'])->name('forms.basicdetails.update');
             Route::get('/{id}/view', [ProjectsController::class, 'view'])->name('view_project');
-
-            // Project Components
-
         });
+
+        // search and filter
+        Route::get('/projects/search', [ProjectsController::class,'search'])->name('projects.search');
 
         // Team Management
         Route::get('/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('project_team');

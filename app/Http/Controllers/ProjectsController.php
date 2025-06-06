@@ -32,14 +32,16 @@ class ProjectsController extends Controller
         $projects = collect();
         $mainProjects = collect();
         $rkns = RKN::all();
+        $statuses = Status::all();
+        $clientMinistries = ClientMinistry::all();
 
         if (session('roles') == 1) {
-            // Admin sees all projects
+            // admin retrieve all projects
             $projects = Project::with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
             $mainProjects = Project::whereNull('parent_project_id')->get();
-            return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns'));
+            return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
         } elseif (session('roles') == 2) {
-            // Project Manager sees only their projects where they are officer in charge
+            // project manager retrieve only their projects (if they are the OIC)
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
             })->with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
@@ -59,20 +61,24 @@ class ProjectsController extends Controller
         $user = auth()->user();
         $title = $request->input('title');
         $rknId = $request->input('rkn_id');
+        $clientMinistryId = $request->input('client_ministry_id');
+        $statusId = $request->input('status_id');
 
         $query = Project::query();
 
-        // Add title search if provided
         if ($title) {
             $query->where('title', 'like', '%' . $title . '%');
         }
-
-        // Add RKN filter if provided
         if ($rknId) {
             $query->where('rkn_id', $rknId);
         }
+        if ($clientMinistryId) {
+            $query->where('client_ministry_id', $clientMinistryId);
+        }
+        if ($statusId) {
+            $query->where('status_id', $statusId);
+        }
 
-        // Filter by project manager if user is PM
         if (session('roles') == 2) {
             $query->whereHas('projectTeam', function($q) use ($user) {
                 $q->where('officer_in_charge', $user->id);
@@ -80,10 +86,12 @@ class ProjectsController extends Controller
         }
 
         $projects = $query->with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
-        
-        return response()->json([
-            'projects' => $projects
-        ]);
+        $mainProjects = Project::whereNull('parent_project_id')->get();
+        $rkns = RKN::all();
+        $clientMinistries = ClientMinistry::all();
+        $statuses = Status::all();
+
+        return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
     }
 
     public function basicdetails($id)
