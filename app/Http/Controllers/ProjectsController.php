@@ -31,26 +31,59 @@ class ProjectsController extends Controller
         $user = auth()->user();
         $projects = collect();
         $mainProjects = collect();
+        $rkns = RKN::all();
 
         if (session('roles') == 1) {
             // Admin sees all projects
-            $projects = Project::with(['milestones', 'projectTeam.officerInCharge'])->get();
+            $projects = Project::with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
             $mainProjects = Project::whereNull('parent_project_id')->get();
-            return view('pages.admin.projectsList', compact('projects', 'mainProjects'));
+            return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns'));
         } elseif (session('roles') == 2) {
             // Project Manager sees only their projects where they are officer in charge
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
-            })->with(['milestones', 'projectTeam.officerInCharge'])->get();
+            })->with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
 
             $mainProjects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
             })->whereNull('parent_project_id')->get();
 
-            return view('pages.project_manager.projectsList', compact('projects', 'mainProjects'));
+            return view('pages.project_manager.projectsList', compact('projects', 'mainProjects', 'rkns'));
         }
 
         return redirect()->route('home')->with('error', 'Unauthorized access');
+    }
+
+    public function search(Request $request)
+    {
+        $user = auth()->user();
+        $title = $request->input('title');
+        $rknId = $request->input('rkn_id');
+
+        $query = Project::query();
+
+        // Add title search if provided
+        if ($title) {
+            $query->where('title', 'like', '%' . $title . '%');
+        }
+
+        // Add RKN filter if provided
+        if ($rknId) {
+            $query->where('rkn_id', $rknId);
+        }
+
+        // Filter by project manager if user is PM
+        if (session('roles') == 2) {
+            $query->whereHas('projectTeam', function($q) use ($user) {
+                $q->where('officer_in_charge', $user->id);
+            });
+        }
+
+        $projects = $query->with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
+        
+        return response()->json([
+            'projects' => $projects
+        ]);
     }
 
     public function basicdetails($id)

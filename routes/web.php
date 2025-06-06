@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
         // Project Management
         Route::prefix('projects')->group(function () {
             Route::get('/', [ProjectsController::class, 'index'])->name('projectsList');
+            Route::get('/search', [ProjectsController::class, 'search'])->name('projects.search');
             Route::get('/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
             Route::post('/basicdetails/store', [ProjectsController::class, 'store'])->name('forms.basicdetails.store');
             Route::get('/{id}/edit', [ProjectsController::class, 'edit'])->name('forms.basicdetails');
@@ -124,6 +125,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
         Route::get('/project-dashboard', [ProjectDashboardController::class, 'index'])->name('project-dashboard');
         Route::get('/projectsList', [ProjectsController::class, 'index'])->name('projectsList');
+        Route::get('/projects/search', [ProjectsController::class, 'search'])->name('projects.search');
         Route::get('/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
         Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('edit');
         Route::get('/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');

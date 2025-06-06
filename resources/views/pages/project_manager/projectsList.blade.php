@@ -114,6 +114,27 @@
             </div>
 
             <div class="card-body">
+                <!-- Search and Filter Section -->
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="searchTitle">Search by Title</label>
+                            <input type="text" class="form-control" id="searchTitle" placeholder="Enter project title...">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="filterRKN">Filter by RKN</label>
+                            <select class="form-control text-white" id="filterRKN">
+                                <option value="">All RKNs</option>
+                                @foreach($rkns as $rkn)
+                                    <option value="{{ $rkn->id }}">{{ $rkn->rknNum }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 @if($projects->isEmpty())
                     <div class="alert alert-warning">
                         No projects available. Please create a new project.
@@ -895,3 +916,87 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        let typingTimer;
+        const doneTypingInterval = 500; // Wait for 500ms after user stops typing
+
+        // Function to update the project list
+        function updateProjects(title = '', rknId = '') {
+            $.ajax({
+                url: "{{ route('pages.project_manager.projects.search') }}",
+                method: 'GET',
+                data: {
+                    title: title,
+                    rkn_id: rknId
+                },
+                success: function(response) {
+                    let tbody = $('table tbody');
+                    tbody.empty();
+
+                    if (response.projects.length === 0) {
+                        tbody.append(`
+                            <tr>
+                                <td colspan="4" class="text-center">No projects found</td>
+                            </tr>
+                        `);
+                        return;
+                    }
+
+                    response.projects.forEach(project => {
+                        tbody.append(`
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="project-title">
+                                            <h4>${project.title}</h4>
+                                            <small>Vote No: ${project.voteNum}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="project-info">
+                                        <p><strong>RKN:</strong> ${project.rkn ? project.rkn.rknNum : 'N/A'}</p>
+                                        <p><strong>Financial Year:</strong> ${project.fy}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="project-progress">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: ${project.progress}%"></div>
+                                        </div>
+                                        <small>${project.progress}% Complete</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="/project_manager/projects/${project.id}/edit" class="btn btn-primary btn-sm">
+                                        <i class="tim-icons icon-pencil"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error fetching projects:', xhr);
+                }
+            });
+        }
+
+        // Handle search input with debounce
+        $('#searchTitle').on('keyup', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                updateProjects($(this).val(), $('#filterRKN').val());
+            }, doneTypingInterval);
+        });
+
+        // Handle RKN filter change
+        $('#filterRKN').on('change', function() {
+            updateProjects($('#searchTitle').val(), $(this).val());
+        });
+    });
+</script>
+@endpush
