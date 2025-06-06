@@ -206,7 +206,7 @@ class ProjectsController extends Controller
         if($project){
             $project->delete();
             $message = Str::limit($project->title.' has been deleted.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager', 'Executive']);
+            sendNotification('update_project_details', $message);
 
             // Redirect based on user role
             if(session('roles') == 1) {
@@ -301,9 +301,7 @@ class ProjectsController extends Controller
         // Log to confirm insertion
         Log::info('Project created: ', $project->toArray());
         $message = Str::limit('A new project ' . $project->title . ' has been added.', 250);
-
-        // insert notification for the admin
-        sendNotification('new_project', $message, ['Admin', 'Executive']);
+        sendNotification('new_project', $message);
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
         // redirect with success notification
@@ -375,8 +373,8 @@ class ProjectsController extends Controller
         $project->milestones()->attach($milestone, ['completed' => $index === 0 ? true : false]);
         }
 
-        $message = Str::limit($project->title . ' details have been updated.', 250);
-        sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+        $message = Str::limit('Project ' . $project->title . ' details have been updated.', 250);
+        sendNotification('update_project_details', $message);
 
         // log success or failure of project update
         if ($updated) {

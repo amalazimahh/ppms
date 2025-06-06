@@ -86,7 +86,7 @@ class ProjectTeamController extends Controller
             );
 
             $message = Str::limit($project->title . ' project team details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.project_team', $project->id)
                 ->with('success', 'Project team details updated successfully!');

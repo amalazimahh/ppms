@@ -54,7 +54,7 @@ class ApprovalAwardController extends Controller
             );
 
             $message = Str::limit($tender->title . ' approval of award details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.approval_award', $tender->id)
                 ->with('success', 'Approval of Award details have been updated.');

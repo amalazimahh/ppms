@@ -42,7 +42,7 @@ class DesignSubmissionController extends Controller
             );
 
             $message = Str::limit($project->title . ' design submission details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.design_submission', $project->id)
                 ->with('success', 'Design submission details updated successfully.');

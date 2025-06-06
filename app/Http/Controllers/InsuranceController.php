@@ -53,8 +53,8 @@ class InsuranceController extends Controller
                 $validated
             );
 
-            $message = Str::limit($contract-> title . ' insurance form details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            $message = Str::limit($contract->title . ' insurance form details have been updated.', 250);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.insurance', $contract->id)
                 ->with('success', 'Insurance form details have been updated.');

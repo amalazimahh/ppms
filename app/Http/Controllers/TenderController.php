@@ -56,7 +56,7 @@ class TenderController extends Controller
             );
 
             $message = Str::limit($project->title . ' tender details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.tender', $project->id)
                 ->with('success', 'Tender details have been updated.');

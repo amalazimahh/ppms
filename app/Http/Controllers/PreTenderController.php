@@ -82,7 +82,7 @@ class PreTenderController extends Controller
             ]);
 
             $message = Str::limit($project->title . ' pre-tender details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.pre_tender', $project->id)
                 ->with('success', 'Pre-tender details updated successfully!');

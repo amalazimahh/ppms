@@ -53,7 +53,7 @@ class BankerGuaranteeController extends Controller
             );
 
             $message = Str::limit($contract->title . ' banker guarantee details have been updated.', 250);
-            sendNotification('update_project_details', $message, ['Admin', 'Project Manager']);
+            sendNotification('update_project_details', $message);
 
             return redirect()->route('projects.bankers_guarantee', $contract->id)
                 ->with('success', 'Banker guarantee details have been updated.');
