@@ -23,6 +23,7 @@ use App\Http\Controllers\RKNController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectHealthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ContractorController;
 
 Route::get('/', [PageController::class, 'dashboard']);
 
@@ -88,7 +89,10 @@ Route::middleware(['auth'])->group(function () {
 
         // Other Admin Features
         Route::get('/user_management', [PageController::class, 'manageUsers'])->name('user_management');
-        Route::get('/contractor', [PageController::class, 'manageContractors'])->name('contractor');
+        Route::get('/contractor', [ContractorController::class, 'index'])->name('contractor');
+        Route::post('/contractor', [ContractorController::class, 'store'])->name('contractors.store');
+        Route::put('/contractor/{id}', [ContractorController::class, 'update'])->name('contractors.update');
+        Route::delete('/contractor/{id}', [ContractorController::class, 'destroy'])->name('contractors.delete');
         Route::get('/rkn', [RKNController::class, 'showRKN'])->name('rkn');
         Route::post('/rkn', [RKNController::class, 'store'])->name('rkn.store');
         Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('assignRole');

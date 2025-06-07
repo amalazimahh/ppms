@@ -17,6 +17,13 @@
         background-color: #525f7f;
         color: #fff;
     }
+
+    .form-control:focus {
+        color: #000;
+    }
+    .form-control:not(:placeholder-shown) {
+        color: #000;
+    }
 </style>
 <div class="content">
   <div class="container-fluid">
@@ -29,6 +36,37 @@
                 <button type="button" class="btn btn-success btn-round animation-on-hover" data-bs-toggle="modal" data-bs-target="#addContractorModal">
                     <i class="tim-icons icon-simple-add"></i> Add New Contractor
                 </button>
+                <!-- add new contractor modal -->
+                <div class="modal fade" id="addContractorModal" tabindex="-1" aria-labelledby="addContractorModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addProjectModalLabel">Add New Contractor</h5>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </div>
+                            <form action="{{ route('pages.admin.contractors.store') }}" method="post">
+                                @csrf
+                                <div class="modal-body">
+
+                                    <div class="row mb-3">
+                                        <label for="name" class="col-sm-3 col-form-label" style="color: #000;">Contractor Name</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="name" id="name">
+                                            </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Project</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -36,7 +74,6 @@
                 <thead class=" text-primary">
                   <th> ID </th>
                   <th> Name </th>
-                  <th> Projects/Team </th>
                   <th> Action </th>
                 </thead>
                 <tbody>
@@ -45,20 +82,17 @@
                             <td> {{ $contractor->id }} </td>
                             <td> {{ $contractor->name }}</td>
                             <td>
-                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="">
-                                  <i class="tim-icons icon-zoom-split"></i> View
-                                </button>
-                            </td>
-                            <td>
                                 <!-- edit button -->
-                                <a href="" class="btn btn-primary btn-sm">
+                                <a href="" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editContractorModal">
                                     <i class="tim-icons icon-pencil"></i> Edit
                                 </a>
 
-                                <!-- delete button -->
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="" onclick="">
-                                    <i class="tim-icons icon-trash-simple"></i> Delete
-                                </button>
+                                <!-- Delete Form -->
+                                <form id="deleteForm" action="{{ route('pages.admin.contractors.delete', $contractor->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
 
                             </td>
                         </tr>
@@ -73,28 +107,26 @@
   </div>
 </div>
 
-<!-- add new contractor modal -->
- <!-- add project modal -->
- <div class="modal fade" id="addContractorModal" tabindex="-1" aria-labelledby="addContractorModalLabel" aria-hidden="true">
+<!-- edit contractor modal -->
+<div class="modal fade" id="editContractorModal" tabindex="-1" aria-labelledby="editContractorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProjectModalLabel">Add New Contractor</h5>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <i class="tim-icons icon-simple-remove"></i>
-                </button>
+                <h5 class="modal-title" id="editProjectModalLabel">Edit Contractor</h5>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
             </div>
-            <form action="" method="post">
+            <form action="{{ route('pages.admin.contractors.update', $contractor->id) }}" method="post">
                 @csrf
+                @method('PUT')
                 <div class="modal-body">
-
-                <!-- financial year -->
-                <div class="row mb-3">
-                    <label for="fy" class="col-sm-3 col-form-label">Contractor Name</label>
+                    <div class="row mb-3">
+                        <label for="name" class="col-sm-3 col-form-label">Contractor Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="name" id="name"
-                            maxlength="9">
+                            <input type="text" class="form-control" name="name" id="name">
                         </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -105,5 +137,12 @@
             </form>
         </div>
     </div>
- </div>
+</div>
+
+
+<script>
+    function setDeleteUrl(url) {
+        document.getElementById('deleteForm').action = url;
+    }
+</script>
 @endsection
