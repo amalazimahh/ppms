@@ -15,26 +15,25 @@ function getNotificationRoles($type) {
         'overdue' => ['Admin', 'Project Manager', 'Executive']
     ];
 
-    return $rolesByNotificationType[$type] ?? ['Admin']; // Default to Admin if type not found
+    return $rolesByNotificationType[$type] ?? ['Admin'];
 }
 
-function sendNotification($type, $message, $roles = [])
+function sendNotification($type, $message, $roles = [], $userIds = [])
 {
-    // create notification
     $notification = Notification::create([
         'type' => $type,
         'message' => $message
     ]);
 
-    // Get the roles that should receive this notification type
-    $targetRoles = empty($roles) ? getNotificationRoles($type) : $roles;
+    if (!empty($userIds)) {
+        $users = User::whereIn('id', $userIds)->get();
+    } else {
+        $targetRoles = empty($roles) ? getNotificationRoles($type) : $roles;
+        $users = User::whereHas('role', function ($query) use ($targetRoles) {
+            $query->whereIn('name', $targetRoles);
+        })->get();
+    }
 
-    // find users by role
-    $users = User::whereHas('role', function ($query) use ($targetRoles) {
-        $query->whereIn('name', $targetRoles);
-    })->get();
-
-    // attach users to the notification
     foreach($users as $user) {
         NotificationRecipient::create([
             'notification_id'=> $notification->id,
