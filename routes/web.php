@@ -24,6 +24,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectHealthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContractorController;
+use App\Http\Controllers\PasswordResetAdminController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+
 
 Route::get('/', [PageController::class, 'dashboard']);
 
@@ -41,6 +44,10 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('typography', ['as' => 'pages.typography', 'uses' => 'App\Http\Controllers\PageController@typography']);
 		Route::get('upgrade', ['as' => 'pages.upgrade', 'uses' => 'App\Http\Controllers\PageController@upgrade']);
 });
+
+Route::post('/reset-password-direct', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::get('/reset-password-direct', [ResetPasswordController::class, 'showDirectResetForm'])->name('auth.password.reset');
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
@@ -82,20 +89,29 @@ Route::middleware(['auth'])->group(function () {
         // search and filter
         Route::get('/projects/search', [ProjectsController::class,'search'])->name('projects.search');
 
-        // Team Management
+        // project team
         Route::get('/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('project_team');
         Route::post('/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('project_team.addDiscipline');
         Route::post('/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('project_team.deleteDiscipline');
 
-        // Other Admin Features
+        // user management
         Route::get('/user_management', [PageController::class, 'manageUsers'])->name('user_management');
+        Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('assignRole');
+
+        // contractor
         Route::get('/contractor', [ContractorController::class, 'index'])->name('contractor');
         Route::post('/contractor', [ContractorController::class, 'store'])->name('contractors.store');
         Route::put('/contractor/{id}', [ContractorController::class, 'update'])->name('contractors.update');
         Route::delete('/contractor/{id}', [ContractorController::class, 'destroy'])->name('contractors.delete');
+
+        // rkn
         Route::get('/rkn', [RKNController::class, 'showRKN'])->name('rkn');
         Route::post('/rkn', [RKNController::class, 'store'])->name('rkn.store');
-        Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('assignRole');
+
+        // password reset requests
+        Route::get('/password-reset-requests', [PasswordResetAdminController::class, 'index'])->name('password-reset-requests');
+        Route::post('/password-reset-requests/{id}/approve', [PasswordResetAdminController::class, 'approve'])->name('password-reset-requests.approve');
+        Route::post('/password-reset-requests/{id}/reject', [PasswordResetAdminController::class, 'reject'])->name('password-reset-requests.reject');
     });
 
     // Common Project Routes (accessible by both admin and project manager)
@@ -144,4 +160,5 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/projectsList', [PageController::class, 'projectList'])->name('projectsList');
     });
 });
+
 

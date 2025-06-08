@@ -13,8 +13,6 @@
                 <div class="card-body">
                     @include('alerts.success')
 
-                    <input type="hidden" name="token" value="{{ $token }}">
-
                     <div class="input-group{{ $errors->has('email') ? ' has-danger' : '' }}">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
@@ -43,7 +41,7 @@
                         </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-3">{{ __('Reset Password') }}</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-3">{{ __('Submit Reset Request') }}</button>
                 </div>
             </div>
         </form>

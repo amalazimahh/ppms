@@ -1,6 +1,3 @@
-<div>
-    Current Role: {{ session('roles') ?? 'Session not set' }}
-</div>
 <div class="sidebar">
     <div class="sidebar-wrapper">
         <div class="logo">
@@ -59,6 +56,14 @@
                 </a>
             </li>
 
+            <!-- password reset requests -->
+            <li @if ($pageSlug == 'password-reset-requests') class="active" @endif>
+                <a href="{{ route('pages.admin.password-reset-requests') }}">
+                    <i class="tim-icons icon-key-25"></i>
+                    <p>{{ __('Password Reset Requests') }}</p>
+                </a>
+            </li>
+
             <!-- Notification Tab -->
             <li @if ($pageSlug == 'notifications') class="active" @endif>
                 <a href="{{ route('pages.notification.index')  }}">
@@ -67,7 +72,7 @@
                 </a>
             </li>
 
-            <!-- Notification Tab -->
+            <!-- project team -->
             <li @if ($pageSlug == 'notifications') class="active" @endif>
                 <a href="{{ route('pages.admin.project_team')  }}">
                     <i class="tim-icons icon-badge"></i>

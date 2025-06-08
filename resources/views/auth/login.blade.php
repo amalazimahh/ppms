@@ -1,38 +1,6 @@
 @extends('layouts.app', ['class' => 'login-page', 'page' => __('Login Page'), 'contentClass' => 'login-page'])
 
 @section('content')
-<div class="login-main-wrapper" style="display:flex;min-height:100vh;align-items:center;">
-    <!-- Left: Login Form -->
-    <div class="login-left" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;">
-        <div style="max-width:400px;width:100%;">
-            <h2 style="color:#1cbfff;font-weight:700;font-size:2rem;margin-bottom:0.5rem;">Welcome Back</h2>
-            <form class="form" method="post" action="{{ route('login') }}">
-                @csrf
-                <div class="form-group" style="margin-bottom:1rem;">
-                    <label for="email" style="color:#ffff;font-weight:600;font-size:0.95rem;">Email</label>
-                    <input type="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="username@ppms.pwd.gov.bn" value="{{ old('email') }}">
-                    @include('alerts.feedback', ['field' => 'email'])
-                </div>
-                <div class="form-group" style="margin-bottom:1rem;">
-                    <label for="password" style="color:#ffff;font-weight:600;font-size:0.95rem;">Password</label>
-                    <input type="password" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="password">
-                    @include('alerts.feedback', ['field' => 'password'])
-                </div>
-                <button type="submit" class="btn btn-primary btn-block" style="background:linear-gradient(90deg,#1cbfff,#3a7bd5);border:none;border-radius:8px;font-weight:600;padding:0.75rem 0;font-size:1rem;box-shadow:0 2px 8px rgba(60,180,255,0.15);">SIGN IN</button>
-            </form>
-            <div style="margin-top:1.5rem;text-align:center;font-size:0.97rem;">
-                <span>Forgot your password? Reset password <a href="{{ route('password.request') }}" style="color:#1cbfff;">here</a></span><br>
-                <span>Don't have an account? <a href="{{ route('register') }}" style="color:#1cbfff;">Sign up</a></span>
-            </div>
-        </div>
-    </div>
-    <!-- Right: Image -->
-    <div class="login-right" style="flex:1;display:flex;align-items:stretch;justify-content:flex-end;position:relative;overflow:hidden;">
-        <div style="width:100%;height:100%;background:#fff;display:flex;align-items:stretch;justify-content:flex-end;clip-path:polygon(15% 0,100% 0,100% 100%,0 100%);box-shadow:0 8px 32px rgba(60,180,255,0.10);">
-            <img src="{{ asset('black') }}/img/curved6.jpg" alt="Login Art" style="width:100%;height:100%;object-fit:cover;">
-        </div>
-    </div>
-</div>
 <style>
 body, html {
     margin: 0;
@@ -145,5 +113,39 @@ img {
   max-width: 100% !important;
 }
 </style>
+
+<div class="login-main-wrapper" style="display:flex;min-height:100vh;align-items:center;">
+    <!-- Left: Login Form -->
+    <div class="login-left" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <div style="max-width:400px;width:100%;">
+            <h2 style="color:#1cbfff;font-weight:700;font-size:2rem;margin-bottom:0.5rem;">Welcome Back</h2>
+            <form class="form" method="post" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label for="email" style="color:#ffff;font-weight:600;font-size:0.95rem;">Email</label>
+                    <input type="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="username@ppms.pwd.gov.bn" value="{{ old('email') }}">
+                    @include('alerts.feedback', ['field' => 'email'])
+                </div>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label for="password" style="color:#ffff;font-weight:600;font-size:0.95rem;">Password</label>
+                    <input type="password" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="password">
+                    @include('alerts.feedback', ['field' => 'password'])
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="background:linear-gradient(90deg,#1cbfff,#3a7bd5);border:none;border-radius:8px;font-weight:600;padding:0.75rem 0;font-size:1rem;box-shadow:0 2px 8px rgba(60,180,255,0.15);">SIGN IN</button>
+            </form>
+            <div style="margin-top:1.5rem;text-align:center;font-size:0.97rem;">
+                <span>Forgot your password? Reset password <a href="{{ route('auth.password.reset') }}" style="color:#1cbfff;">here</a></span><br>
+                <span>Don't have an account? <a href="{{ route('register') }}" style="color:#1cbfff;">Sign up</a></span>
+            </div>
+        </div>
+    </div>
+    <!-- Right: Image -->
+    <div class="login-right" style="flex:1;display:flex;align-items:stretch;justify-content:flex-end;position:relative;overflow:hidden;">
+        <div style="width:100%;height:100%;background:#fff;display:flex;align-items:stretch;justify-content:flex-end;clip-path:polygon(15% 0,100% 0,100% 100%,0 100%);box-shadow:0 8px 32px rgba(60,180,255,0.10);">
+            <img src="{{ asset('black') }}/img/curved6.jpg" alt="Login Art" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+    </div>
+</div>
+
 @endsection
 
