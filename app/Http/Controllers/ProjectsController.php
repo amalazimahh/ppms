@@ -350,7 +350,16 @@ class ProjectsController extends Controller
 
         $mainProjects = Project::whereNull('parent_project_id')->get();
         // redirect with success notification
-        return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was added successfully!');
+        if(session('roles') == 1) {
+            return redirect()->route('pages.admin.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was added successfully!');
+        } elseif (session('roles') == 2){
+            \App\Models\ProjectTeam::create([
+                'project_id' => $project->id,
+                'officer_in_charge' => auth()->id(),
+            ]);
+            return redirect()->route('pages.project_manager.projectsList')->with('success', 'Project <strong>'.$project->title. '</strong> was added successfully!');
+        }
+
     }
 
 
@@ -429,40 +438,17 @@ class ProjectsController extends Controller
         }
 
         // return the success response
-        return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
+        if(session('roles') == 1) {
+            return redirect()->route('pages.admin.projectsList')->with('success', 'Project updated successfully!');
+        } elseif (session('roles') == 2){
+            return redirect()->route('pages.project_manager.projectsList')->with('success', 'Project updated successfully!');
+        }
     }
 
     public function getVoteNum($id)
     {
         $parentProject = Project::findOrFail($id);
         return response()->json(['voteNum' => $parentProject->voteNum]); // return corresponding voteNum
-    }
-
-    public function view($id)
-    {
-        //fetch project details
-        $project = Project::findOrFail($id);
-
-        //fetch related data
-        $statuses = Status::all();
-        $mainProjects = Project::whereNull('parent_project_id')->get();
-        $clientMinistries = ClientMinistry::all();
-        $architects = Architect::all();
-        $civilStructurals = CivilStructural::all();
-        $mechanicalElectricals = MechanicalElectrical::all();
-        $quantitySurveyors = QuantitySurveyor::all();
-
-        return view('pages.view_project', [
-            'project' => $project,
-            'statuses' => $statuses,
-            'mainProjects' => $mainProjects,
-            'clientMinistries' => $clientMinistries,
-            'architects' => $architects,
-            'civilStructurals' => $civilStructurals,
-            'mechanicalElectricals' => $mechanicalElectricals,
-            'quantitySurveyors' => $quantitySurveyors,
-        ]);
-
     }
 
     public function downloadPdf($id)

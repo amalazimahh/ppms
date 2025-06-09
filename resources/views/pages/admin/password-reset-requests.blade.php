@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page'=>__('Password Reset Requests'), 'pageSlug' => 'password-reset-requests'])
+@extends('layouts.app', ['page'=>__('Password Reset Request'), 'page'=>__('Password Reset Requests'), 'pageSlug' => 'password-reset-requests'])
 
 @section('content')
 <div class="content">

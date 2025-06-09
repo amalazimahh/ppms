@@ -1,4 +1,4 @@
-@extends('layouts.app', ['pageSlug' => 'projectsList'])
+@extends('layouts.app', ['page'=>__('Project List'), 'pageSlug' => 'projectsList'])
 
 @if(session('success') || session('error'))
 <div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">

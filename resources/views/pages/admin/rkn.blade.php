@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'table', 'titlePage' => __('Table List')])
+@extends('layouts.app', ['activePage' => 'table', 'page'=>__('RKN List'), 'titlePage' => __('Table List')])
 
 @if(session('success') || session('error'))
 <div style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">

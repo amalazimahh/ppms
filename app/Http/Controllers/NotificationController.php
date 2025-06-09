@@ -14,20 +14,19 @@ class NotificationController extends Controller
 {
     $user = Auth::user();
 
-    // Base query
-    $query = Notification::whereHas('recipient', function ($q) use ($user) {
+    $query = Notification::whereHas('recipients', function ($q) use ($user) {
         $q->where('user_id', $user->id);
     });
 
     \Log::info('Initial Query:', ['query' => $query->toSql()]);
 
-    // Filter by type
+    // filter by type
     if ($request->has('type') && $request->type !== '') {
         $query->where('type', $request->type);
         \Log::info('Type Filter Added:', ['type' => $request->type]);
     }
 
-    // Filter by read status (NEW)
+    // filter by read status
     if ($request->has('status')) {
         $isRead = $request->status === 'read';
         $query->whereHas('recipient', function ($q) use ($isRead) {
@@ -61,8 +60,19 @@ class NotificationController extends Controller
 
 
 
-    public function destroyAll(){
-        Notification::where('user_id', Auth::id())->delete();
-        return response()->json(['success'=>true]);
+    public function destroy($id)
+    {
+        $userId = Auth::id();
+        $notification = Notification::where('id', $id)->where('user_id', $userId)->first();
+        if ($notification) {
+            $notification->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Notification not found or unauthorized'], 404);
+    }
+
+    public function destroyAll() {
+        NotificationRecipient::where('user_id', Auth::id())->delete();
+        return response()->json(['success' => true]);
     }
 }

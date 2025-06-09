@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'table', 'titlePage' => __('Table List')])
+@extends('layouts.app', ['page'=>__('User Management'), 'activePage' => 'table', 'titlePage' => __('Table List')])
 
 @section('content')
 <!-- apply styling for dropdown -->

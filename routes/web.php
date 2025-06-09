@@ -52,7 +52,7 @@ Route::get('/reset-password-direct', [ResetPasswordController::class, 'showDirec
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
-	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
+Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 });
 
@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('pages.notification.index');
     Route::post('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
-    Route::get('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('pages.notification.destroy');
     Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('pages.notification.destroyAll');
 
     // Common project routes used across roles
@@ -88,6 +88,8 @@ Route::middleware(['auth'])->group(function () {
 
         // search and filter
         Route::get('/projects/search', [ProjectsController::class,'search'])->name('projects.search');
+
+        Route::get('/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum']);
 
         // project team
         Route::get('/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('project_team');
@@ -138,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/{id}/insurance', [InsuranceController::class, 'update'])->name('projects.insurance.update');
     Route::get('/{id}/project_health', [ProjectHealthController::class, 'show'])->name('projects.project_health');
     Route::put('/{id}/project_health', [ProjectHealthController::class, 'update'])->name('projects.project_health.update');
-    Route::get('/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum'])->name('projects.getVoteNum');
+
 
     // Project Manager Routes
     Route::prefix('project_manager')->name('pages.project_manager.')->group(function () {
@@ -146,11 +148,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/project-dashboard', [ProjectDashboardController::class, 'index'])->name('project-dashboard');
         Route::get('/projectsList', [ProjectsController::class, 'index'])->name('projectsList');
         Route::get('/projects/search', [ProjectsController::class, 'search'])->name('projects.search');
+        Route::post('addprojects/store', [ProjectsController::class, 'store'])->name('projects.store');
         Route::get('/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
         Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('edit');
         Route::get('/projects/{id}/basicdetails', [ProjectsController::class, 'basicdetails'])->name('forms.basicdetails');
         Route::post('/projects/basicdetails/store', [ProjectsController::class, 'store'])->name('forms.basicdetails.store');
         Route::put('/projects/{id}/basicdetails/update', [ProjectsController::class, 'update'])->name('forms.basicdetails.update');
+        Route::get('/projects/{id}/getVoteNum', [ProjectsController::class, 'getVoteNum']);
     });
 
     // Executive Routes

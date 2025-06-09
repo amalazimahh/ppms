@@ -76,7 +76,7 @@
                         </form>
 
                         <!-- Delete Button -->
-                        <button class="btn btn-danger btn-sm delete-notification" data-id="{{ $notification->id }}">
+                        <button class="btn btn-danger btn-sm delete-notification" data-id="{{ $notification->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">
                           Delete
                         </button>
                       </td>

@@ -119,7 +119,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label for="searchTitle">Search by Title</label>
-                            <input type="text" class="form-control" id="searchTitle" placeholder="Enter project title...">
+                            <input type="text" class="form-control text-white" id="searchTitle" placeholder="Enter project title...">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -748,7 +748,7 @@
                     <i class="tim-icons icon-simple-remove"></i>
                 </button>
             </div>
-            <form action="{{ route('projects.store') }}" method="post">
+            <form action="{{ route('pages.project_manager.projects.store') }}" method="post">
                 @csrf
                 <div class="modal-body">
 
@@ -786,7 +786,7 @@
                     <label for="parent_project_id" class="col-sm-2 col-form-label">Parent Project (Optional)</label>
                     <div class="col-sm-10">
                         <select id="parent_project_id" name="parent_project_id" class="form-control">
-                            <option value="">No Parent (New Main Project)</option>
+                        <option value="">No Parent (New Main Project)</option>
                             @foreach($mainProjects as $parentProject)
                                 <option value="{{ $parentProject->id }}"
                                     {{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') == $parentProject->id ? 'selected' : '' }}>
@@ -826,9 +826,6 @@
 
 @push('js')
 <script>
-    function setDeleteUrl(url) {
-        document.getElementById('deleteForm').action = url;
-    }
 
     function formatFinancialYear(input)
     {
@@ -896,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let parentId = parentProjectSelect.value;
 
             if (parentId) {
-                fetch(`/admin/projects/${parentId}/getVoteNum`) // fetch voteNum from parent
+                fetch(`/project_manager/projects/${parentId}/getVoteNum`) // fetch voteNum from parent
                     .then(response => response.json())
                     .then(data => {
                         voteNum.value = data.voteNum; // set parent voteNum

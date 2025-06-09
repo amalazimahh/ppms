@@ -195,7 +195,7 @@
 
 <div class="modal fade" id="addDisciplineModal" tabindex="-1" role="dialog" aria-labelledby="addDisciplineModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form id="addDisciplineForm" method="POST" action="{{ route('admin.project_team.addDiscipline') }}">
+    <form id="addDisciplineForm" method="POST" action="{{ route('pages.admin.project_team.addDiscipline') }}">
       @csrf
       <input type="hidden" name="discipline" id="disciplineInput" value="">
       <div class="modal-content">
@@ -224,7 +224,7 @@
 <div class="modal fade" id="deleteDisciplineModal" tabindex="-1" role="dialog" aria-labelledby="deleteDisciplineModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form id="deleteDisciplineForm" method="POST" action="{{ route('admin.project_team.deleteDiscipline') }}">
+      <form id="deleteDisciplineForm" method="POST" action="{{ route('pages.admin.project_team.deleteDiscipline') }}">
         @csrf
         @method('DELETE')
         <div class="modal-header">
