@@ -155,9 +155,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Executive Routes
     Route::prefix('executive')->name('pages.executive.')->group(function () {
-        Route::get('/dashboard', [PageController::class, 'executiveDashboard'])->name('dashboard');
-        Route::get('/project-dashboard', [PageController::class, 'projectSpecificDashboard'])->name('project-dashboard');
-        Route::get('/projectsList', [PageController::class, 'projectList'])->name('projectsList');
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/project-dashboard', [ProjectDashboardController::class, 'index'])->name('project-dashboard');
+        Route::get('/projectsList', [ProjectsController::class, 'index'])->name('projectsList');
     });
 });
 

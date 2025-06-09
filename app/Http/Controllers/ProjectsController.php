@@ -51,8 +51,12 @@ class ProjectsController extends Controller
             })->whereNull('parent_project_id')->get();
 
             return view('pages.project_manager.projectsList', compact('projects', 'mainProjects', 'rkns'));
+        } elseif (session('roles') == 3) {
+            // admin retrieve all projects
+            $projects = Project::with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
+            $mainProjects = Project::whereNull('parent_project_id')->get();
+            return view('pages.executive.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
         }
-
         return redirect()->route('home')->with('error', 'Unauthorized access');
     }
 
