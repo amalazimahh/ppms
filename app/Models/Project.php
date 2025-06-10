@@ -16,7 +16,7 @@ class Project extends Model
     protected $fillable = [
         'rkn_id', 'fy', 'sv', 'av', 'voteNum', 'title', 'siteGazette',
         'scope', 'location', 'statuses_id', 'parent_project_id',
-        'client_ministry_id', 'handoverDate', 'img', 'milestones_id',
+        'client_ministry_id', 'handoverDate', 'img', 'milestone_id',
         'created_by', 'created_at', 'updated_at'
     ];
 
@@ -71,8 +71,9 @@ class Project extends Model
     }
 
     public function milestone(){
-        return $this->belongsTo(Milestone::class, 'milestones_id');
+        return $this->belongsTo(Milestone::class, 'milestone_id');
     }
+
 
     public function physical_status() {
         return $this->hasOne(PhysicalStatus::class);
@@ -91,6 +92,6 @@ class Project extends Model
     }
 
     public function projectTeam() {
-        return $this->hasOne(ProjectTeam::class);
+        return $this->hasOne(ProjectTeam::class, 'project_id');
     }
 }

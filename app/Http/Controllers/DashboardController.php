@@ -156,7 +156,8 @@ class DashboardController extends Controller
 
         if(session('roles') == 1 || session('roles') == 3){
             // calculate the upcoming deadlines of projects
-            $projects = Project::with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
+            $projects = Project::with('milestone.status')->get();
+
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
             $completedCount = 0;
@@ -293,10 +294,9 @@ class DashboardController extends Controller
         } else if(session('roles') == 2){
             $user = Auth::user();
 
-            // Get projects where the user is the officer in charge
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
-            })->with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
+            })->with(['rkn', 'milestones.status', 'physical_status', 'financial_status'])->get();
 
             $totalProjects = $projects->count();
             $upcomingDeadlines = [];

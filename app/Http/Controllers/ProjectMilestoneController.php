@@ -12,40 +12,43 @@ use Illuminate\Support\Str;
 class ProjectMilestoneController extends Controller
 {
     public function toggle(Project $project, Milestone $milestone)
-    {
-        try {
-            // Get the current completion status
-            $currentStatus = $project->milestones()
-                ->where('milestone_id', $milestone->id)
-                ->first()
-                ->pivot
-                ->completed;
+{
+    try {
+        $pivot = $project->milestones()->where('milestone_id', $milestone->id)->first()->pivot;
+        $currentStatus = $pivot->completed;
 
-            // Toggle the status
-            $project->milestones()
-                ->updateExistingPivot($milestone->id, ['completed' => !$currentStatus]);
+        $project->milestones()->updateExistingPivot($milestone->id, ['completed' => !$currentStatus]);
 
-            // Send notification about milestone change
-            $message = Str::limit("Project {$project->title} has been updated to milestone: {$milestone->name}.", 250);
-            sendNotification('update_project_status', $message);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Milestone status updated successfully'
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error toggling milestone: ', [
-                'error' => $e->getMessage(),
-                'project_id' => $project->id,
-                'milestone_id' => $milestone->id
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update milestone status'
-            ], 500);
+        if (!$currentStatus) {
+            $project->milestone_id = $milestone->id;
+            $project->save();
+        } else {
+            $project->milestone_id = null;
+            $project->save();
         }
+
+        // Notification
+        $message = Str::limit("Project {$project->title} has been updated to milestone: {$milestone->name}.", 250);
+        sendNotification('update_project_status', $message);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Milestone status updated successfully'
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error toggling milestone: ', [
+            'error' => $e->getMessage(),
+            'project_id' => $project->id,
+            'milestone_id' => $milestone->id
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update milestone status'
+        ], 500);
     }
+}
+
 
     public function getProgress(Project $project)
     {

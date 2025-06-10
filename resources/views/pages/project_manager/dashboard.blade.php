@@ -200,7 +200,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-category">Timeline Overview</h5>
-                <h2 class="card-title">Upcoming Deadlines</h2>
+                <h2 class="card-title">Timeline Overview</h2>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -208,7 +208,6 @@
                         <thead>
                             <tr>
                                 <th>Project</th>
-                                <th>Officer-in-Charge</th>
                                 <th>Deadline</th>
                                 <th>Countdown</th>
                             </tr>
@@ -221,9 +220,6 @@
                                         @endif
                                         {{ $project['name'] }}
                                     </td>
-                                    <td>
-                                        {{ $project['officer_in_charge'] ?? 'N/A' }}
-                                    </td>
                                     <td>{{ $project['deadline'] }}</td>
                                     <td>
                                         @if($project['status'] === 'danger')
@@ -235,7 +231,7 @@
                                         @else
                                             <span class="status-dot green"></span>
                                         @endif
-                                        {{ $project['months_left'] }}
+                                        {{ $project['months_left'] }} months left
                                     </td>
                                 </tr>
                             @endforeach

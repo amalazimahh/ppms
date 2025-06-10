@@ -31,6 +31,7 @@ class ProjectTeam extends Model
         return $this->belongsTo(User::class, 'officer_in_charge');
     }
 
+
     public function architect(){
         return $this->belongsTo(Architect::class, 'architect_id');
     }

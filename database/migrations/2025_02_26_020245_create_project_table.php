@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('scope')->nullable();
             $table->text('location')->nullable();
             $table->string('img')->nullable();
-            $table->foreignId('milestones_id')->nullable()->constrained('milestones');
+            $table->foreignId('milestone_id')->nullable()->constrained('milestones');
             $table->timestamps();
 
             $table->bigInteger('created_by')->unsigned()->nullable();
