@@ -147,10 +147,5 @@
         </div>
     </div>
 </div>
-
-
-    <a href="{{ route('projects.insurance', $project->id) }}" class="btn btn-primary">Back</a>
-    <a href="{{ route('projects.insurance', $project->id) }}" class="btn btn-primary">Next</a>
-
 @endsection
 

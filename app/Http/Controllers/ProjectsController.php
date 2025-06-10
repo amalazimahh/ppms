@@ -89,13 +89,34 @@ class ProjectsController extends Controller
             });
         }
 
-        $projects = $query->with(['milestones', 'projectTeam.officerInCharge', 'rkn'])->get();
+        $projects = $query->with(['milestones', 'projectTeam.officerInCharge', 'rkn', 'parentProject'])->get();
+
+        // Add calculated progress to each project
+        $projects->transform(function ($project) {
+            $milestones = $project->milestones;
+            $total = $milestones->count();
+            $completed = $milestones->where('pivot.completed', true)->count();
+            $progress = $total > 0 ? round(($completed / $total) * 100) : 0;
+            $project->progress = $progress;
+            return $project;
+        });
+
+        if ($request->ajax()) {
+            return response()->json(['projects' => $projects]);
+        }
+
+        // Otherwise, return the normal view
         $mainProjects = Project::whereNull('parent_project_id')->get();
         $rkns = RKN::all();
         $clientMinistries = ClientMinistry::all();
         $statuses = Status::all();
 
-        return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
+        if(session('roles') == 1){
+            return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
+        } else if(session('roles') == 2){
+            return view('pages.project_manager.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
+        }
+
     }
 
     public function basicdetails($id)
@@ -456,7 +477,7 @@ class ProjectsController extends Controller
         $user = auth()->user();
         $project = Project::with(['projectTeam.officerInCharge'])->findOrFail($id);
 
-        // Check if user is admin or the project manager in charge
+        // check current user logged in
         if (session('roles') != 1 && // not admin
             (!$project->projectTeam || // no project team
              $project->projectTeam->officer_in_charge != $user->id)) { // not the officer in charge
@@ -501,7 +522,13 @@ class ProjectsController extends Controller
         $completedMilestones = $milestones->where('pivot.completed', true)->count();
         $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
 
-        return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
+        // return the success response
+        if(session('roles') == 1) {
+            return view('pages.admin.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
+        } elseif (session('roles') == 2){
+            return view('pages.project_team.forms.project_team', compact('project', 'projectManagers', 'architects', 'mechanicalElectricals', 'civilStructurals', 'quantitySurveyors', 'progress'));
+        }
+
     }
 
 }

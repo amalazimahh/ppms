@@ -235,9 +235,8 @@
                     </div>
                 </div>
 
-                <a href="{{ route('projects.approval_award', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
-                <a href="{{ route('projects.bankers_guarantee', $project->id) }}" class="btn btn-primary">Next</a>
+
             </form>
         </div>
     </div>

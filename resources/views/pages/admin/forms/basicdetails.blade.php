@@ -219,16 +219,8 @@
                     </div>
                 </div>
 
-                @if(isset($project))
-                <a href="{{ route('pages.admin.projectsList') }}" class="btn btn-primary">Cancel</a>
-                @endif
-
                 <button type="submit" class="btn btn-primary">{{ isset($project) ? 'Update' : 'Submit' }}</button>
-                @if(isset($project))
-                 <a href="{{ route('projects.pre_tender', $project->id) }}" class="btn btn-primary">
-                     Next
-                 </a>
-                 @endif
+
             </form>
         </div>
     </div>

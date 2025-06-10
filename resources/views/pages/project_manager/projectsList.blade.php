@@ -928,7 +928,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     let tbody = $('table tbody');
                     tbody.empty();
 
-                    if (response.projects.length === 0) {
+                    if (!response.projects || response.projects.length === 0) {
+
                         tbody.append(`
                             <tr>
                                 <td colspan="4" class="text-center">No projects found</td>
@@ -938,38 +939,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     response.projects.forEach(project => {
-                        tbody.append(`
+                        const parentTitle = project.parent_project ? project.parent_project.title + ' - ' : '';
+                        const progress = project.progress ?? 0;
+
+                        $('table tbody').append(`
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="project-title">
-                                            <h4>${project.title}</h4>
-                                            <small>Vote No: ${project.voteNum}</small>
+                                <td class="project-title">
+                                    ${parentTitle}${project.title}
+                                </td>
+                                <td class="progress-column">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            style="width: ${progress}%;" aria-valuenow="${progress}"
+                                            aria-valuemin="0" aria-valuemax="100">
+                                            ${progress}%
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="project-info">
-                                        <p><strong>RKN:</strong> ${project.rkn ? project.rkn.rknNum : 'N/A'}</p>
-                                        <p><strong>Financial Year:</strong> ${project.fy}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="project-progress">
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: ${project.progress}%"></div>
-                                        </div>
-                                        <small>${project.progress}% Complete</small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="/project_manager/projects/${project.id}/edit" class="btn btn-primary btn-sm">
+                                <td class="action-buttons">
+                                    <button type="button" class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#projectDetailsModal${project.id}">
+                                        <i class="tim-icons icon-zoom-split"></i> View Details
+                                    </button>
+                                    <a href="projects/${project.id}/basicdetails"
+                                        class="btn btn-primary btn-sm">
                                         <i class="tim-icons icon-pencil"></i> Edit
                                     </a>
                                 </td>
                             </tr>
                         `);
                     });
+
                 },
                 error: function(xhr) {
                     console.error('Error fetching projects:', xhr);

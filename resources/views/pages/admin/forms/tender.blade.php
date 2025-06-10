@@ -169,9 +169,8 @@
                     </div>
                 </div>
 
-                <a href="{{ route('projects.design_submission', $project->id) }}" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">SAVE</button>
-                <a href="{{ route('projects.tender_recommendation', $project->id) }}" class="btn btn-primary">Next</a>
+
             </form>
         </div>
     </div>
