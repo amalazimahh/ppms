@@ -198,8 +198,8 @@
                                         $milestones = $project->milestones;
 
                                         // calculate progress
-                                        $totalMilestones = $milestones->count();
-                                        $completedMilestones = $milestones->where('pivot.completed', true)->count();
+                                        $totalMilestones = $milestones->unique('id')->count();
+                                        $completedMilestones = $milestones->where('pivot.completed', true)->unique('id')->count();
                                         $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
                                 @endphp
                                 <tr>
