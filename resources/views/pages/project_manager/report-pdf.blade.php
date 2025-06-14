@@ -59,7 +59,7 @@
             padding: 4px 8px;
             font-size: 9pt;
         }
-        td {
+        td.value {
             padding: 4px 8px;
             border: 1px solid #ccc;
             vertical-align: top;
@@ -140,7 +140,7 @@
     <table style="width: 100%; table-layout: fixed;">
         <tr>
             <td style="width: 35%; vertical-align: top;">
-                <table width="100%">
+                <table width="100% ">
                     <tr><td colspan="4" class="section"><span>1.</span>PROJECT TERMS OF REFERENCE</td></tr>
                     <tr>
                         <td class="label">RKN</td><td class="value">{{ $project->rkn->name ?? '' }}</td>
@@ -234,9 +234,9 @@
                 <table width="100%">
                     <tr><td colspan="12" class="section"><span>5.</span>TENDER DETAILS</td></tr>
                     <tr>
-                        <td colspan="4" style="text-align: center; background: #f8f9fa;">Opening/Closing Tender</td>
-                        <td colspan="4" style="text-align: center; background: #f8f9fa;">Tender Recommendation/Evaluation</td>
-                        <td colspan="4" style="text-align: center; background: #f8f9fa;">Approval of Award</td>
+                        <td colspan="4" style="text-align: center; background: #c8b8db;">Opening/Closing Tender</td>
+                        <td colspan="4" style="text-align: center; background: #c8b8db;">Tender Recommendation/Evaluation</td>
+                        <td colspan="4" style="text-align: center; background: #c8b8db;">Approval of Award</td>
                     </tr>
                     <tr>
                         <td class="label">Confirmation Fund</td>
@@ -308,7 +308,7 @@
                 <table width="100%">
                     <tr><td colspan="12" class="section"><span>6.</span>CONTRACT DETAILS</td></tr>
                     <!-- contract details -->
-                    <tr><td colspan="12" style="text-align: center; background: #f8f9fa;">Contract Information</td></tr>
+                    <tr><td colspan="12" style="text-align: center; background: #c8b8db;">Contract Information</td></tr>
                     <tr>
                         <td class="label">Contractor</td>
                         <td colspan="5" class="value">{{ $project->contract->contractor->name ?? '' }}</td>
@@ -363,7 +363,7 @@
                     </tr>
 
                     <!-- banker's guarantee details -->
-                    <tr><td colspan="12" style="text-align: center; background: #f8f9fa;">Banker's Guarantee</td></tr>
+                    <tr><td colspan="12" style="text-align: center; background: #c8b8db;">Banker's Guarantee</td></tr>
                     <tr>
                         <td class="label">Amount</td>
                         <td colspan="2" class="value">{{ $project->bankersGuarantee->bgAmt ?? '' }}</td>
@@ -376,7 +376,7 @@
                     </tr>
 
                     <!-- insurance details -->
-                    <tr><td colspan="12" style="text-align: center; background: #f8f9fa;">Insurance</td></tr>
+                    <tr><td colspan="12" style="text-align: center; background: #c8b8db;">Insurance</td></tr>
                     <tr>
                         <td class="label">Type</td>
                         <td colspan="2" class="value">{{ $project->insurance->insuranceType->name ?? '' }}</td>
@@ -390,50 +390,65 @@
                 </table>
             </td>
             <td style="width: 30%; vertical-align: top;">
-                <div class="progress-container">
-                    <div class="progress-chart">
-                        <div class="chart-title">Physical Progress</div>
-                        <div class="y-axis">
-                            <div class="y-label" style="top: 0">100%</div>
-                            <div class="y-label" style="top: 50%">50%</div>
-                            <div class="y-label" style="top: 100%">0%</div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-group">
-                                <div class="bar" style="height: {{ $project->physical_status ? $project->physical_status->scheduled : 0 }}%"></div>
-                                <div class="bar-label">Expected</div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                    <tr>
+                        <td colspan="3" class="section">
+                            Physical Progress
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Expected</td>
+                        <td>
+                            <div style="width: 100%; background: #e6e6e6; height: 20px;">
+                                <div style="background-color: #1d8cf8; height: 20px; width: {{ $project->physical_status ? $project->physical_status->scheduled : 0 }}%;"></div>
                             </div>
-                            <div class="bar-group">
-                                <div class="bar actual" style="height: {{ $project->physical_status ? $project->physical_status->actual : 0 }}%"></div>
-                                <div class="bar-label">Actual</div>
+                            <small>{{ $project->physical_status ? $project->physical_status->scheduled : 0 }}%</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Actual</td>
+                        <td>
+                            <div style="width: 100%; background: #e6e6e6; height: 20px;">
+                                <div style="background-color: #00f2c3; height: 20px; width: {{ $project->physical_status ? $project->physical_status->actual : 0 }}%;"></div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="progress-chart">
-                        <div class="chart-title">Financial Progress</div>
-                        <div class="y-axis">
-                            <div class="y-label" style="top: 0">100%</div>
-                            <div class="y-label" style="top: 50%">50%</div>
-                            <div class="y-label" style="top: 100%">0%</div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar-group">
-                                <div class="bar" style="height: {{ $project->financial_status ? $project->financial_status->scheduled : 0 }}%"></div>
-                                <div class="bar-label">Expected</div>
+                            <small>{{ $project->physical_status ? $project->physical_status->actual : 0 }}%</small>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="height: 50px;"></div> <!-- spacing -->
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                    <tr>
+                        <td colspan="3" class="section">
+                            Financial Progress
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Expected</td>
+                        <td>
+                            <div style="width: 100%; background: #e6e6e6; height: 20px;">
+                                <div style="background-color: #1d8cf8; height: 20px; width: {{ $project->financial_status ? $project->financial_status->scheduled : 0 }}%;"></div>
                             </div>
-                            <div class="bar-group">
-                                <div class="bar actual" style="height: {{ $project->financial_status ? $project->financial_status->actual : 0 }}%"></div>
-                                <div class="bar-label">Actual</div>
+                            <small>{{ $project->financial_status ? $project->financial_status->scheduled : 0 }}%</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Actual</td>
+                        <td>
+                            <div style="width: 100%; background: #e6e6e6; height: 20px;">
+                                <div style="background-color: #00f2c3; height: 20px; width: {{ $project->financial_status ? $project->financial_status->actual : 0 }}%;"></div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                            <small>{{ $project->financial_status ? $project->financial_status->actual : 0 }}%</small>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
 
     <div class="footer">
-        Generated by: {{ auth()->user()->name }} | {{ date('d/m/Y H:i:s') }}
+        Generated by: {{ auth()->user()->name }} | {{ date('d/m/Y') }}
     </div>
 </body>
 </html>
