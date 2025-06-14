@@ -625,6 +625,9 @@
                     y: {
                         beginAtZero: true,
                         max: 100,
+                        grid: {
+                            color: 'rgba(255,255,255,0.1)'
+                        },
                         title: {
                             display: true,
                             text: 'Percentage (%)'

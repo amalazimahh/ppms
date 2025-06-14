@@ -51,19 +51,19 @@
         <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to Form: </label>
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
-                <option disabled selected>-- Select Form --</option>
-                <option value="{{ route('projects.status', $project->id) }}">1. Project Status</option>
-                <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}">2. Project Terms of Reference Form</option>
-                <option value="{{ route('projects.pre_tender', $project->id) }}">3. Pre-Design Form</option>
-                <option value="{{ route('projects.project_team', $project->id) }}">4. Project Team Form</option>
-                <option value="{{ route('projects.design_submission', $project->id) }}">5. Design Submission Form</option>
-                <option value="{{ route('projects.tender', $project->id) }}">6. Opening/Closing Tender Form</option>
-                <option value="{{ route('projects.tender_recommendation', $project->id) }}">6.1 Evaluation/Recommendation of Tender Form</option>
-                <option value="{{ route('projects.approval_award', $project->id) }}">6.2 Approval of Award Form</option>
-                <option value="{{ route('projects.contract', $project->id) }}">7. Contract Form</option>
-                <option value="{{ route('projects.bankers_guarantee', $project->id) }}">7.1 Banker's Guarantee Form</option>
-                <option value="{{ route('projects.insurance', $project->id) }}">7.2 Insurance Form</option>
-                <option value="{{ route('projects.project_health', $project->id) }}">8. Project Progress Status</option>
+                <option disabled {{ Route::currentRouteName() === null ? 'selected' : '' }}>-- Select Form --</option>
+                <option value="{{ route('projects.status', $project->id) }}" {{ Route::currentRouteName() === 'projects.status' ? 'selected' : '' }}>1. Project Status</option>
+                <option value="{{ route('pages.admin.forms.basicdetails', $project->id) }}" {{ Route::currentRouteName() === 'pages.admin.forms.basicdetails' ? 'selected' : '' }}>2. Project Terms of Reference Form</option>
+                <option value="{{ route('projects.pre_tender', $project->id) }}" {{ Route::currentRouteName() === 'projects.pre_tender' ? 'selected' : '' }}>3. Pre-Design Form</option>
+                <option value="{{ route('projects.project_team', $project->id) }}" {{ Route::currentRouteName() === 'projects.project_team' ? 'selected' : '' }}>4. Project Team Form</option>
+                <option value="{{ route('projects.design_submission', $project->id) }}" {{ Route::currentRouteName() === 'projects.design_submission' ? 'selected' : '' }}>5. Design Submission Form</option>
+                <option value="{{ route('projects.tender', $project->id) }}" {{ Route::currentRouteName() === 'projects.tender' ? 'selected' : '' }}>6. Opening/Closing Tender Form</option>
+                <option value="{{ route('projects.tender_recommendation', $project->id) }}" {{ Route::currentRouteName() === 'projects.tender_recommendation' ? 'selected' : '' }}>6.1 Evaluation/Recommendation of Tender Form</option>
+                <option value="{{ route('projects.approval_award', $project->id) }}" {{ Route::currentRouteName() === 'projects.approval_award' ? 'selected' : '' }}>6.2 Approval of Award Form</option>
+                <option value="{{ route('projects.contract', $project->id) }}" {{ Route::currentRouteName() === 'projects.contract' ? 'selected' : '' }}>7. Contract Form</option>
+                <option value="{{ route('projects.bankers_guarantee', $project->id) }}" {{ Route::currentRouteName() === 'projects.bankers_guarantee' ? 'selected' : '' }}>7.1 Banker's Guarantee Form</option>
+                <option value="{{ route('projects.insurance', $project->id) }}" {{ Route::currentRouteName() === 'projects.insurance' ? 'selected' : '' }}>7.2 Insurance Form</option>
+                <option value="{{ route('projects.project_health', $project->id) }}" {{ Route::currentRouteName() === 'projects.project_health' ? 'selected' : '' }}>8. Project Progress Status</option>
             </select>
         </div>
     </div>

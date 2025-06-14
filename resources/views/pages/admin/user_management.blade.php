@@ -54,7 +54,7 @@
                                         {{ $roleName }}
                                     </span>
                                 @else
-                                    <form action="{{ route('admin.assignRole', $user->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('pages.admin.assignRole', $user->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <select class="form-control" name="roles_id" required onchange="this.form.submit()" style="width: 150px;">
                                             <option value="">No role assigned</option>
