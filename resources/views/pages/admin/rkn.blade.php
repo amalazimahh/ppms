@@ -105,8 +105,8 @@
                             <tr>
                                 <td>{{ $rkn->id }}</td>
                                 <td>{{ $rkn->rknNum }}</td>
-                                <td>{{ $rkn->startDate }}</td>
-                                <td>{{ $rkn->endDate }}</td>
+                                <td>{{ \Carbon\Carbon::parse($rkn->startDate)->format('d-m-Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($rkn->endDate)->format('d-m-Y') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
