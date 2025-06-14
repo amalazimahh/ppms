@@ -4,7 +4,7 @@
 
 <style>
     .member-card {
-        background: #fff;
+        background: #fffdf7;
         border-radius: 12px;
         box-shadow: 0 2px 8px #000000;
         padding: 20px 16px;
