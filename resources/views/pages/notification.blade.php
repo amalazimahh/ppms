@@ -50,9 +50,9 @@
               <table class="table">
                 <thead class="text-primary">
                   <tr>
-                    <th>Message</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th style="width: 60%">Message</th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 25%">Action</th>
                   </tr>
                 </thead>
                 <tbody id="notificationsTable">
