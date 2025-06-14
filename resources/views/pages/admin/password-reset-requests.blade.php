@@ -29,7 +29,7 @@
                     <tr>
                       <td>{{ $request->user->name }}</td>
                       <td>{{ $request->email }}</td>
-                      <td>{{ $request->created_at->format('Y-m-d H:i') }}</td>
+                      <td>{{ $request->created_at->format('d-m-Y') }}</td>
                       <td>
                         <div class="d-flex">
                           <form action="{{ route('pages.admin.password-reset-requests.approve', $request->id) }}" method="POST" class="mr-2">
