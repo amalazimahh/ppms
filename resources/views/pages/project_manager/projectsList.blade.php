@@ -99,6 +99,12 @@
         opacity: 0;
         transition: none;
     }
+
+    .readonly-light-text {
+        color: #f8f9fa !important;
+        background-color: #343a40 !important;
+    }
+
 </style>
 <div class="content">
   <div class="container-fluid">
@@ -757,8 +763,7 @@
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="fy" id="fy" placeholder="2020/2021"
-                            maxlength="9" oninput="formatFinancialYear(this)"
-                            value="{{ old('fy', isset($project) ? $project->fy : '') }}">
+                            maxlength="9" oninput="formatFinancialYear(this)">
                         </div>
                 </div>
 
@@ -766,8 +771,7 @@
                     <label for="sv" class="col-sm-2 col-form-label">Scheme Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="sv" id="sv"
-                            placeholder="$20,000,000.00"
-                            value="{{ old('sv', isset($project) ? $project->sv : '') }}">
+                            placeholder="$20,000,000.00">
                     </div>
                 </div>
 
@@ -775,8 +779,7 @@
                     <label for="av" class="col-sm-2 col-form-label">Allocation Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="av" id="av"
-                            placeholder="$3,901,420.00"
-                            value="{{ old('av', isset($project) ? $project->av : '') }}">
+                            placeholder="$3,901,420.00">
                     </div>
                 </div>
 
@@ -789,7 +792,7 @@
                         <option value="">No Parent (New Main Project)</option>
                             @foreach($mainProjects as $parentProject)
                                 <option value="{{ $parentProject->id }}"
-                                    {{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') == $parentProject->id ? 'selected' : '' }}>
+                                    {{ old('parent_project_id') == $parentProject->id ? 'selected' : '' }}>
                                     {{ $parentProject->title }}
                                 </option>
                             @endforeach
@@ -801,16 +804,14 @@
                 <div class="row mb-3">
                     <label for="voteNum" class="col-sm-2 col-form-label">Vote No.</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="voteNum" id="voteNum" placeholder="1105-005"
-                            value="{{ old('voteNum', isset($project) ? $project->voteNum : '') }}">
+                        <input type="text" class="form-control" name="voteNum" id="voteNum" placeholder="1105-005">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="title" class="col-sm-2 col-form-label">Project Title</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title" id="title" placeholder="Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong"
-                            value="{{ old('title', isset($project) ? $project->title : '') }}">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Project Title">
                     </div>
                 </div>
 
@@ -898,11 +899,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         voteNum.value = data.voteNum; // set parent voteNum
                         voteNum.setAttribute('readonly', 'readonly'); // disable input
+                        voteNum.classList.add('readonly-light-text');
                     })
                     .catch(error => console.error('Error fetching voteNum:', error));
             } else {
                 voteNum.value = ''; // clear field
                 voteNum.removeAttribute('readonly'); // enable input for manual entry
+                voteNum.classList.remove('readonly-light-text');
             }
         }
 

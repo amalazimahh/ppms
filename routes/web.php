@@ -30,6 +30,12 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 
 Route::get('/', [PageController::class, 'dashboard']);
 
+Route::get('/no-role', function () {
+    return redirect('/')
+        ->with('status', 'No role assigned yet. Please wait for Admin to assign a role.');
+});
+
+
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
@@ -47,14 +53,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::post('/reset-password-direct', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::get('/reset-password-direct', [ResetPasswordController::class, 'showDirectResetForm'])->name('auth.password.reset');
-
-
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
-	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
-Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
-	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
-});
 
 Route::middleware(['auth'])->group(function () {
     // Common routes accessible by all authenticated users

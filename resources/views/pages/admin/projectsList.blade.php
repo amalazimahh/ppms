@@ -113,6 +113,11 @@
         opacity: 0;
         transition: none;
     }
+
+    .readonly-light-text {
+        color: #f8f9fa !important;
+        background-color: #343a40 !important;
+    }
 </style>
 <div class="content">
   <div class="container-fluid">
@@ -129,6 +134,13 @@
 
             <div class="card-body">
                 <div class="row mb-3">
+                    <!-- search specific projects -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="searchTitle">Search by Title</label>
+                            <input type="text" class="form-control text-white" id="searchTitle" placeholder="Enter project title...">
+                        </div>
+                    </div>
                     <!-- filter by rkn -->
                     <div class="col-md-2">
                         <div class="form-group">
@@ -141,28 +153,8 @@
                             </select>
                         </div>
                     </div>
-                    <!-- search specific projects -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="searchTitle">Search by Title</label>
-                            <input type="text" class="form-control" id="searchTitle" placeholder="Enter project title...">
-                        </div>
-                    </div>
-
-                    <!-- filter by client ministry -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="filterClientMinistry">Filter by Client Ministry</label>
-                            <select class="form-control text-white" id="filterClientMinistry">
-                                <option value="">All Client Ministry</option>
-                                @foreach($clientMinistries as $client)
-                                    <option value="{{ $client->id }}">{{ $client->ministryName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                     <!-- filter by status -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="filterStatus">Filter by Status</label>
                             <select class="form-control text-white" id="filterStatus">
@@ -173,6 +165,20 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- filter by client ministry -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="filterClientMinistry">Filter by Client Ministry</label>
+                            <select class="form-control text-white" id="filterClientMinistry">
+                                <option value="">All Client Ministry</option>
+                                @foreach($clientMinistries as $client)
+                                    <option value="{{ $client->id }}">{{ $client->ministryName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
 
                 @if($projects->isEmpty())
@@ -771,27 +777,30 @@
 
                                         <!-- bootstrap delete modal -->
                                         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-dark">
-                                                    Are you sure you want to delete this project? This action cannot be undone.
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="tim-icons icon-simple-remove"></i>
+                                                        </button>
 
-                                                    <!-- Delete Form -->
-                                                    <form id="deleteForm" method="POST" style="display: inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                                                    </form>
+                                                    </div>
+                                                    <div class="modal-body text-dark" style="white-space: normal; word-break: break-word; overflow-wrap: break-word;">
+                                                        Are you sure you want to delete this project? This action cannot be undone.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                        <!-- Delete Form -->
+                                                        <form id="deleteForm" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -827,8 +836,7 @@
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="fy" id="fy" placeholder="2020/2021"
-                            maxlength="9" oninput="formatFinancialYear(this)"
-                            value="{{ old('fy', isset($project) ? $project->fy : '') }}">
+                            maxlength="9" oninput="formatFinancialYear(this)" required>
                         </div>
                 </div>
 
@@ -836,8 +844,8 @@
                     <label for="sv" class="col-sm-2 col-form-label">Scheme Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="sv" id="sv"
-                            placeholder="$20,000,000.00"
-                            value="{{ old('sv', isset($project) ? $project->sv : '') }}">
+                            placeholder="$20,000,000.00" required pattern="^\$?\d{1,3}(,\d{3})*(\.\d{2})?$"
+                            title="Please enter a valid currency format (e.g., $1,000,000.00)">
                     </div>
                 </div>
 
@@ -845,8 +853,8 @@
                     <label for="av" class="col-sm-2 col-form-label">Allocation Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="av" id="av"
-                            placeholder="$3,901,420.00"
-                            value="{{ old('av', isset($project) ? $project->av : '') }}">
+                            placeholder="$3,901,420.00" placeholder="$20,000,000.00" required pattern="^\$?\d{1,3}(,\d{3})*(\.\d{2})?$"
+                            title="Please enter a valid currency format (e.g., $1,000,000.00)">
                     </div>
                 </div>
 
@@ -859,7 +867,7 @@
                             <option value="">No Parent (New Main Project)</option>
                             @foreach($mainProjects as $parentProject)
                                 <option value="{{ $parentProject->id }}"
-                                    {{ old('parent_project_id', isset($project) ? $project->parent_project_id : '') == $parentProject->id ? 'selected' : '' }}>
+                                    {{ old('parent_project_id') == $parentProject->id ? 'selected' : '' }}>
                                     {{ $parentProject->title }}
                                 </option>
                             @endforeach
@@ -871,16 +879,14 @@
                 <div class="row mb-3">
                     <label for="voteNum" class="col-sm-2 col-form-label">Vote No.</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="voteNum" id="voteNum" placeholder="1105-005"
-                            value="{{ old('voteNum', isset($project) ? $project->voteNum : '') }}">
+                        <input type="text" class="form-control" name="voteNum" id="voteNum" placeholder="1105-005" required>
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <label for="title" class="col-sm-2 col-form-label">Project Title</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title" id="title" placeholder="Pembinaan Semula Sekolah Menengah Sultan Hassan Bangar Temburong"
-                            value="{{ old('title', isset($project) ? $project->title : '') }}">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Project Title" required>
                     </div>
                 </div>
 
@@ -970,11 +976,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         voteNum.value = data.voteNum; // set parent voteNum
                         voteNum.setAttribute('readonly', 'readonly'); // disable input
+                        voteNum.classList.add('readonly-light-text');
                     })
                     .catch(error => console.error('Error fetching voteNum:', error));
             } else {
                 voteNum.value = ''; // clear field
                 voteNum.removeAttribute('readonly'); // enable input for manual entry
+                voteNum.classList.remove('readonly-light-text');
             }
         }
 
