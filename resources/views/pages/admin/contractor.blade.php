@@ -38,7 +38,7 @@
                 </button>
                 <!-- add new contractor modal -->
                 <div class="modal fade" id="addContractorModal" tabindex="-1" aria-labelledby="addContractorModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addProjectModalLabel">Add New Contractor</h5>
