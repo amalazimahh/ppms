@@ -28,7 +28,17 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        if (auth()->user()->role_id === null) {
+            session()->flash('welcome', 'You have not been assigned a role yet. You are currently a guest.');
+            return '/';
+        }
+
+        return '/dashboard';
+    }
+
+
 
     /**
      * Create a new controller instance.

@@ -25,9 +25,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- include cleave.js library for currency format -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
@@ -40,7 +37,6 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -68,7 +64,46 @@
     </script>
 
 </head>
+@push('styles')
+<style>
+    .custom-top-modal {
+        position: absolute;
+        top: 10vh;
+        margin: 0 auto;
+        transform: translateY(0);
+    }
+</style>
+@endpush
+
 <body class="{{ $class ?? '' }}">
+    @if(session('welcome'))
+        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+            <div class="modal-dialog custom-top-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ session('welcome') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('welcome'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var welcomeModal = document.getElementById('welcomeModal');
+                if (welcomeModal) {
+                    var modal = new bootstrap.Modal(welcomeModal);
+                    modal.show();
+                }
+            });
+        </script>
+    @endif
+
+
     @auth()
         <div class="wrapper">
             @include('layouts.navbars.sidebar', ['pageSlug' => 'dashboard'])
@@ -100,6 +135,7 @@
             </div>
         </div>
     @endauth
+
 
     <!-- <div class="fixed-plugin">
         <div class="dropdown show-dropdown">
@@ -138,32 +174,6 @@
             </ul>
         </div>
     </div> -->
-    @if(session('welcome'))
-        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
-                    </div>
-                    <div class="modal-body">
-                        {{ session('welcome') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    @if(session('welcome'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var welcomeModal = document.getElementById('welcomeModal');
-                if (welcomeModal) {
-                    var modal = new bootstrap.Modal(welcomeModal);
-                    modal.show();
-                }
-            });
-        </script>
-    @endif
 
     <!-- Scripts -->
     <script src="{{ asset('black') }}/js/core/jquery.min.js"></script>

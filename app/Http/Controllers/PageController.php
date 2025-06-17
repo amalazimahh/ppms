@@ -33,16 +33,16 @@ class PageController extends Controller
     {
         // Get all projects with their relationships
         $projects = Project::with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
-        
+
         // Calculate basic statistics
         $totalProjects = Project::count();
         $completedCount = 0;
         $ongoingCount = 0;
         $overdueCount = 0;
-        
+
         // Get ministries for sunburst chart
         $ministries = ClientMinistry::with('projects')->get();
-        
+
         $projectNames = [];
         $physicalProgress = [];
         $financialProgress = [];
