@@ -32,17 +32,46 @@
           <div class="card-body">
             <!-- Filter dropdown -->
             <div class="mb-3">
-              <select id="filterType" class="form-control" onchange="window.location.href = this.value">
+            @php
+                $role = session('roles');
+                $typeOptions = [];
+
+                if ($role == 1) { // Admin
+                    $typeOptions = [
+                        'new_project' => 'New Projects',
+                        'new_user' => 'New Users',
+                        'reset_password' => 'Reset Password Request',
+                        'upcoming_deadline' => 'Upcoming Deadline Projects',
+                        'update_project_details' => 'Project Details Updates',
+                        'update_project_status' => 'Project Status Updates',
+                        'overbudget' => 'Overbudget Projects',
+                        'overdue' => 'Overdue Projects',
+                    ];
+                } elseif ($role == 2) { // Project Manager
+                    $typeOptions = [
+                        'upcoming_deadline' => 'Upcoming Deadline Projects',
+                        'update_project_details' => 'Project Details Updates',
+                        'update_project_status' => 'Project Status Updates',
+                        'overbudget' => 'Overbudget Projects',
+                        'overdue' => 'Overdue Projects',
+                    ];
+                } elseif ($role == 3) { // Executive
+                    $typeOptions = [
+                        'upcoming_deadline' => 'Upcoming Deadline Projects',
+                        'update_project_status' => 'Project Status Updates',
+                        'overbudget' => 'Overbudget Projects',
+                        'overdue' => 'Overdue Projects',
+                    ];
+                }
+            @endphp
+            <select id="filterType" class="form-control" onchange="window.location.href = this.value">
                 <option value="{{ route('pages.notification.index') }}" {{ !request()->has('type') ? 'selected' : '' }}>All Notifications</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'new_project']) }}" {{ request('type') == 'new_project' ? 'selected' : '' }}>New Projects</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'new_user']) }}" {{ request('type') == 'new_user' ? 'selected' : '' }}>New Users</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'reset_password']) }}" {{ request('type') == 'reset_password' ? 'selected' : '' }}>Reset Password Request</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'upcoming_deadline']) }}" {{ request('type') == 'upcoming_deadline' ? 'selected' : '' }}>Upcoming Deadline Projects</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'update_project_details']) }}" {{ request('type') == 'update_project_details' ? 'selected' : '' }}>Project Details Updates</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'update_project_status']) }}" {{ request('type') == 'update_project_status' ? 'selected' : '' }}>Project Status Updates</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'overbudget']) }}" {{ request('type') == 'overbudget' ? 'selected' : '' }}>Overbudget Projects</option>
-                <option value="{{ route('pages.notification.index', ['type' => 'overdue']) }}" {{ request('type') == 'overdue' ? 'selected' : '' }}>Overdue Projects</option>
-              </select>
+                @foreach($typeOptions as $type => $label)
+                    <option value="{{ route('pages.notification.index', ['type' => $type]) }}" {{ request('type') == $type ? 'selected' : '' }}>
+                        {{ $label }}
+                    </option>
+                @endforeach
+            </select>
             </div>
 
             <!-- Notifications List -->

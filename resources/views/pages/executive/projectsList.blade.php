@@ -141,7 +141,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="searchTitle">Search by Title</label>
-                            <input type="text" class="form-control" id="searchTitle" placeholder="Enter project title...">
+                            <input type="text" class="form-control text-white" id="searchTitle" placeholder="Enter project title...">
                         </div>
                     </div>
 
@@ -181,9 +181,9 @@
                     <table class="table">
                         <thead class=" text-primary">
                             <tr>
-                                <th style="width: 45%">Title</th>
+                                <th style="width: 55%">Title</th>
                                 <th style="width: 10%">Progress</th>
-                                <th style="width: 35%">Action</th>
+                                <th style="width: 15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -771,7 +771,7 @@
 </div>
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Add fade-out class before page unload
     window.addEventListener('beforeunload', function() {
@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $(document).ready(function() {
         let typingTimer;
-        const doneTypingInterval = 500;
+        const doneTypingInterval = 300;
 
         function updateProjects(title = '', rknId = '', clientMinistryId = '', statusId = '') {
             $.ajax({
@@ -810,13 +810,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: title,
                     rkn_id: rknId,
                     client_ministry_id: clientMinistryId,
-                    status_id: statusId
+                    statuses_id: statusId
                 },
                 success: function(response) {
                     let tbody = $('table tbody');
                     tbody.empty();
 
-                    if (response.projects.length === 0) {
+                    if (!response.projects || response.projects.length === 0) {
+
                         tbody.append(`
                             <tr>
                                 <td colspan="4" class="text-center">No projects found</td>
@@ -826,38 +827,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     response.projects.forEach(project => {
-                        tbody.append(`
+                        const parentTitle = project.parent_project ? project.parent_project.title + ' - ' : '';
+                        const progress = project.progress ?? 0;
+
+                        $('table tbody').append(`
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="project-title">
-                                            <h4>${project.title}</h4>
-                                            <small>Vote No: ${project.voteNum}</small>
+                                <td class="project-title">
+                                    ${parentTitle}${project.title}
+                                </td>
+                                <td class="progress-column">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            style="width: ${progress}%;" aria-valuenow="${progress}"
+                                            aria-valuemin="0" aria-valuemax="100">
+                                            ${progress}%
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="project-info">
-                                        <p><strong>RKN:</strong> ${project.rkn ? project.rkn.rknNum : 'N/A'}</p>
-                                        <p><strong>Financial Year:</strong> ${project.fy}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="project-progress">
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: ${project.progress}%"></div>
-                                        </div>
-                                        <small>${project.progress}% Complete</small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="/admin/projects/${project.id}/edit" class="btn btn-primary btn-sm">
-                                        <i class="tim-icons icon-pencil"></i> Edit
-                                    </a>
+                                <td class="action-buttons">
+                                    <button type="button" class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#projectDetailsModal${project.id}">
+                                        <i class="tim-icons icon-zoom-split"></i> View Details
+                                    </button>
                                 </td>
                             </tr>
                         `);
                     });
+
                 },
                 error: function(xhr) {
                     console.error('Error fetching projects:', xhr);
@@ -869,7 +865,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateProjects(
                 $('#searchTitle').val(),
                 $('#filterRKN').val(),
-                $('#filterClient').val(),
+                $('#filterClientMinistry').val(),
                 $('#filterStatus').val()
             );
         }
@@ -878,7 +874,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(triggerUpdate, doneTypingInterval);
         });
-        $('#filterRKN, #filterClient, #filterStatus').on('change', triggerUpdate);
+        $('#filterRKN, #filterClientMinistry, #filterStatus').on('change', triggerUpdate);
     });
 
 </script>

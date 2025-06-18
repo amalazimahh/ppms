@@ -94,4 +94,8 @@ class Project extends Model
     public function projectTeam() {
         return $this->hasOne(ProjectTeam::class, 'project_id');
     }
+
+    public function mainMilestone() {
+        return $this->belongsTo(Milestone::class, 'milestone_id');
+    }
 }

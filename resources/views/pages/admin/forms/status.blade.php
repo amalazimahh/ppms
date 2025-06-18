@@ -64,7 +64,11 @@
             <h1 class="card-title">Project Status/Milestones</h1>
         </div>
         <div class="card-body">
-            @if (!$project->status)
+            @php
+                $latestMilestone = $project->milestones->sortByDesc('updated_at')->first();
+            @endphp
+
+            @if (!$latestMilestone || !$latestMilestone->status)
                 <div class="alert alert-info">
                     This project has not been assigned a status yet. Please assign a status to view milestones.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

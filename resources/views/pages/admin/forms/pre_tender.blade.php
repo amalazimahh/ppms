@@ -42,6 +42,12 @@
         }
     </style>
 
+    @php
+        $milestones = $project->milestones;
+        $totalMilestones = $milestones->unique('id')->count();
+        $completedMilestones = $milestones->where('pivot.completed', true)->unique('id')->count();
+        $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
+    @endphp
      <!-- progress bar -->
      <div class="progress" style="height: 20px;">
         <div id="formProgressBar" class="progress-bar" role="progressbar"
