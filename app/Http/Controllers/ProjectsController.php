@@ -66,7 +66,7 @@ class ProjectsController extends Controller
         $title = $request->input('title');
         $rknId = $request->input('rkn_id');
         $clientMinistryId = $request->input('client_ministry_id');
-        $statusId = $request->input('status_id');
+        $statusId = $request->input('statuses_id');
 
         $query = Project::query();
 
@@ -80,7 +80,9 @@ class ProjectsController extends Controller
             $query->where('client_ministry_id', $clientMinistryId);
         }
         if ($statusId) {
-            $query->where('status_id', $statusId);
+            $query->whereHas('mainMilestone', function($q) use ($statusId) {
+                $q->where('statuses_id', $statusId);
+            });
         }
 
         if (session('roles') == 2) {
@@ -89,7 +91,7 @@ class ProjectsController extends Controller
             });
         }
 
-        $projects = $query->with(['milestones', 'projectTeam.officerInCharge', 'rkn', 'parentProject'])->get();
+        $projects = $query->with(['mainMilestone.status', 'projectTeam.officerInCharge', 'rkn', 'parentProject'])->get();
 
         // Add calculated progress to each project
         $projects->transform(function ($project) {
@@ -115,7 +117,10 @@ class ProjectsController extends Controller
             return view('pages.admin.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
         } else if(session('roles') == 2){
             return view('pages.project_manager.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
+        } else if(session('roles') == 3){
+            return view('pages.executive.projectsList', compact('projects', 'mainProjects', 'rkns', 'clientMinistries', 'statuses'));
         }
+        return redirect()->route('home')->with('error', 'Unauthorized access');
 
     }
 

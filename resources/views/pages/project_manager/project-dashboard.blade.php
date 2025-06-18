@@ -2,6 +2,20 @@
 
 @section('content')
     <style>
+        select {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option:hover{
+            background-color: #525f7f;
+            color: #fff;
+        }
         .card {
             height: 100%;
             margin-bottom: 20px;
@@ -259,10 +273,20 @@
             <form action="{{ route('pages.project_manager.project-dashboard') }}" method="get">
                 <div class="row align-items-center">
                     <div class="col-md-9">
-                        <input type="text" name="project_name" id="project_name" class="form-control" placeholder="Enter a project name...">
+                        <select name="project_id" id="project_id" class="form-control" onchange="this.form.submit()">
+                            <option value="">Select a project...</option>
+                            @foreach($projects as $proj)
+                                <option value="{{ $proj->id }}">
+                                    @if($proj->parent_project_id)
+                                        {{ $proj->parentProject->title }} -
+                                    @endif
+                                    {{ $proj->title }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-primary btn-block">Search</button>
+                        <button class="btn btn-primary btn-block" type="submit">View</button>
                     </div>
                 </div>
             </form>

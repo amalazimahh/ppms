@@ -26,38 +26,54 @@ class ProjectDashboardController extends Controller
 
     public function index(Request $request)
     {
+        $user = Auth::user();
         $project = null;
         $progress = 0;
         $stages = [];
         $projectUpdates = collect();
 
-        if($request->has('project_name')){
-            $project = Project::where('title', 'LIKE', '%' . $request->project_name . '%')
-                ->with([
-                    'physical_status',
-                    'financial_status',
-                    'milestones.status',
-                    'rkn',
-                    'milestone',
-                    'projectTeam.officerInCharge'
-                ])
-                ->first();
+        // check user role
+        if (session('roles') == 2) {
+            // only their projects
+            $projects = Project::whereHas('projectTeam', function($q) use ($user) {
+                $q->where('officer_in_charge', $user->id);
+            })
+            ->with([
+                'physical_status',
+                'financial_status',
+                'milestones.status',
+                'rkn',
+                'milestone',
+                'projectTeam.officerInCharge'
+            ])
+            ->get();
+        } else {
+            // admin or executive: show all projects (original logic)
+            $projects = Project::with([
+                'physical_status',
+                'financial_status',
+                'milestones.status',
+                'rkn',
+                'milestone',
+                'projectTeam.officerInCharge'
+            ])
+            ->get();
+        }
 
-            if($project) {
-                // retrieve project-related notifications with pagination
+        // if a project is selected, load its dashboard
+        if ($request->has('project_id')) {
+            $project = $projects->where('id', $request->project_id)->first();
+
+            if ($project) {
                 $projectUpdates = Notification::where('message', 'LIKE', '%' . $project->title . '%')
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
-                // calculate overall progress (progress bar)
                 $totalMilestones = $project->milestones->unique('id')->count();
                 $completedMilestones = $project->milestones->where('pivot.completed', true)->unique('id')->count();
                 $progress = $totalMilestones > 0 ? round(($completedMilestones / $totalMilestones) * 100) : 0;
 
-                // get all statuses in order by ID
                 $allStatuses = Status::orderBy('id')->get();
-
-                // store stages array with default values
                 foreach ($allStatuses as $status) {
                     $stages[$status->id] = [
                         'name' => $status->name,
@@ -67,7 +83,6 @@ class ProjectDashboardController extends Controller
                     ];
                 }
 
-                // calculate progress for each stage
                 $currentStageFound = false;
                 foreach ($stages as $statusId => &$stage) {
                     $stageMilestones = $project->milestones->where('statuses_id', $statusId);
@@ -86,19 +101,15 @@ class ProjectDashboardController extends Controller
                         }
                     }
                 }
-
-                \Log::info('Stages data:', ['stages' => $stages]);
             }
         }
 
-        if(session('roles') == 1) {
-        return view('pages.admin.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
-        } elseif(session('roles') == 2) {
-            return view('pages.project_manager.project-dashboard', compact('project', 'progress', 'stages', 'projectUpdates'));
-        } elseif(session('roles') == 3) {
-            return view('pages.executive.project-dashboard', compact('project', 'progress','stages', 'projectUpdates'));
+        if (session('roles') == 1) {
+            return view('pages.admin.project-dashboard', compact('projects', 'project', 'progress', 'stages', 'projectUpdates'));
+        } else if (session('roles') == 2) {
+            return view('pages.project_manager.project-dashboard', compact('projects', 'project', 'progress', 'stages', 'projectUpdates'));
+        } else if (session('roles') == 3) {
+            return view('pages.executive.project-dashboard', compact('projects', 'project', 'progress', 'stages', 'projectUpdates'));
         }
-
-        return redirect()->route('home');
     }
 }
