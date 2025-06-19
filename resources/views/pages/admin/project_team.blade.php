@@ -195,8 +195,9 @@
 
 <div class="modal fade" id="addDisciplineModal" tabindex="-1" role="dialog" aria-labelledby="addDisciplineModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form id="addDisciplineForm" method="POST" action="{{ route('pages.admin.project_team.addDiscipline') }}">
+    <form id="addDisciplineForm" method="POST" action="">
       @csrf
+      @method('DELETE')
       <input type="hidden" name="discipline" id="disciplineInput" value="">
       <div class="modal-content">
         <div class="modal-header">
@@ -224,7 +225,7 @@
 <div class="modal fade" id="deleteDisciplineModal" tabindex="-1" role="dialog" aria-labelledby="deleteDisciplineModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form id="deleteDisciplineForm" method="POST" action="{{ route('pages.admin.project_team.deleteDiscipline') }}">
+      <form id="deleteDisciplineForm" method="POST" action="">
         @csrf
         @method('DELETE')
         <div class="modal-header">
@@ -246,23 +247,14 @@
 </div>
 
 <script>
-  $('#deleteDisciplineModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var id = button.data('id');
-    var discipline = button.data('discipline');
-    var modal = $(this);
-    modal.find('#disciplineName').text(discipline.charAt(0).toUpperCase() + discipline.slice(1));
-    // Set the form action dynamically (update the route as needed)
-    modal.find('#deleteDisciplineForm').attr('action', '/admin/project-team/' + discipline + '/' + id);
-  });
-</script>
-
-<script>
 document.addEventListener('DOMContentLoaded', function() {
   // Set discipline type for Add Discipline modal
   document.querySelectorAll('[data-target="#addDisciplineModal"]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var discipline = btn.getAttribute('data-discipline');
+      // If you need a project ID, get it from a data attribute or context
+      var action = "{{ url('/admin/project-team/add-discipline') }}/" + discipline;
+      document.getElementById('addDisciplineForm').setAttribute('action', action);
       document.getElementById('disciplineInput').value = discipline;
     });
   });

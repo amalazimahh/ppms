@@ -238,7 +238,7 @@
                                     </td>
                                     <td>
                                         @if($project['status'] === 'danger')
-                                            Overdue by
+                                            Overdue
                                             @if($project['months_left'] < 0)
                                                 {{ abs($project['months_left']) }} month{{ abs($project['months_left']) == 1 ? '' : 's' }}
                                             @endif

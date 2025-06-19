@@ -15,171 +15,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        if(session('roles') == 1 || session('roles') == 3){
-            // calculate the upcoming deadlines of projects
-            $projects = Project::with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
-            $totalProjects = Project::count();
-            $upcomingDeadlines = [];
-            $completedCount = 0;
-            $ongoingCount = 0;
-            $overdueCount = 0;
-            $ministries = ClientMinistry::with(['projects.physical_status', 'projects.financial_status'])->get();
-
-            $projectsByMinistry = [];
-            foreach ($ministries as $ministry) {
-                $projectsByMinistry[$ministry->id] = $ministry->projects->map(function($project) {
-                    return [
-                        'title' => $project->title,
-                        'physical' => $project->physical_status ? $project->physical_status->actual : 0,
-                        'financial' => $project->financial_status ? $project->financial_status->actual : 0,
-                    ];
-                });
-            }
-
-            $mainProjects = Project::whereNull('parent_project_id')->get();
-
-            $projectNames = [];
-            $physicalProgress = [];
-            $financialProgress = [];
-
-            foreach($projects as $project){
-                // retrieve project data for the progress chart
-                $projectNames[] = $project->title;
-                $physicalProgress[] = $project->physical_status ? $project->physical_status->actual : 0;
-                $financialProgress[] = $project->financial_status ? $project->financial_status->actual : 0;
-
-                // use endDate as the deadline
-                if ($project->rkn && $project->rkn->endDate) {
-                    $deadline = \Carbon\Carbon::parse($project->rkn->endDate);
-                } else {
-                    // if no RKN assigned then use default date
-                    $handover = \Carbon\Carbon::parse($project->handoverDate);
-                    $fyStartYear = $handover->month < 4 ? $handover->year : $handover->year + 1;
-                    $fyStart = \Carbon\Carbon::create($fyStartYear,4, 1);
-                    $deadline = $fyStart->copy()->addYears(5)->subDay();
-                }
-
-                $now = \Carbon\Carbon::now();
-                $diffInMonths = floor($now->diffInMonths($deadline, false));
-                $diffInDays =  $now->diffInDays($deadline, false);
-
-                // assign traffic light color for deadline
-                if($diffInMonths > 2){
-                    $status = 'success'; // green
-                } elseif($diffInMonths == 2){
-                    $status = 'warning'; // yellow
-                } else if($diffInMonths < 1){
-                    $status = 'danger'; // red
-                } else {
-                    $status = 'success'; // green
-                }
-
-                // milestone logic
-                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
-
-                if ($completedMilestones == 25) {
-                    $completedCount++;
-                } else {
-                    $ongoingCount++;
-                    // overdue: not completed and red status
-                    if ($status == 'danger') {
-                        $overdueCount++;
-                    }
-                }
-
-                // fetch oic from project_team
-                $oic = \DB::table('project_team')
-                    ->join('users', 'project_team.officer_in_charge', '=', 'users.id')
-                    ->where('project_team.project_id', $project->id)
-                    ->value('users.name');
-
-                $upcomingDeadlines[] = [
-                    'name' => $project->title,
-                    'main_project' => $project->parent_project_id
-                        ? optional(Project::find($project->parent_project_id))->title
-                        : null,
-                    'deadline' => $deadline->format('d-m-Y'),
-                    'months_left' => $diffInMonths,
-                    'status' => $status,
-                    'officer_in_charge' => $oic ?? 'N/A'
-                ];
-            }
-
-            // Sort by status: danger (red), warning (yellow), success (green)
-            $statusOrder = ['danger' => 1, 'warning' => 2, 'success' => 3];
-            usort($upcomingDeadlines, function($a, $b) use ($statusOrder) {
-                return ($statusOrder[$a['status']] ?? 4) <=> ($statusOrder[$b['status']] ?? 4);
-            });
-
-            // Paginate (10 per page)
-            $page = request()->get('page', 1);
-            $perPage = 10;
-            $offset = ($page - 1) * $perPage;
-            $paginatedDeadlines = new LengthAwarePaginator(
-                array_slice($upcomingDeadlines, $offset, $perPage),
-                count($upcomingDeadlines),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-
-            // calculate total sch and av
-            $schemeValue = Project::sum('sv');
-            $allocationValue = Project::sum('av');
-
-            // dynamic sunburst chart data
-            $sunburstChildren = [];
-            foreach ($ministries as $ministry) {
-                $ministryNode = [
-                    'name' => $ministry->ministryName,
-                    'children' => []
-                ];
-                foreach ($ministry->projects as $project) {
-                    $ministryNode['children'][] = [
-                        'name' => $project->title
-                    ];
-                }
-                if(!empty($ministryNode['children'])){
-                    $sunburstChildren[] = $ministryNode;
-                }
-            }
-
-            $sunburstData = [
-                'name' => 'Ministries Projects',
-                'children' => $sunburstChildren
-            ];
-
-            // group projects by milestone stage for donut chart
-            $projects = Project::with('milestones.status')->get();
-            $stageCounts = [];
-            foreach($projects as $project){
-                $milestone = $project->milestone;
-                $statusName = $milestone && $milestone->status ? $milestone->status->name : 'Pre-Design';
-                if(!isset($stageCounts[$statusName])){
-                    $stageCounts[$statusName] = 0;
-                }
-                $stageCounts[$statusName]++;
-            }
-
-            $stageLabels = array_keys($stageCounts);
-            $stageData = array_values($stageCounts);
-
-            return view('pages.admin.dashboard', compact(
-                'paginatedDeadlines', 'totalProjects', 'completedCount',
-                'ongoingCount', 'overdueCount', 'schemeValue', 'allocationValue',
-                'sunburstData', 'projectNames', 'physicalProgress', 'financialProgress',
-                'stageLabels', 'stageData', 'ministries', 'projectsByMinistry'
-            ));
-        } else if(session('roles') == 2){
-
-            return view('pages.project_manager.dashboard', ['pageSlug' => 'dashboard']);
-        } else {
-            return view('pages.dashboard');
-        }
-    }
-
     public function dashboard()
     {
         $user = Auth::user();
@@ -241,7 +76,7 @@ class DashboardController extends Controller
                 // assign traffic light color for deadline
                 if($diffInMonths > 2){
                     $status = 'success'; // green
-                } elseif($diffInMonths == 2){
+                } elseif($diffInMonths > 0 && $diffInMonths <= 2){
                     $status = 'warning'; // yellow
                 } else if($diffInMonths < 1){
                     $status = 'danger'; // red
@@ -454,7 +289,7 @@ class DashboardController extends Controller
                 // assign traffic light color for deadline
                 if($diffInMonths > 2){
                     $status = 'success'; // green
-                } elseif($diffInMonths == 2){
+                } elseif($diffInMonths > 0 && $diffInMonths <= 2){
                     $status = 'warning'; // yellow
                 } else if($diffInMonths < 1){
                     $status = 'danger'; // red
@@ -511,8 +346,8 @@ class DashboardController extends Controller
             );
 
             // calculate total sch and av
-            $schemeValue = Project::sum('sv');
-            $allocationValue = Project::sum('av');
+            $schemeValue = $projects->sum('sv');
+            $allocationValue = $projects->sum('av');
 
             // dynamic sunburst chart data
             $sunburstChildren = [];

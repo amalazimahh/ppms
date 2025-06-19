@@ -72,10 +72,15 @@
                                     <i class="tim-icons icon-pencil"></i> Edit
                                 </a>
 
-                                <!-- delete button -->
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                    <i class="tim-icons icon-trash-simple"></i> Delete
-                                </button>
+                                @if($roleName === 'Admin')
+                                    <button type="button" class="btn btn-warning btn-sm" disabled>
+                                        <i class="tim-icons icon-trash-simple"></i> Delete
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="tim-icons icon-trash-simple"></i> Delete
+                                    </button>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

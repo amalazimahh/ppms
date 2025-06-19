@@ -92,9 +92,9 @@ Route::middleware(['auth'])->group(function () {
         // project team
         Route::get('/project_team', [ProjectTeamController::class, 'manageProjectTeam'])->name('project_team');
         Route::post('/project-team/add-discipline', [ProjectTeamController::class, 'addDiscipline'])->name('project_team.addDiscipline');
-        Route::post('/project-team/delete-discipline', [ProjectTeamController::class, 'deleteDiscipline'])->name('project_team.deleteDiscipline');
+        Route::delete('/project-team/delete-discipline/{discipline}/{id}', [ProjectTeamController::class, 'deleteDiscipline'])->name('project_team.deleteDiscipline');
 
-        // user management
+        // user managements
         Route::get('/user_management', [PageController::class, 'manageUsers'])->name('user_management');
         Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('assignRole');
 

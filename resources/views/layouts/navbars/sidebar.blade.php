@@ -42,7 +42,7 @@
                         </li>
                         <li @if ($pageSlug == 'users') class="active" @endif>
                             <a href="{{ route('pages.admin.rkn')  }}">
-                                <i class="tim-icons icon-bullet-list-67"></i>
+                                <i class="tim-icons icon-istanbul"></i>
                                 <p>{{ __('RKN List') }}</p>
                             </a>
                         </li>
@@ -88,7 +88,7 @@
             <li @if ($pageSlug == 'notifications') class="active" @endif>
                 <a href="{{ route('pages.admin.project_team')  }}">
                     <i class="tim-icons icon-badge"></i>
-                    <p>{{ __('Project Team') }}</p>
+                    <p>{{ __('Consultants') }}</p>
                 </a>
             </li>
 

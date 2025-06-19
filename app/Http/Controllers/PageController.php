@@ -132,7 +132,7 @@ class PageController extends Controller
                 // assign traffic light color for deadline
                 if($diffInMonths > 2){
                     $status = 'success'; // green
-                } elseif($diffInMonths == 2){
+                } elseif($diffInMonths > 0 && $diffInMonths <= 2){
                     $status = 'warning'; // yellow
                 } else if($diffInMonths < 1){
                     $status = 'danger'; // red
