@@ -25,21 +25,49 @@ function sendNotification($type, $message, $roles = [], $userIds = [])
         'message' => $message
     ]);
 
+    // Get users by IDs
+    $users = collect();
     if (!empty($userIds)) {
         $users = User::whereIn('id', $userIds)->get();
-    } else {
-        $targetRoles = empty($roles) ? getNotificationRoles($type) : $roles;
-        $users = User::whereHas('role', function ($query) use ($targetRoles) {
-            $query->whereIn('name', $targetRoles);
-        })->get();
     }
 
-    foreach($users as $user) {
-        NotificationRecipient::create([
-            'notification_id'=> $notification->id,
-            'user_id' => $user->id
-        ]);
+    // Get users by roles
+    $targetRoles = empty($roles) ? getNotificationRoles($type) : $roles;
+    $roleUsers = User::whereHas('role', function ($query) use ($targetRoles) {
+        $query->whereIn('name', $targetRoles);
+    })->get();
+
+    // Merge and remove duplicates
+    $allUsers = $users->merge($roleUsers)->unique('id');
+
+    \Log::info('Users found for notification', [
+        'count' => $allUsers->count(),
+        'ids' => $allUsers->pluck('id')->toArray()
+    ]);
+
+    foreach($allUsers as $user) {
+        try {
+            NotificationRecipient::create([
+                'notification_id'=> $notification->id,
+                'user_id' => $user->id
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to create NotificationRecipient', [
+                'user_id' => $user->id,
+                'notification_id' => $notification->id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
+
+    \Log::info('sendNotification called', [
+        'type' => $type,
+        'message' => $message,
+        'userIds' => $userIds,
+        'roles' => $roles,
+    ]);
 }
+
+
 
 ?>

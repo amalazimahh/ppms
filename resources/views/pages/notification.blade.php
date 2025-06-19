@@ -105,9 +105,14 @@
                         </form>
 
                         <!-- Delete Button -->
-                        <button class="btn btn-danger btn-sm delete-notification" data-id="{{ $notification->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                          Delete
-                        </button>
+                        <form action="{{ route('pages.notification.destroy', $notification->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this notification?');">
+                                Delete
+                            </button>
+                        </form>
                       </td>
                     </tr>
                     @empty
@@ -130,9 +135,6 @@
             <div class="mt-3 d-flex justify-content-center">
               {{ $notifications->links('pagination::bootstrap-5') }}
             </div>
-
-            <!-- Delete All Notifications -->
-            <button class="btn btn-danger mt-3" id="deleteAll">Delete All</button>
           </div>
         </div>
       </div>
@@ -140,65 +142,5 @@
   </div>
 </div>
 
-<!-- Bootstrap Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this notification? This action cannot be undone.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-        <!-- Delete Form -->
-        <form id="deleteForm" method="POST" style="display: inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 @endsection
 
-@section('scripts')
-<script>
-$(document).ready(function () {
-
-    // Delete single notification
-    $('.delete-notification').click(function () {
-        var id = $(this).data('id');
-        var $row = $(this).closest('tr');
-
-        $.ajax({
-            url: "{{ route('pages.notification.destroy', '') }}/" + id,
-            type: 'DELETE',
-            data: { _token: "{{ csrf_token() }}" },
-            success: function () {
-                $row.remove();
-            }
-        });
-    });
-
-    // Delete all notifications
-    $('#deleteAll').click(function () {
-        if (confirm("Are you sure you want to delete all notifications?")) {
-            $.ajax({
-                url: "{{ route('pages.notification.destroyAll') }}",
-                type: 'DELETE',
-                data: { _token: "{{ csrf_token() }}" },
-                success: function () {
-                    location.reload();
-                }
-            });
-        }
-    });
-});
-</script>
-@endsection

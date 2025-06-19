@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\NotificationRecipient;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Project;
+use App\Helpers\NotificationHelper;
 
 class NotificationController extends Controller
 {
@@ -63,16 +66,129 @@ class NotificationController extends Controller
     public function destroy($id)
     {
         $userId = Auth::id();
-        $notification = Notification::where('id', $id)->where('user_id', $userId)->first();
-        if ($notification) {
-            $notification->delete();
-            return response()->json(['success' => true]);
+        $recipient = \App\Models\NotificationRecipient::where('notification_id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($recipient) {
+            $recipient->delete();
+            return redirect()->back()->with('success', 'Notification deleted!');
         }
-        return response()->json(['success' => false, 'message' => 'Notification not found or unauthorized'], 404);
+        return redirect()->back()->with('error', 'Notification not found or unauthorized');
     }
 
     public function destroyAll() {
         NotificationRecipient::where('user_id', Auth::id())->delete();
-        return response()->json(['success' => true]);
+        return redirect()->back()->with('success', 'Notification deleted!');
+    }
+
+    public function sendProjectDeadlineNotifications()
+    {
+        // Loop through projects
+        $now = Carbon::now();
+        $projects = Project::all();
+
+        foreach ($projects as $project) {
+            if (!$project->deadline) continue;
+            $now = \Carbon\Carbon::now();
+            $deadline = \Carbon\Carbon::parse($project->deadline);
+            $diffInMonths = $now->diffInMonths($deadline, false);
+
+            if ($diffInMonths > 0 && $diffInMonths <= 2) {
+                // Notify only project managers of this project
+                $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+                sendNotification(
+                    'upcoming_deadline',
+                    "Project '{$project->title}' is approaching its deadline in {$diffInMonths} month(s).",
+                    ['Admin', 'Project Manager', 'Executive'], // roles
+                    $userIds // userIds
+                );
+            }
+
+            if ($now->greaterThan($deadline)) {
+                $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+                sendNotification(
+                    'overdue',
+                    "Project '{$project->title}' is overdue.",
+                    ['Admin', 'Project Manager', 'Executive'], // roles
+                    $userIds
+                );
+            }
+        }
+    }
+
+    // upcoming deadline notification
+    // overbudget notification
+    // overdue notification
+
+    public function notifyNewProject($project)
+    {
+        sendNotification(
+            'new_project',
+            "A new project '{$project->title}' has been created.",
+            ['Admin']
+        );
+    }
+
+    public function notifyNewUser($user)
+    {
+        sendNotification(
+            'new_user',
+            "A new user '{$user->name}' has registered.",
+            ['Admin']
+        );
+    }
+
+    public function notifyResetPassword($user)
+    {
+        sendNotification(
+            'reset_password',
+            "User '{$user->name}' has requested a password reset.",
+            ['Admin']
+        );
+    }
+
+    public function notifyUpdateProjectDetails($project)
+    {
+        $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        sendNotification(
+            'update_project_details',
+            "Project '{$project->title}' details have been updated.",
+            ['Admin', 'Project Manager'],
+            $userIds
+        );
+    }
+
+    public function notifyUpdateProjectStatus($project)
+    {
+        $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        sendNotification(
+            'update_project_status',
+            "Project '{$project->title}' status has been updated.",
+            ['Admin', 'Project Manager'],
+            $userIds
+        );
+    }
+
+    public function notifyOverbudget($project)
+    {
+        $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        sendNotification(
+            'overbudget',
+            "Project '{$project->title}' is over budget.",
+            ['Admin', 'Project Manager', 'Executive'],
+            $userIds
+        );
+    }
+
+    public function notifyOverdue($project)
+    {
+        $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        sendNotification(
+            'overdue',
+            "Project '{$project->title}' is overdue.",
+            ['Admin', 'Project Manager', 'Executive'],
+            $userIds
+        );
     }
 }

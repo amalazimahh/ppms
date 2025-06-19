@@ -19,6 +19,8 @@ class Kernel extends ConsoleKernel
     {
         // Run project status checks daily at midnight
         $schedule->command('projects:check-statuses')->daily();
+
+        $schedule->command('check:project-deadlines')->daily();
     }
 
     /**
@@ -32,4 +34,4 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
-} 
+}
