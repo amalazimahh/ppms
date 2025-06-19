@@ -105,7 +105,12 @@ class PageController extends Controller
 
             foreach($projects as $project){
                 // project data for the progress chart
-                $projectNames[] = $project->title;
+                if ($project->parent_project_id) {
+                    $parentTitle = optional(\App\Models\Project::find($project->parent_project_id))->title;
+                    $projectNames[] = $parentTitle ? "{$parentTitle} - {$project->title}" : $project->title;
+                } else {
+                    $projectNames[] = $project->title;
+                }
                 $physicalProgress[] = $project->physical_status ? $project->physical_status->actual : 0;
                 $financialProgress[] = $project->financial_status ? $project->financial_status->actual : 0;
 
