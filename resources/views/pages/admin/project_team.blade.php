@@ -209,7 +209,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="memberName">Name</label>
-            <input type="text" class="form-control" id="memberName" name="name" required>
+            <input type="text" class="form-control text-dark" id="memberName" name="name" required>
           </div>
         </div>
         <div class="modal-footer">
