@@ -25,19 +25,19 @@ function sendNotification($type, $message, $roles = [], $userIds = [])
         'message' => $message
     ]);
 
-    // Get users by IDs
+    // get users by IDs
     $users = collect();
     if (!empty($userIds)) {
         $users = User::whereIn('id', $userIds)->get();
     }
 
-    // Get users by roles
+    // get users by roles
     $targetRoles = empty($roles) ? getNotificationRoles($type) : $roles;
     $roleUsers = User::whereHas('role', function ($query) use ($targetRoles) {
         $query->whereIn('name', $targetRoles);
     })->get();
 
-    // Merge and remove duplicates
+    // merge and remove duplicates
     $allUsers = $users->merge($roleUsers)->unique('id');
 
     \Log::info('Users found for notification', [

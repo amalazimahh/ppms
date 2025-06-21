@@ -27,17 +27,41 @@ class CheckProjectStatuses extends Command
             }
 
             $now = Carbon::now();
-            $diffInMonths = floor($now->diffInMonths($deadline, false));
+            $deadlineCarbon = $deadline;
+
+            $diffInMonths = ceil($now->floatDiffInMonths($deadlineCarbon, false));
+            $diffInWeeks = (int) $now->diffInWeeks($deadlineCarbon, false);
+            $diffInDays = (int) $now->diffInDays($deadlineCarbon, false);
+
+            if ($diffInMonths >= 1) {
+                $timeLeft = $diffInMonths . ' month' . ($diffInMonths > 1 ? 's' : '');
+            } elseif ($diffInWeeks >= 1) {
+                $timeLeft = $diffInWeeks . ' week' . ($diffInWeeks > 1 ? 's' : '');
+            } else {
+                $timeLeft = $diffInDays . ' day' . ($diffInDays > 1 ? 's' : '');
+            }
 
             // send upcoming deadline notification if deadline is 2 months away
-            if ($diffInMonths == 2) {
-                $message = "Project {$project->title} has an upcoming deadline in 2 months ({$deadline->format('d-m-Y')}).";
+            if ($diffInMonths > 0 && $diffInMonths <= 2) {
+                $message = "Project {$project->title} is approaching its deadline in {$timeLeft} ({$deadlineCarbon->format('d-m-Y')}).";
                 sendNotification('upcoming_deadline', $message);
             }
 
             // send overdue notification if project is past deadline
-            if ($diffInMonths < 0) {
-                $message = "Project {$project->title} is overdue. Deadline was {$deadline->format('d-m-Y')}.";
+            if ($now->greaterThan($deadlineCarbon)) {
+                $overdueMonths = (int) $deadlineCarbon->diffInMonths($now);
+                $overdueWeeks = (int) $deadlineCarbon->diffInWeeks($now);
+                $overdueDays = (int) $deadlineCarbon->diffInDays($now);
+
+                if ($overdueMonths >= 1) {
+                    $overdueText = $overdueMonths . ' month' . ($overdueMonths > 1 ? 's' : '');
+                } elseif ($overdueWeeks >= 1) {
+                    $overdueText = $overdueWeeks . ' week' . ($overdueWeeks > 1 ? 's' : '');
+                } else {
+                    $overdueText = $overdueDays . ' day' . ($overdueDays > 1 ? 's' : '');
+                }
+
+                $message = "Project {$project->title} is overdue by {$overdueText} (Deadline was {$deadlineCarbon->format('d-m-Y')}).";
                 sendNotification('overdue', $message);
             }
 
@@ -48,7 +72,7 @@ class CheckProjectStatuses extends Command
 
                 if ($actual > $planned) {
                     $overBudgetAmount = $actual - $planned;
-                    $message = "Project {$project->title} is over budget by {$overBudgetAmount}.";
+                    $message = "Project {$project->title} is over budget by {$overBudgetAmount}%.";
                     sendNotification('overbudget', $message);
                 }
             }
