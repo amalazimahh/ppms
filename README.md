@@ -1,75 +1,92 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Project Progress Monitoring System (PPMS)
+*A centralized web application developed for the Department of Development, Public Works Department (JKR)*
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+PPMS is a custom-built Laravel web application developed as a Capstone Project at Universiti Teknologi Brunei (UTB). The system aims to improve project visibility, progress tracking, and decision-making for infrastructure projects under Brunei’s National Development Plan (RKN).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Objectives
 
-## Learning Laravel
+- Provide a centralized platform for project tracking and updates
+- Implement real-time progress dashboards for ongoing projects
+- Automate deadline and budget notifications
+- Generate project reports summary in PDF
+- Improve communication between stakeholders through system alerts
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer         | Technology                             |
+|---------------|-----------------------------------------|
+| Backend       | Laravel (PHP Framework)                |
+| Frontend      | Blade Templating, HTML, Bootstrap5   |
+| Database      | MySQL with Migrations & Seeders        |
+| Charts        | Chart.js, ApexCharts                   |
+| PDF Export    | DomPDF                                 |
+| Scheduler     | Laravel Artisan Commands + Task Scheduling |
+| Dev Server    | XAMPP (Local Development)              |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Key Features
 
-### Premium Partners
+- **Authentication** with role-based access (Admin, Executive, Project Manager)  
+- **Overall Dashboard** showing project stats, charts, and upcoming deadlines  
+- **Project-Specific Dashboards** with progress breakdowns and summaries  
+- **CRUD for Projects** with dynamic form sections  
+- **Notifications & Alerts** (Deadlines, Overdue, Over Budget)  
+- **Search & Filtering** for all project records  
+- **Report Generation** (PDF format)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## Running the System Locally
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-link>
+   cd ppms
 
-## Code of Conduct
+2. Install dependencies
+    ```bash
+    composer install
+    npm install && npm run dev
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. Create .env and configure DB
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
 
-## Security Vulnerabilities
+4. Run the migrations and seeders
+    ```bash
+    php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. Start the local server
+    ```bash
+    php artisan serve
 
-## License
+6. Schedule daily notification checks
+    ```bash
+    php artisan projects:check-statuses
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# ppms
-Project Progress Monitoring System (PPMS) developed for DOD, JKR. 
+## Development Timeline
 
+- **System Design:** Jan–Feb 2025
+- **System Development:** Feb–May 2025
+- **Testing & UAT:** 19 June 2025
+- **Final Report & Presentation:** June 2025
 
-order of migrations: 
-![Screenshot 2025-06-05 144846](https://github.com/user-attachments/assets/f4a58de6-dac0-45bf-b717-2190475d5395)
->>>>>>> origin/main
+## Acknowledgements
+
+- **Ms. Fatimah, UTB Supervisor** – for academic guidance and support
+- **Mr. Nizam, Host Supervisor (DoD JKR)** – for insights into departmental workflows
+- **DoD JKR Staff** – for their cooperation during system requirement analysis
+- **Universiti Teknologi Brunei** – for the academic platform and guidance
+
+## Licenses
+- This project was developed as part of a university capstone project. Not licensed for commercial use.
