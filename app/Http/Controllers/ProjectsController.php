@@ -314,7 +314,7 @@ class ProjectsController extends Controller
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
-            //img
+            'img' => $imgPath = 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         // remove dollar signs and commas sv and av fields (clean values)
@@ -359,7 +359,7 @@ class ProjectsController extends Controller
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],
-            //img
+            'img' => $imgPath,
             'created_by' => auth()->id(),
         ]);
 
@@ -414,7 +414,7 @@ class ProjectsController extends Controller
             'siteGazette' => 'nullable|string',
             'scope' => 'nullable|string',
             'location' => 'nullable|string',
-            // img
+            'img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         // Clean up the sv and av fields (remove dollar signs and commas)
@@ -424,6 +424,16 @@ class ProjectsController extends Controller
         // Log cleaned values
         Log::info('Cleaned sv: ' . $sv);
         Log::info('Cleaned av: ' . $av);
+
+         // log to see if the file is present in the request
+        if ($request->hasFile('img')) {
+            Log::info('File Uploaded: ' . $request->file('img')->getClientOriginalName());
+            $imgPath = $request->file('img')->store('images', 'public');
+            Log::info('Image path: ' . $imgPath);
+        } else {
+            Log::info('No file uploaded');
+            $imgPath = null;
+        }
 
         $project = Project::findOrFail($id);
         Log::info('Before Update:', $project->toArray());
@@ -443,7 +453,7 @@ class ProjectsController extends Controller
             'siteGazette' => $request['siteGazette'],
             'scope' => $request['scope'],
             'location' => $request['location'],
-            // img
+            'img' => $imgPath,
             'created_by' =>  auth()->id(),
         ]);
 
