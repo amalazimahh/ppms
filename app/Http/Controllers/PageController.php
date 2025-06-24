@@ -23,29 +23,26 @@ class PageController extends Controller
      */
     public function notifications(Request $request)
     {
-        $user = auth()->user();
+    $user = auth()->user();
     $role = session('roles');
     $type = $request->input('type');
 
-    // Start with a base query joining notifications and notification_recipient
+    // base query joining notifications and notification_recipient
     $query = DB::table('notifications')
         ->join('notification_recipient', 'notifications.id', '=', 'notification_recipient.notification_id')
         ->orderBy('notifications.created_at', 'desc')
         ->select('notifications.*', 'notification_recipient.read', 'notification_recipient.user_id');
 
-    // Filter by notification type if requested
+    // filter by notification type if requested
     if ($type) {
         $query->where('notifications.type', $type);
     }
 
-    if ($role == 1) {
-        // Admin: see all notifications
-        // No extra filter
-    } elseif ($role == 2) {
-        // Project Manager: only their projects, and only certain types
+    if ($role == 2) {
+        // Project manager: only their notifications and certain types
         $allowedTypes = [
             'upcoming_deadline',
-             'update_project_details',
+            'update_project_details',
             'update_project_status',
             'overbudget',
             'overdue'
@@ -53,7 +50,7 @@ class PageController extends Controller
         $query->whereIn('notifications.type', $allowedTypes)
               ->where('notification_recipient.user_id', $user->id);
     } elseif ($role == 3) {
-        // Executive: all projects, only certain types
+        // Executive: all users, but only certain types
         $allowedTypes = [
             'upcoming_deadline',
             'update_project_status',
@@ -61,6 +58,9 @@ class PageController extends Controller
             'overdue'
         ];
         $query->whereIn('notifications.type', $allowedTypes);
+    } else if ($role == 1) {
+        // Admin: see all notifications (no user_id filter)
+        // No additional filter needed
     }
 
     $notifications = $query->paginate(10);
@@ -77,7 +77,7 @@ class PageController extends Controller
     public function dashboard()
     {
         // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestone.status')->get();
+            $projects = Project::with('milestones')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
@@ -141,7 +141,9 @@ class PageController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+                $completedMilestones = $project->milestones(function ($milestone) {
+                        return $milestone->pivot->completed == 1;
+                    })->count();
                 if ($completedMilestones == 25) {
                     $completedCount++;
                 } else {

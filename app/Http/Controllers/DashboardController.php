@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         if(session('roles') == 1){
             // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestone.status')->get();
+            $projects = Project::with('milestones')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
@@ -84,8 +84,11 @@ class DashboardController extends Controller
                     $status = 'success'; // green
                 }
 
+
                 // milestone logic
-                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+                $completedMilestones = $project->milestones(function ($milestone) {
+                        return $milestone->pivot->completed == 1;
+                    })->count();
                 if ($completedMilestones == 25) {
                     $completedCount++;
                 } else {
@@ -221,7 +224,7 @@ class DashboardController extends Controller
 
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
-            })->with(['rkn', 'milestones.status', 'physical_status', 'financial_status'])->get();
+            })->with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
 
             $ministries = ClientMinistry::whereHas('projects', function($query) use ($user) {
                 $query->whereHas('projectTeam', function($q) use ($user) {
@@ -298,7 +301,9 @@ class DashboardController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+                $completedMilestones = $project->milestones(function ($milestone) {
+                        return $milestone->pivot->completed == 1;
+                    })->count();
                 if ($completedMilestones == 25) {
                     $completedCount++;
                 } else {
@@ -430,7 +435,7 @@ class DashboardController extends Controller
                     ));
         } else if(session('roles') == 3){
             // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestone.status')->get();
+            $projects = Project::with('milestones')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
@@ -489,7 +494,9 @@ class DashboardController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones()->wherePivot('completed', true)->count();
+                $completedMilestones = $project->milestones(function ($milestone) {
+                        return $milestone->pivot->completed == 1;
+                    })->count();
                 if ($completedMilestones == 25) {
                     $completedCount++;
                 } else {
