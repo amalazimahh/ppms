@@ -195,9 +195,8 @@
 
 <div class="modal fade" id="addDisciplineModal" tabindex="-1" role="dialog" aria-labelledby="addDisciplineModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form id="addDisciplineForm" method="POST" action="">
+    <form id="addDisciplineForm" method="POST" action="{{ route('pages.admin.project_team.addDiscipline') }}">
       @csrf
-      @method('DELETE')
       <input type="hidden" name="discipline" id="disciplineInput" value="">
       <div class="modal-content">
         <div class="modal-header">
@@ -248,18 +247,14 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Set discipline type for Add Discipline modal
   document.querySelectorAll('[data-target="#addDisciplineModal"]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var discipline = btn.getAttribute('data-discipline');
-      // If you need a project ID, get it from a data attribute or context
-      var action = "{{ url('/admin/project-team/add-discipline') }}/" + discipline;
-      document.getElementById('addDisciplineForm').setAttribute('action', action);
       document.getElementById('disciplineInput').value = discipline;
     });
   });
 
-  // Handle delete button click for all cards
+  // handle delete button click for all cards
   $('#deleteDisciplineModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var id = button.data('id');

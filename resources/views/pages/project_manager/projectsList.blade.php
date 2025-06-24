@@ -24,6 +24,20 @@
 
 @section('content')
 <style>
+    select {
+            background-color: #f6f9fc,
+            color: #000;
+        }
+
+        select option {
+            background-color: #f6f9fc;
+            color: #000;
+        }
+
+        select option:hover{
+            background-color: #525f7f;
+            color: #fff;
+        }
     .form-control:focus {
         color: #000;
     }
@@ -763,7 +777,7 @@
                     <label for="fy" class="col-sm-2 col-form-label">Financial Year</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="fy" id="fy" placeholder="2020/2021"
-                            maxlength="9" oninput="formatFinancialYear(this)">
+                            maxlength="9" oninput="formatFinancialYear(this)" required>
                         </div>
                 </div>
 
@@ -771,7 +785,8 @@
                     <label for="sv" class="col-sm-2 col-form-label">Scheme Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="sv" id="sv"
-                            placeholder="$20,000,000.00">
+                            placeholder="$20,000,000.00" required pattern="^\$?\d{1,3}(,\d{3})*(\.\d{2})?$"
+                            title="Please enter a valid currency format (e.g., $1,000,000.00)">
                     </div>
                 </div>
 
@@ -779,7 +794,8 @@
                     <label for="av" class="col-sm-2 col-form-label">Allocation Value</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="av" id="av"
-                            placeholder="$3,901,420.00">
+                            placeholder="$3,901,420.00" placeholder="$20,000,000.00" required pattern="^\$?\d{1,3}(,\d{3})*(\.\d{2})?$"
+                            title="Please enter a valid currency format (e.g., $1,000,000.00)">
                     </div>
                 </div>
 
@@ -811,7 +827,7 @@
                 <div class="row mb-3">
                     <label for="title" class="col-sm-2 col-form-label">Project Title</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title" id="title" placeholder="Project Title">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Project Title" required>
                     </div>
                 </div>
 
@@ -858,11 +874,6 @@
             numeralDecimalScale: 2,
             numeralPositiveOnly: true,
         });
-    });
-
-    // Add fade-out class before page unload
-    window.addEventListener('beforeunload', function() {
-        document.body.classList.add('fade-out');
     });
 
 // auto-close after 5 seconds

@@ -57,19 +57,19 @@
         <label for="formNavigation" class="col-sm-2 col-form-label">Navigate to Form: </label>
         <div class="col-sm-10">
             <select id="formNavigation" class="form-control" onchange="window.location.href=this.value">
-                <option disabled selected>-- Select Form --</option>
-                <option value="{{ route('projects.status', $project->id) }}">1. Project Status</option>
-                <option value="{{ route('pages.project_manager.forms.basicdetails', $project->id) }}">2. Project Terms of Reference Form</option>
-                <option value="{{ route('projects.pre_tender', $project->id) }}">3. Pre-Design Form</option>
-                <option value="{{ route('projects.project_team', $project->id) }}">4. Project Team Form</option>
-                <option value="{{ route('projects.design_submission', $project->id) }}">5. Design Submission Form</option>
-                <option value="{{ route('projects.tender', $project->id) }}">6. Opening/Closing Tender Form</option>
-                <option value="{{ route('projects.tender_recommendation', $project->id) }}">6.1 Evaluation/Recommendation of Tender Form</option>
-                <option value="{{ route('projects.approval_award', $project->id) }}">6.2 Approval of Award Form</option>
-                <option value="{{ route('projects.contract', $project->id) }}">7. Contract Form</option>
-                <option value="{{ route('projects.bankers_guarantee', $project->id) }}">7.1 Banker's Guarantee Form</option>
-                <option value="{{ route('projects.insurance', $project->id) }}">7.2 Insurance Form</option>
-                <option value="{{ route('projects.project_health', $project->id) }}">8. Project Progress Status</option>
+                <option disabled {{ Route::currentRouteName() === null ? 'selected' : '' }}>-- Select Form --</option>
+                <option value="{{ route('projects.status', $project->id) }}" {{ Route::currentRouteName() === 'projects.status' ? 'selected' : '' }}>1. Project Status</option>
+                <option value="{{ route('pages.project_manager.forms.basicdetails', $project->id) }}" {{ Route::currentRouteName() === 'pages.project_manager.forms.basicdetails' ? 'selected' : '' }}>2. Project Terms of Reference Form</option>
+                <option value="{{ route('projects.pre_tender', $project->id) }}" {{ Route::currentRouteName() === 'projects.pre_tender' ? 'selected' : '' }}>3. Pre-Design Form</option>
+                <option value="{{ route('projects.project_team', $project->id) }}" {{ Route::currentRouteName() === 'projects.project_team' ? 'selected' : '' }}>4. Project Team Form</option>
+                <option value="{{ route('projects.design_submission', $project->id) }}" {{ Route::currentRouteName() === 'projects.design_submission' ? 'selected' : '' }}>5. Design Submission Form</option>
+                <option value="{{ route('projects.tender', $project->id) }}" {{ Route::currentRouteName() === 'projects.tender' ? 'selected' : '' }}>6. Opening/Closing Tender Form</option>
+                <option value="{{ route('projects.tender_recommendation', $project->id) }}" {{ Route::currentRouteName() === 'projects.tender_recommendation' ? 'selected' : '' }}>6.1 Evaluation/Recommendation of Tender Form</option>
+                <option value="{{ route('projects.approval_award', $project->id) }}" {{ Route::currentRouteName() === 'projects.approval_award' ? 'selected' : '' }}>6.2 Approval of Award Form</option>
+                <option value="{{ route('projects.contract', $project->id) }}" {{ Route::currentRouteName() === 'projects.contract' ? 'selected' : '' }}>7. Contract Form</option>
+                <option value="{{ route('projects.bankers_guarantee', $project->id) }}" {{ Route::currentRouteName() === 'projects.bankers_guarantee' ? 'selected' : '' }}>7.1 Banker's Guarantee Form</option>
+                <option value="{{ route('projects.insurance', $project->id) }}" {{ Route::currentRouteName() === 'projects.insurance' ? 'selected' : '' }}>7.2 Insurance Form</option>
+                <option value="{{ route('projects.project_health', $project->id) }}" {{ Route::currentRouteName() === 'projects.project_health' ? 'selected' : '' }}>8. Project Progress Status</option>
             </select>
         </div>
     </div>
@@ -147,6 +147,7 @@
                     </div>
                 </div>
 
+
                 <div class="row mb-3">
                     <label for="voteNum" class="col-sm-2 col-form-label">Vote No.</label>
                     <div class="col-sm-10">
@@ -193,37 +194,107 @@
                     </div>
                 </div>
 
+                <!-- <div class="row mb-3">
+                    <label for="handover" class="col-sm-2 col-form-label">Handover Project</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="handover" id="handover"
+                        value="{{ old('handover', isset($project) ? $project->handover : '') }}">
+                    </div>
+                </div> -->
+
                 <div class="row mb-3">
                     <label for="scope" class="col-sm-2 col-form-label">Scope</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" name="scope" id="scope" rows="3">{{ old('scope', isset($project) ? $project->scope : '') }}</textarea>
+                        <textarea class="form-control" name="scope" id="scope" rows="4" placeholder="Construction of school campus including MPH, cafeteria, academic and admin blocks."
+                            value="{{ old('scope', isset($project) ? $project->scope : '') }}"></textarea>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="remarks" class="col-sm-2 col-form-label">Remarks</label>
+                    <label for="location" class="col-sm-2 col-form-label">Location</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" name="remarks" id="remarks" rows="3">{{ old('remarks', isset($project) ? $project->remarks : '') }}</textarea>
+                        <input type="text" class="form-control" name="location" id="location" placeholder="https://goo.gl/maps/Qktu9RDd3hKWc8Av8"
+                            value="{{ old('location', isset($project) ? $project->location : '') }}">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-sm-10 offset-sm-2">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                <div class="row mb-3">
+                    <label for="img" class="col-sm-2 col-form-label">Upload Image</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control-file" name="img" id="img">
                     </div>
                 </div>
+
+                <button type="submit" class="btn btn-primary">{{ isset($project) ? 'Update' : 'Submit' }}</button>
+
             </form>
         </div>
     </div>
 
-    <script>
-        function formatFinancialYear(input) {
-            let value = input.value.replace(/\D/g, '');
-            if (value.length >= 4) {
-                value = value.slice(0, 4) + '/' + value.slice(4, 8);
-            }
-            input.value = value;
+<!-- handles financial year, amount user enters -->
+<script>
+    function formatFinancialYear(input)
+    {
+        //remove non-digit input
+        let value = input.value.replace(/\D/g, '');
+
+        // if length > 4, insert /
+        if(value.length > 4)
+        {
+            value = value.slice(0,4) + '/' + value.slice(4,8);
         }
-    </script>
+
+        input.value = value;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        new Cleave('#sv', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+
+        new Cleave('#av', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: '$',
+            numeralDecimalScale: 2,
+            numeralPositiveOnly: true,
+        });
+    });
+
+
+    // javascript to load the voteNum dynamically
+    document.addEventListener('DOMContentLoaded', function () {
+        let voteNum = document.getElementById('voteNum');
+        let parentProjectSelect = document.getElementById('parent_project_id');
+
+        function updateVoteNum() {
+            let parentId = parentProjectSelect.value;
+
+            if (parentId) {
+                fetch(`/project_manager/projects/${parentId}/getVoteNum`) // fetch voteNum from parent
+                    .then(response => response.json())
+                    .then(data => {
+                        voteNum.value = data.voteNum; // set parent voteNum
+                        voteNum.setAttribute('readonly', 'readonly'); // disable input
+                        voteNum.classList.add('readonly-light-text');
+                    })
+                    .catch(error => console.error('Error fetching voteNum:', error));
+            } else {
+                voteNumField.value = ''; // clear field
+                voteNumField.removeAttribute('readonly'); // enable input for manual entry
+                voteNum.classList.remove('readonly-light-text');
+            }
+        }
+
+        parentProjectSelect.addEventListener('change', updateVoteNum);
+
+        updateVoteNum();
+    });
+
+</script>
 
 @endsection

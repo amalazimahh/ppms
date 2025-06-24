@@ -1,7 +1,6 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
-
 <style>
-    select {
+      select {
         background-color: #f6f9fc;
         color: #000;
     }
@@ -41,8 +40,23 @@
         from{ opacity: 1; }
         to { opacity: 0.4; }
     }
+    /* scrollbar styles, blend with the card */
+    .table-responsive {
+    background: #23263a; /* Match your card/table background */
+    scrollbar-color: #444 #23263a; /* thumb color, track color for Firefox */
+    scrollbar-width: thin;
+    }
 
-    /* scrollbar styles blend with the card */
+    /* Webkit browsers (Chrome, Edge, Safari) */
+    .table-responsive::-webkit-scrollbar {
+        height: 10px;
+        background: #23263a; /* track color */
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #444; /* thumb color */
+        border-radius: 5px;
+    }
+
     #chartContainer {
     background: #23263a; /* Match your card/chart background */
     scrollbar-color: #444 #23263a; /* thumb color, track color for Firefox */
@@ -60,9 +74,7 @@
     }
 </style>
 
-
 @section('content')
-
 <div class="row mt-3">
     <div class="col-lg-3">
         <div class="card card-stats">
@@ -238,10 +250,7 @@
                                     </td>
                                     <td>
                                         @if($project['status'] === 'danger')
-                                            Overdue
-                                            @if($project['months_left'] < 0)
-                                                {{ abs($project['months_left']) }} month{{ abs($project['months_left']) == 1 ? '' : 's' }}
-                                            @endif
+                                            Overdue by {{ abs($project['months_left']) }} month{{ abs($project['months_left']) == 1 ? '' : 's' }}
                                         @elseif($project['status'] === 'warning')
                                             {{ $project['months_left'] }} month{{ $project['months_left'] == 1 ? '' : 's' }} left
                                         @elseif($project['status'] === 'success')
@@ -252,7 +261,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="mt-3 d-flex flex-column align-items-center">
+                    <div class="mt-3 d-flex justify-content-center">
                         {{ $paginatedDeadlines->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
@@ -289,10 +298,10 @@
         </div>
     </div>
 </div>
-
 @endsection
 
 @push('js')
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const projectsByMinistry = @json($projectsByMinistry);
@@ -385,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
     function hideChart() {
         document.getElementById('chartContainer').style.display = 'none';
         if (window.progressChart) {
@@ -481,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // prepare legend data with line count
         const legendLineHeight = 12;
-        const legendMaxChars = 45;   // chars per line
+        const legendMaxChars = 60;   // chars per line
 
         // Calculate lines for each legend item
         const legendData = data.children.map(d => {

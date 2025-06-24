@@ -16,10 +16,21 @@ class NotificationController extends Controller
     public function index(Request $request)
 {
     $user = Auth::user();
+    $role = $user->role_id ?? session('roles');
 
-    $query = Notification::whereHas('recipients', function ($q) use ($user) {
-        $q->where('user_id', $user->id);
-    });
+    if ($role == 1) {
+        $query = Notification::whereHas('recipients', function ($q) {
+            $q->where('user_id', 1);
+        });
+    } elseif ($role == 3) {
+        $query = Notification::whereHas('recipients', function ($q) {
+            $q->where('user_id', 3);
+        });
+    } else {
+        $query = Notification::whereHas('recipients', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+    }
 
     \Log::info('Initial Query:', ['query' => $query->toSql()]);
 
@@ -32,7 +43,7 @@ class NotificationController extends Controller
     // filter by read status
     if ($request->has('status')) {
         $isRead = $request->status === 'read';
-        $query->whereHas('recipient', function ($q) use ($isRead) {
+        $query->whereHas('recipients', function ($q) use ($isRead) {
             $q->where('read', $isRead);
         });
     }
@@ -93,6 +104,7 @@ class NotificationController extends Controller
             $now = \Carbon\Carbon::now();
             $deadline = \Carbon\Carbon::parse($project->deadline);
             $diffInMonths = $now->diffInMonths($deadline, false);
+            $title = $project->parentProject ? $project->parentProject->title : $project->title;
 
             if ($diffInMonths > 0 && $diffInMonths <= 2) {
                 // Notify only project managers of this project
@@ -117,12 +129,9 @@ class NotificationController extends Controller
         }
     }
 
-    // upcoming deadline notification
-    // overbudget notification
-    // overdue notification
-
     public function notifyNewProject($project)
     {
+        $title = $project->parentProject ? $project->parentProject->title : $project->title;
         sendNotification(
             'new_project',
             "A new project '{$project->title}' has been created.",
@@ -151,9 +160,10 @@ class NotificationController extends Controller
     public function notifyUpdateProjectDetails($project)
     {
         $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        $title = $project->parentProject ? $project->parentProject->title . ' - ' . $project->title : $project->title;
         sendNotification(
             'update_project_details',
-            "Project '{$project->title}' details have been updated.",
+            "Project '{$title}' details have been updated.",
             ['Admin', 'Project Manager'],
             $userIds
         );
@@ -162,9 +172,10 @@ class NotificationController extends Controller
     public function notifyUpdateProjectStatus($project)
     {
         $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        $title = $project->parentProject ? $project->parentProject->title . ' - ' . $project->title : $project->title;
         sendNotification(
             'update_project_status',
-            "Project '{$project->title}' status has been updated.",
+            "Project '{$title}' status has been updated.",
             ['Admin', 'Project Manager'],
             $userIds
         );
@@ -173,9 +184,10 @@ class NotificationController extends Controller
     public function notifyOverbudget($project)
     {
         $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        $title = $project->parentProject ? $project->parentProject->title . ' - ' . $project->title : $project->title;
         sendNotification(
             'overbudget',
-            "Project '{$project->title}' is over budget.",
+            "Project '{$title}' is over budget.",
             ['Admin', 'Project Manager', 'Executive'],
             $userIds
         );
@@ -184,9 +196,10 @@ class NotificationController extends Controller
     public function notifyOverdue($project)
     {
         $userIds = $project->projectTeam->pluck('officer_in_charge')->toArray();
+        $title = $project->parentProject ? $project->parentProject->title . ' - ' . $project->title : $project->title;
         sendNotification(
             'overdue',
-            "Project '{$project->title}' is overdue.",
+            "Project '{$title}' is overdue.",
             ['Admin', 'Project Manager', 'Executive'],
             $userIds
         );

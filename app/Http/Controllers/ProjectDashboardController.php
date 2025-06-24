@@ -27,6 +27,7 @@ class ProjectDashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $roles = $user->roles_id ?? session('roles');
         $project = null;
         $progress = 0;
         $stages = [];
@@ -48,7 +49,7 @@ class ProjectDashboardController extends Controller
             ])
             ->get();
         } else {
-            // admin or executive: show all projects (original logic)
+            // admin or executive: show all projects
             $projects = Project::with([
                 'physical_status',
                 'financial_status',

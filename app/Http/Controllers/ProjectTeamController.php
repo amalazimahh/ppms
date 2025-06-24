@@ -75,7 +75,6 @@ class ProjectTeamController extends Controller
         ]);
 
         try {
-            // For project managers, ensure they can't change the officer_in_charge
             if (session('roles') == 2) {
                 $validated['officer_in_charge'] = $user->id;
             }
