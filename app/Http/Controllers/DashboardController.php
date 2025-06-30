@@ -21,13 +21,11 @@ class DashboardController extends Controller
 
         if(session('roles') == 1){
             // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestones')->get();
+            $projects = Project::with('milestone.status')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
-            $completedCount = 0;
-            $ongoingCount = 0;
-            $overdueCount = 0;
+            $completedCount = $ongoingCount = $overdueCount = 0;
             $ministries = ClientMinistry::with(['projects.physical_status', 'projects.financial_status'])->get();
 
             $projectsByMinistry = [];
@@ -86,15 +84,19 @@ class DashboardController extends Controller
 
 
                 // milestone logic
-                $completedMilestones = $project->milestones(function ($milestone) {
-                        return $milestone->pivot->completed == 1;
+                $completedMilestones = $project->milestones
+                    ->filter(function ($milestone) {
+                        return $milestone->status && $milestone->status->name === 'Post-Completion';
                     })->count();
-                if ($completedMilestones == 25) {
+
+                $milestone = $project->milestone;
+                $statusName = $milestone && $milestone->status ? $milestone->status->name : null;
+
+                if ($statusName === 'Post-Completion') {
                     $completedCount++;
                 } else {
                     $ongoingCount++;
-                    // overdue: not completed and red status
-                    if ($status == 'danger') {
+                    if ($status === 'danger') {
                         $overdueCount++;
                     }
                 }
@@ -164,11 +166,18 @@ class DashboardController extends Controller
                     foreach ($projectsByParent[$parentProject->id] ?? [] as $childProject) {
                         $parentNode['children'][] = [
                             'name' => $childProject->title,
-                            'value' => 1000 // or whatever value you want
                         ];
                     }
 
-                    // if no children, you can add a value to the parent node itself
+                    // add children
+                    foreach ($projectsByParent[$parentProject->id] ?? [] as $childProject) {
+                        $parentNode['children'][] = [
+                            'name' => $childProject->title,
+                            'value' => 1000
+                        ];
+                    }
+
+                    // if no children, add a value to the parent node
                     if (empty($parentNode['children'])) {
                         $parentNode['value'] = 1000;
                     }
@@ -224,7 +233,7 @@ class DashboardController extends Controller
 
             $projects = Project::whereHas('projectTeam', function($query) use ($user) {
                 $query->where('officer_in_charge', $user->id);
-            })->with(['rkn', 'milestones', 'physical_status', 'financial_status'])->get();
+            })->with(['rkn', 'milestone.status', 'physical_status', 'financial_status'])->get();
 
             $ministries = ClientMinistry::whereHas('projects', function($query) use ($user) {
                 $query->whereHas('projectTeam', function($q) use ($user) {
@@ -301,15 +310,19 @@ class DashboardController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones(function ($milestone) {
-                        return $milestone->pivot->completed == 1;
+                $completedMilestones = $project->milestones
+                    ->filter(function ($milestone) {
+                        return $milestone->status && $milestone->status->name === 'Post-Completion';
                     })->count();
-                if ($completedMilestones == 25) {
+
+                $milestone = $project->milestone;
+                $statusName = $milestone && $milestone->status ? $milestone->status->name : null;
+
+                if ($statusName === 'Post-Completion') {
                     $completedCount++;
                 } else {
                     $ongoingCount++;
-                    // overdue: not completed and red status
-                    if ($status == 'danger') {
+                    if ($status === 'danger') {
                         $overdueCount++;
                     }
                 }
@@ -375,15 +388,15 @@ class DashboardController extends Controller
                         'children' => []
                     ];
 
-                    // add children (if any)
+                    // add children
                     foreach ($projectsByParent[$parentProject->id] ?? [] as $childProject) {
                         $parentNode['children'][] = [
                             'name' => $childProject->title,
-                            'value' => 1000 // or whatever value you want
+                            'value' => 1000
                         ];
                     }
 
-                    // if no children, you can add a value to the parent node itself
+                    // if no children, add a value to the parent node
                     if (empty($parentNode['children'])) {
                         $parentNode['value'] = 1000;
                     }
@@ -435,7 +448,7 @@ class DashboardController extends Controller
                     ));
         } else if(session('roles') == 3){
             // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestones')->get();
+            $projects = Project::with('milestone.status')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
@@ -494,15 +507,19 @@ class DashboardController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones(function ($milestone) {
-                        return $milestone->pivot->completed == 1;
+                $completedMilestones = $project->milestones
+                    ->filter(function ($milestone) {
+                        return $milestone->status && $milestone->status->name === 'Post-Completion';
                     })->count();
-                if ($completedMilestones == 25) {
+
+                $milestone = $project->milestone;
+                $statusName = $milestone && $milestone->status ? $milestone->status->name : null;
+
+                if ($statusName === 'Post-Completion') {
                     $completedCount++;
                 } else {
                     $ongoingCount++;
-                    // overdue: not completed and red status
-                    if ($status == 'danger') {
+                    if ($status === 'danger') {
                         $overdueCount++;
                     }
                 }
@@ -568,15 +585,15 @@ class DashboardController extends Controller
                         'children' => []
                     ];
 
-                    // add children (if any)
+                    // add children
                     foreach ($projectsByParent[$parentProject->id] ?? [] as $childProject) {
                         $parentNode['children'][] = [
                             'name' => $childProject->title,
-                            'value' => 1000 // or whatever value you want
+                            'value' => 1000
                         ];
                     }
 
-                    // if no children, you can add a value to the parent node itself
+                    // if no children, add a value to the parent node
                     if (empty($parentNode['children'])) {
                         $parentNode['value'] = 1000;
                     }

@@ -77,7 +77,7 @@ class PageController extends Controller
     public function dashboard()
     {
         // calculate the upcoming deadlines of projects
-            $projects = Project::with('milestones')->get();
+            $projects = Project::with('milestone.status')->get();
 
             $totalProjects = Project::count();
             $upcomingDeadlines = [];
@@ -141,15 +141,19 @@ class PageController extends Controller
                 }
 
                 // milestone logic
-                $completedMilestones = $project->milestones(function ($milestone) {
-                        return $milestone->pivot->completed == 1;
+                $completedMilestones = $project->milestones
+                    ->filter(function ($milestone) {
+                        return $milestone->status && $milestone->status->name === 'Post-Completion';
                     })->count();
-                if ($completedMilestones == 25) {
+
+                $milestone = $project->milestone;
+                $statusName = $milestone && $milestone->status ? $milestone->status->name : null;
+
+                if ($statusName === 'Post-Completion') {
                     $completedCount++;
                 } else {
                     $ongoingCount++;
-                    // overdue: not completed and red status
-                    if ($status == 'danger') {
+                    if ($status === 'danger') {
                         $overdueCount++;
                     }
                 }
@@ -215,15 +219,15 @@ class PageController extends Controller
                         'children' => []
                     ];
 
-                    // add children (if any)
+                    // add children
                     foreach ($projectsByParent[$parentProject->id] ?? [] as $childProject) {
                         $parentNode['children'][] = [
                             'name' => $childProject->title,
-                            'value' => 1000 // or whatever value you want
+                            'value' => 1000
                         ];
                     }
 
-                    // if no children, you can add a value to the parent node itself
+                    // if no children, add a value to the parent node
                     if (empty($parentNode['children'])) {
                         $parentNode['value'] = 1000;
                     }
